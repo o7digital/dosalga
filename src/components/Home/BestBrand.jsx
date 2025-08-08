@@ -65,7 +65,7 @@ const BestBrand = () => {
                     <div className="brand-icon">
                       <Link legacyBehavior href="/shop">
                         <a>
-                          <img src="/assets/img/home1/brand-logo1.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/brand-logo1.png" alt="" />
                         </a>
                       </Link>
                     </div>
@@ -74,7 +74,7 @@ const BestBrand = () => {
                     <div className="brand-icon">
                    <Link legacyBehavior href="/shop">
                         <a>
-                          <img src="/assets/img/home1/brand-logo2.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/brand-logo2.png" alt="" />
                         </a>
                       </Link>
                     </div>
@@ -83,7 +83,7 @@ const BestBrand = () => {
                     <div className="brand-icon">
                    <Link legacyBehavior href="/shop">
                         <a>
-                          <img src="/assets/img/home1/brand-logo3.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/brand-logo3.png" alt="" />
                         </a>
                       </Link>
                     </div>
@@ -92,7 +92,7 @@ const BestBrand = () => {
                     <div className="brand-icon">
                    <Link legacyBehavior href="/shop">
                         <a>
-                          <img src="/assets/img/home1/brand-logo4.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/brand-logo4.png" alt="" />
                         </a>
                       </Link>
                     </div>
@@ -101,7 +101,7 @@ const BestBrand = () => {
                     <div className="brand-icon">
                    <Link legacyBehavior href="/shop">
                         <a>
-                          <img src="/assets/img/home1/brand-logo5.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/brand-logo5.png" alt="" />
                         </a>
                       </Link>
                     </div>
@@ -110,7 +110,7 @@ const BestBrand = () => {
                     <div className="brand-icon">
                    <Link legacyBehavior href="/shop">
                         <a>
-                          <img src="/assets/img/home1/brand-logo6.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/brand-logo6.png" alt="" />
                         </a>
                       </Link>
                     </div>
@@ -119,7 +119,7 @@ const BestBrand = () => {
                     <div className="brand-icon">
                    <Link legacyBehavior href="/shop">
                         <a>
-                          <img src="/assets/img/home1/brand-logo7.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/brand-logo7.png" alt="" />
                         </a>
                       </Link>
                     </div>

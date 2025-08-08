@@ -11,7 +11,7 @@ function GiftCardpage() {
             <div className="col-lg-4 col-md-6">
               <div className="gift-card">
                 <div className="gift-card-img hover-img">
-                  <img src="/assets/img/inner-page/gift-card-img1.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/gift-card-img1.png" alt="" />
                   <Link legacyBehavior href="#"><a  className="add-card-btn">*Add To Cart*</a></Link>
                   <div className="favorite">
                     <Link legacyBehavior href="/shop/whistlist">
@@ -34,7 +34,7 @@ function GiftCardpage() {
             <div className="col-lg-4 col-md-6">
               <div className="gift-card">
                 <div className="gift-card-img hover-img">
-                  <img src="/assets/img/inner-page/gift-card-img2.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/gift-card-img2.png" alt="" />
                   <Link legacyBehavior href="#"><a  className="add-card-btn">*Add To Cart*</a></Link>
                   <div className="favorite">
                   <Link legacyBehavior href="/shop/whistlist">
@@ -57,7 +57,7 @@ function GiftCardpage() {
             <div className="col-lg-4 col-md-6">
               <div className="gift-card">
                 <div className="gift-card-img hover-img">
-                  <img src="/assets/img/inner-page/gift-card-img3.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/gift-card-img3.png" alt="" />
                   <Link legacyBehavior href="#"><a  className="add-card-btn">*Add To Cart*</a></Link>
                   <div className="favorite">
                   <Link legacyBehavior href="/shop/whistlist">
@@ -82,7 +82,7 @@ function GiftCardpage() {
             <div className="col-lg-6">
               <div className="gift-card">
                 <div className="gift-card-img hover-img">
-                  <img src="/assets/img/inner-page/gift-card-img4.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/gift-card-img4.png" alt="" />
                   <Link legacyBehavior href="#"><a  className="add-card-btn">*Add To Cart*</a></Link>
                   <div className="favorite">
                   <Link legacyBehavior href="/shop/whistlist">
@@ -105,7 +105,7 @@ function GiftCardpage() {
             <div className="col-lg-6">
               <div className="gift-card">
                 <div className="gift-card-img hover-img">
-                  <img src="/assets/img/inner-page/gift-card-img5.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/gift-card-img5.png" alt="" />
                   <Link legacyBehavior href="#"><a  className="add-card-btn">*Add To Cart*</a></Link>
                   <div className="favorite">
                   <Link legacyBehavior href="/shop/whistlist">
@@ -130,7 +130,7 @@ function GiftCardpage() {
             <div className="col-lg-4 col-md-6">
               <div className="gift-card">
                 <div className="gift-card-img hover-img">
-                  <img src="/assets/img/inner-page/gift-card-img6.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/gift-card-img6.png" alt="" />
                   <Link legacyBehavior href="#"><a  className="add-card-btn">*Add To Cart*</a></Link>
                   <div className="favorite">
                   <Link legacyBehavior href="/shop/whistlist">
@@ -153,7 +153,7 @@ function GiftCardpage() {
             <div className="col-lg-4 col-md-6">
               <div className="gift-card">
                 <div className="gift-card-img hover-img">
-                  <img src="/assets/img/inner-page/gift-card-img7.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/gift-card-img7.png" alt="" />
                   <Link legacyBehavior href="#"><a  className="add-card-btn">*Add To Cart*</a></Link>
                   <div className="favorite">
                   <Link legacyBehavior href="/shop/whistlist">
@@ -176,7 +176,7 @@ function GiftCardpage() {
             <div className="col-lg-4 col-md-6">
               <div className="gift-card">
                 <div className="gift-card-img hover-img">
-                  <img src="/assets/img/inner-page/gift-card-img8.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/gift-card-img8.png" alt="" />
                   <Link legacyBehavior href="#"><a  className="add-card-btn">*Add To Cart*</a></Link>
                   <div className="favorite">
                   <Link legacyBehavior href="/shop/whistlist">

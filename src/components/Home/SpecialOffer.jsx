@@ -120,8 +120,8 @@ const SpecialOffer = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/sp-product-img-01.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/sp-product-img-05.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/sp-product-img-01.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/sp-product-img-05.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -156,7 +156,7 @@ const SpecialOffer = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/sp-product-img-02.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/sp-product-img-02.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -191,7 +191,7 @@ const SpecialOffer = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/sp-product-img-03.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/sp-product-img-03.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -226,7 +226,7 @@ const SpecialOffer = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/sp-product-img-04.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/sp-product-img-04.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -262,8 +262,8 @@ const SpecialOffer = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/sp-product-img-05.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/sp-product-img-01.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/sp-product-img-05.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/sp-product-img-01.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -298,7 +298,7 @@ const SpecialOffer = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                            <img src="/assets/img/home1/sp-product-img-06.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/sp-product-img-06.png" alt="" />
                             <div className="batch">
                               <span>-15%</span>
                             </div>
@@ -334,7 +334,7 @@ const SpecialOffer = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/sp-product-img-01.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/sp-product-img-01.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -369,7 +369,7 @@ const SpecialOffer = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/sp-product-img-02.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/sp-product-img-02.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -404,7 +404,7 @@ const SpecialOffer = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/sp-product-img-03.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/sp-product-img-03.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -439,7 +439,7 @@ const SpecialOffer = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/sp-product-img-04.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/sp-product-img-04.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -475,7 +475,7 @@ const SpecialOffer = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/sp-product-img-05.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/sp-product-img-05.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -510,7 +510,7 @@ const SpecialOffer = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/sp-product-img-06.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/sp-product-img-06.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>

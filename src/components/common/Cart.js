@@ -59,7 +59,7 @@ const Cart = () => {
             <li className="single-item">
               <div className="item-area">
                 <div className="item-img">
-                  <img src="/assets/img/home1/cart-img-1.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home1/cart-img-1.png" alt="" />
                 </div>
                 <div className="content-and-quantity">
                   <div className="content">
@@ -101,7 +101,7 @@ const Cart = () => {
             <li className="single-item">
               <div className="item-area">
                 <div className="item-img">
-                  <img src="/assets/img/home1/cart-img-2.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home1/cart-img-2.png" alt="" />
                 </div>
                 <div className="content-and-quantity">
                   <div className="content">

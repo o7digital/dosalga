@@ -55,7 +55,7 @@ const BlogGridLefSidebarPage = () => {
                 <h5 className="shop-widget-title">Recent Post</h5>
                 <div className="recent-post-widget mb-20">
                   <div className="recent-post-img">
-                    <Link legacyBehavior href="/blog-details"><a><img src="/assets/img/inner-page/recent-post-img1.png" alt="" /></a></Link>
+                    <Link legacyBehavior href="/blog-details"><a><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/recent-post-img1.png" alt="" /></a></Link>
                   </div>
                   <div className="recent-post-content">
                     <Link legacyBehavior href="/blog-grid"><a>20 July, 2023</a></Link>
@@ -64,7 +64,7 @@ const BlogGridLefSidebarPage = () => {
                 </div>
                 <div className="recent-post-widget mb-20">
                   <div className="recent-post-img">
-                    <Link legacyBehavior href="/blog-details"><a><img src="/assets/img/inner-page/recent-post-img2.png" alt="" /></a></Link>
+                    <Link legacyBehavior href="/blog-details"><a><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/recent-post-img2.png" alt="" /></a></Link>
                   </div>
                   <div className="recent-post-content">
                     <Link legacyBehavior href="/blog-grid"><a>12 July, 2023</a></Link>
@@ -73,7 +73,7 @@ const BlogGridLefSidebarPage = () => {
                 </div>
                 <div className="recent-post-widget mb-20">
                   <div className="recent-post-img">
-                    <Link legacyBehavior href="/blog-details"><a><img src="/assets/img/inner-page/recent-post-img3.png" alt="" /></a></Link>
+                    <Link legacyBehavior href="/blog-details"><a><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/recent-post-img3.png" alt="" /></a></Link>
                   </div>
                   <div className="recent-post-content">
                     <Link legacyBehavior href="/blog-grid"><a>04 July, 2023</a></Link>

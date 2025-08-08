@@ -19,7 +19,7 @@ const AboutPage = () => {
             <div className="col-12">
               <div className="about-us-thumb hover-img mb-60">
                 <img
-                  src="/assets/img/inner-page/about-us-banner-img.png"
+                  src="https://beautico-nextjs.vercel.app/assets/img/inner-page/about-us-banner-img.png"
                   alt=""
                 />
               </div>
@@ -64,7 +64,7 @@ const AboutPage = () => {
           <div className="row">
             <div className="col-12">
               <div className="about-video-thumb">
-                <img src="/assets/img/inner-page/about-video-bg.png" alt="" />
+                <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/about-video-bg.png" alt="" />
                 <a
                   data-fancybox="popup-video"
                   onClick={() => setOpen(true)}

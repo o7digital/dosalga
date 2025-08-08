@@ -34,7 +34,7 @@ const Banner2 = () => {
           <div className="col-xxl-3 col-xl-4">
             <div className="banner-2-left">
               <div className="banner-2-left-img">
-                <img src="/assets/img/home2/banner-2-left-img.png" alt="" />
+                <img src="https://beautico-nextjs.vercel.app/assets/img/home2/banner-2-left-img.png" alt="" />
               </div>
               <div className="banner-2-left-content">
                 <h2>

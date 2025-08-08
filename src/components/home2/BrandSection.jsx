@@ -17,7 +17,7 @@ const BrandSection = () => {
                 <div className="brand-img pb-35">
                   <Link legacyBehavior href="/shop">
                     <a>
-                    <img src="/assets/img/home2/brand-img1.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/home2/brand-img1.png" alt="" />
                     </a>
                   </Link>
                 </div>
@@ -26,7 +26,7 @@ const BrandSection = () => {
                 <div className="brand-img pb-35">
                   <Link legacyBehavior href="/shop">
                     <a>
-                    <img src="/assets/img/home2/brand-img2.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/home2/brand-img2.png" alt="" />
                     </a>
                   </Link>
                 </div>
@@ -35,7 +35,7 @@ const BrandSection = () => {
                 <div className="brand-img pb-35">
                   <Link legacyBehavior href="/shop">
                     <a>
-                    <img src="/assets/img/home2/brand-img3.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/home2/brand-img3.png" alt="" />
                     </a>
                   </Link>
                 </div>
@@ -44,7 +44,7 @@ const BrandSection = () => {
                 <div className="brand-img pb-35">
                   <Link legacyBehavior href="/shop">
                     <a>
-                    <img src="/assets/img/home2/brand-img4.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/home2/brand-img4.png" alt="" />
                     </a>
                   </Link>
                 </div>
@@ -53,7 +53,7 @@ const BrandSection = () => {
                 <div className="brand-img pb-35">
                   <Link legacyBehavior href="/shop">
                     <a>
-                    <img src="/assets/img/home2/brand-img5.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/home2/brand-img5.png" alt="" />
                     </a>
                   </Link>
                 </div>
@@ -62,7 +62,7 @@ const BrandSection = () => {
                 <div className="brand-img pt-35">
                   <Link legacyBehavior href="/shop">
                     <a>
-                    <img src="/assets/img/home2/brand-img6.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/home2/brand-img6.png" alt="" />
                     </a>
                   </Link>
                 </div>
@@ -71,7 +71,7 @@ const BrandSection = () => {
                 <div className="brand-img pt-35">
                   <Link legacyBehavior href="/shop">
                     <a>
-                    <img src="/assets/img/home2/brand-img7.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/home2/brand-img7.png" alt="" />
                     </a>
                   </Link>
                 </div>
@@ -80,7 +80,7 @@ const BrandSection = () => {
                 <div className="brand-img pt-35">
                   <Link legacyBehavior href="/shop">
                     <a>
-                    <img src="/assets/img/home2/brand-img8.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/home2/brand-img8.png" alt="" />
                     </a>
                   </Link>
                 </div>
@@ -89,7 +89,7 @@ const BrandSection = () => {
                 <div className="brand-img pt-35">
                   <Link legacyBehavior href="/shop">
                     <a>
-                    <img src="/assets/img/home2/brand-img9.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/home2/brand-img9.png" alt="" />
                     </a>
                   </Link>
                 </div>
@@ -98,7 +98,7 @@ const BrandSection = () => {
                 <div className="brand-img pt-35">
                   <Link legacyBehavior href="/shop">
                     <a>
-                    <img src="/assets/img/home2/brand-img10.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/home2/brand-img10.png" alt="" />
                     </a>
                   </Link>
                 </div>

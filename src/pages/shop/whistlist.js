@@ -27,7 +27,7 @@ const Whistlist = () => {
                     </td>
                     <td data-label="Product" className="table-product">
                       <div className="product-img">
-                        <img src="/assets/img/inner-page/whistlist-img1.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/whistlist-img1.png" alt="" />
                       </div>
                       <div className="product-content">
                         <h6><Link legacyBehavior href="/shop/product-default"><a>Eau De Blue Perfume</a></Link></h6>
@@ -54,7 +54,7 @@ const Whistlist = () => {
                     </td>
                     <td data-label="Product" className="table-product">
                       <div className="product-img">
-                        <img src="/assets/img/inner-page/whistlist-img2.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/whistlist-img2.png" alt="" />
                       </div>
                       <div className="product-content">
                         <h6><Link legacyBehavior href="/shop/product-default"><a>Smooth Makeup Box</a></Link></h6>
@@ -81,7 +81,7 @@ const Whistlist = () => {
                     </td>
                     <td data-label="Product" className="table-product">
                       <div className="product-img">
-                        <img src="/assets/img/inner-page/whistlist-img3.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/whistlist-img3.png" alt="" />
                       </div>
                       <div className="product-content">
                         <h6><Link legacyBehavior href="/shop/product-default"><a>Modern Red Lipstick</a></Link></h6>
@@ -108,7 +108,7 @@ const Whistlist = () => {
                     </td>
                     <td data-label="Product" className="table-product">
                       <div className="product-img">
-                        <img src="/assets/img/inner-page/whistlist-img4.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/whistlist-img4.png" alt="" />
                       </div>
                       <div className="product-content">
                         <h6><Link legacyBehavior href="/shop/product-default"><a>New Botanical Shampoo</a></Link></h6>

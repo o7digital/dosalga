@@ -18,7 +18,7 @@ const Topbar = () => {
             <div className="company-logo">
               <Link legacyBehavior href="/">
                 <a>
-                  <img src="/assets/img/logo.svg" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/logo.svg" alt="" />
                 </a>
               </Link>
             </div>

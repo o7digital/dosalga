@@ -17,7 +17,7 @@ function PromoModal() {
         <div className="popup-wrapper">
           <div className="modal-close-btn" onClick={handleClose} />
           <div className="popup-img">
-            <img src="/assets/img/home1/on-load-popup-img.png" alt="" />
+            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/on-load-popup-img.png" alt="" />
           </div>
           <div className="popup-content">
             <h2>Get 15% off your first order</h2>

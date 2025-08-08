@@ -30,8 +30,8 @@ const ExclusiveProduct = () => {
     },[])
   return (
     <div className="exclusive-product-section mb-110">
-      <img src="/assets/img/home1/icon/vector-3.svg" alt="" className="vector3" />
-      <img src="/assets/img/home1/icon/vector-4.svg" alt="" className="vector4" />
+      <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/vector-3.svg" alt="" className="vector3" />
+      <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/vector-4.svg" alt="" className="vector4" />
       <div className="container">
         <div className="section-title style-2 text-center">
           <h3>Exclusive Product</h3>
@@ -92,18 +92,18 @@ const ExclusiveProduct = () => {
                         <div className="product-right-img hover-img">
                           <Link legacyBehavior href="/shop/product-default">
                             <a>
-                            <img src="/assets/img/home1/ex-product-img-01.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/ex-product-img-01.png" alt="" />
                             </a>
                           </Link>
                         </div>
                         <div className="product-right-content">
                           <Link legacyBehavior href="/shop">
                             <a>
-                            <img src="/assets/img/home1/loreal-logo.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/loreal-logo.png" alt="" />
                             </a>
                           </Link>
                           <div className="star-bg">
-                            <img src="/assets/img/home1/star.svg" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/star.svg" alt="" />
                             <span>NEW</span>
                           </div>
                         </div>
@@ -163,18 +163,18 @@ const ExclusiveProduct = () => {
                         <div className="product-right-img hover-img">
                           <Link legacyBehavior href="/shop/product-default">
                             <a>
-                            <img src="/assets/img/home1/ex-product-img-02.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/ex-product-img-02.png" alt="" />
                             </a>
                           </Link>
                         </div>
                         <div className="product-right-content">
                           <Link legacyBehavior href="/shop">
                             <a>
-                            <img src="/assets/img/home1/loreal-logo.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/loreal-logo.png" alt="" />
                             </a>
                           </Link>
                           <div className="star-bg">
-                            <img src="/assets/img/home1/star.svg" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/star.svg" alt="" />
                             <span>NEW</span>
                           </div>
                         </div>
@@ -234,18 +234,18 @@ const ExclusiveProduct = () => {
                         <div className="product-right-img hover-img">
                           <Link legacyBehavior href="/shop/product-default">
                             <a>
-                            <img src="/assets/img/home1/ex-product-img-03.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/ex-product-img-03.png" alt="" />
                             </a>
                           </Link>
                         </div>
                         <div className="product-right-content">
                           <Link legacyBehavior href="/shop">
                             <a>
-                            <img src="/assets/img/home1/loreal-logo.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/loreal-logo.png" alt="" />
                             </a>
                           </Link>
                           <div className="star-bg">
-                            <img src="/assets/img/home1/star.svg" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/star.svg" alt="" />
                             <span>NEW</span>
                           </div>
                         </div>

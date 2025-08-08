@@ -17,40 +17,40 @@ const ProductThumbLeft = () => {
               <div className="shop-details-img">
                 <div className="nav nav-pills order-xl-1 order-2" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                   <button className="nav-link active" id="v-pills-img1-tab" data-bs-toggle="pill" data-bs-target="#v-pills-img1" type="button" role="tab" aria-controls="v-pills-img1" aria-selected="true">
-                    <img src="/assets/img/inner-page/shop-details-nav-img5.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details-nav-img5.png" alt="" />
                   </button>
                   <button className="nav-link" id="v-pills-img2-tab" data-bs-toggle="pill" data-bs-target="#v-pills-img2" type="button" role="tab" aria-controls="v-pills-img2" aria-selected="false">
-                    <img src="/assets/img/inner-page/shop-details-nav-img6.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details-nav-img6.png" alt="" />
                   </button>
                   <button className="nav-link" id="v-pills-img3-tab" data-bs-toggle="pill" data-bs-target="#v-pills-img3" type="button" role="tab" aria-controls="v-pills-img3" aria-selected="false">
-                    <img src="/assets/img/inner-page/shop-details-nav-img7.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details-nav-img7.png" alt="" />
                   </button>
                   <button className="nav-link" id="v-pills-img4-tab" data-bs-toggle="pill" data-bs-target="#v-pills-img4" type="button" role="tab" aria-controls="v-pills-img4" aria-selected="false">
-                    <img src="/assets/img/inner-page/shop-details-nav-img8.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details-nav-img8.png" alt="" />
                   </button>
                 </div>
                 <div className="tab-content order-xl-2 order-1" id="v-pills-tabContent">
                   <div className="tab-pane fade show active" id="v-pills-img1" role="tabpanel">
                     <div className="shop-details-tab-img">
-                      <img src="/assets/img/inner-page/shop-details2-tab-img1.png" alt="" />
+                      <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details2-tab-img1.png" alt="" />
                       <span />
                     </div>
                   </div>
                   <div className="tab-pane fade" id="v-pills-img2" role="tabpanel">
                     <div className="shop-details-tab-img">
-                      <img src="/assets/img/inner-page/shop-details2-tab-img2.png" alt="" />
+                      <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details2-tab-img2.png" alt="" />
                       <span />
                     </div>
                   </div>
                   <div className="tab-pane fade" id="v-pills-img3" role="tabpanel" aria-labelledby="v-pills-img3-tab">
                     <div className="shop-details-tab-img">
-                      <img src="/assets/img/inner-page/shop-details2-tab-img3.png" alt="" />
+                      <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details2-tab-img3.png" alt="" />
                       <span />
                     </div>
                   </div>
                   <div className="tab-pane fade" id="v-pills-img4" role="tabpanel" aria-labelledby="v-pills-img4-tab">
                     <div className="shop-details-tab-img">
-                      <img src="/assets/img/inner-page/shop-details2-tab-img4.png" alt="" />
+                      <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details2-tab-img4.png" alt="" />
                       <span />
                     </div>
                   </div>
@@ -114,13 +114,13 @@ const ProductThumbLeft = () => {
                 <div className="payment-method">
                   <h6>Guaranted Safe Checkout</h6>
                   <ul className="payment-card-list">
-                    <li><img src="/assets/img/inner-page/payment-img1.svg" alt="" /></li>
-                    <li><img src="/assets/img/inner-page/payment-img2.svg" alt="" /></li>
-                    <li><img src="/assets/img/inner-page/payment-img3.svg" alt="" /></li>
-                    <li><img src="/assets/img/inner-page/payment-img4.svg" alt="" /></li>
-                    <li><img src="/assets/img/inner-page/payment-img5.svg" alt="" /></li>
-                    <li><img src="/assets/img/inner-page/payment-img6.svg" alt="" /></li>
-                    <li><img src="/assets/img/inner-page/payment-img7.svg" alt="" /></li>
+                    <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img1.svg" alt="" /></li>
+                    <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img2.svg" alt="" /></li>
+                    <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img3.svg" alt="" /></li>
+                    <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img4.svg" alt="" /></li>
+                    <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img5.svg" alt="" /></li>
+                    <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img6.svg" alt="" /></li>
+                    <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img7.svg" alt="" /></li>
                   </ul>
                 </div>
                 <ul className="product-shipping-delivers">
@@ -240,7 +240,7 @@ const ProductThumbLeft = () => {
                       </div>
                       <div className="col-lg-3 d-flex justify-content-lg-end justify-content-center">
                         <div className="details2-description-img">
-                          <img src="/assets/img/inner-page/details2-description-img.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/details2-description-img.png" alt="" />
                         </div>
                       </div>
                     </div>
@@ -257,7 +257,7 @@ const ProductThumbLeft = () => {
                             <ul className="author-comment mb-100">
                               <li>
                                 <div className="author-img">
-                                  <img src="/assets/img/inner-page/comment-author1.png " alt="" />
+                                  <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/comment-author1.png " alt="" />
                                 </div>
                                 <div className="comment-content">
                                   <div className="author-post">
@@ -276,7 +276,7 @@ const ProductThumbLeft = () => {
                               </li>
                               <li>
                                 <div className="author-img">
-                                  <img src="/assets/img/inner-page/comment-author2.png " alt="" />
+                                  <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/comment-author2.png " alt="" />
                                 </div>
                                 <div className="comment-content">
                                   <div className="author-post">

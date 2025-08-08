@@ -29,7 +29,7 @@ const Cart = () => {
                       </td>
                       <td data-label="Product" className="table-product">
                         <div className="product-img">
-                          <img src="/assets/img/inner-page/whistlist-img1.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/whistlist-img1.png" alt="" />
                         </div>
                         <div className="product-content">
                           <h6><a href="#">Eau De Blue Perfume</a></h6>
@@ -56,7 +56,7 @@ const Cart = () => {
                       </td>
                       <td data-label="Product" className="table-product">
                         <div className="product-img">
-                          <img src="/assets/img/inner-page/whistlist-img2.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/whistlist-img2.png" alt="" />
                         </div>
                         <div className="product-content">
                           <h6><a href="#">Smooth Makeup Box</a></h6>
@@ -83,7 +83,7 @@ const Cart = () => {
                       </td>
                       <td data-label="Product" className="table-product">
                         <div className="product-img">
-                          <img src="/assets/img/inner-page/whistlist-img3.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/whistlist-img3.png" alt="" />
                         </div>
                         <div className="product-content">
                           <h6><a href="#">Modern Red Lipstick</a></h6>

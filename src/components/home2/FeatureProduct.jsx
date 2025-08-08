@@ -29,7 +29,7 @@ const FeatureProduct = () => {
               <div className="product-card-img">
                 <Link legacyBehavior href="/shop">
                   <a>
-                  <img src="/assets/img/home2/product-img-1.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home2/product-img-1.png" alt="" />
                   </a>
                 </Link>
                 <div className="cart-btn-area">
@@ -84,7 +84,7 @@ const FeatureProduct = () => {
               <div className="product-card-img">
                 <Link legacyBehavior href="/shop">
                   <a>
-                  <img src="/assets/img/home2/product-img-2.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home2/product-img-2.png" alt="" />
                   </a>
                 </Link>
                 <div className="cart-btn-area">
@@ -143,8 +143,8 @@ const FeatureProduct = () => {
               <div className="product-card-img double-img">
                 <Link legacyBehavior href="/shop">
                   <a>
-                  <img src="/assets/img/home2/product-img-3.png" alt="" className="img1" />
-                  <img src="/assets/img/home2/product-img-9.png" alt="" className="img2" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home2/product-img-3.png" alt="" className="img1" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home2/product-img-9.png" alt="" className="img2" />
                   </a>
                 </Link>
                 <div className="cart-btn-area">
@@ -203,7 +203,7 @@ const FeatureProduct = () => {
               <div className="product-card-img">
                 <Link legacyBehavior href="/shop">
                   <a>
-                  <img src="/assets/img/home2/product-img-4.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home2/product-img-4.png" alt="" />
                   </a>
                 </Link>
                 <div className="out-of-stock">
@@ -265,7 +265,7 @@ const FeatureProduct = () => {
               <div className="product-card-img">
                 <Link legacyBehavior href="/shop">
                   <a>
-                  <img src="/assets/img/home2/product-img-5.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home2/product-img-5.png" alt="" />
                   </a>
                 </Link>
                 <div className="cart-btn-area">
@@ -324,8 +324,8 @@ const FeatureProduct = () => {
               <div className="product-card-img double-img">
                 <Link legacyBehavior href="/shop">
                   <a>
-                  <img src="/assets/img/home2/product-img-6.png" alt="" className="img1" />
-                  <img src="/assets/img/home2/product-img-12.png" alt="" className="img2" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home2/product-img-6.png" alt="" className="img1" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home2/product-img-12.png" alt="" className="img2" />
                   </a>
                 </Link>
                 <div className="cart-btn-area">
@@ -384,7 +384,7 @@ const FeatureProduct = () => {
               <div className="product-card-img">
                 <Link legacyBehavior href="/shop">
                   <a>
-                  <img src="/assets/img/home2/product-img-7.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home2/product-img-7.png" alt="" />
                   </a>
                 </Link>
                 <div className="cart-btn-area">
@@ -443,8 +443,8 @@ const FeatureProduct = () => {
               <div className="product-card-img double-img">
                 <Link legacyBehavior href="/shop">
                   <a>
-                  <img src="/assets/img/home2/product-img-8.png" alt="" className="img1" />
-                  <img src="/assets/img/home2/product-img-11.png" alt="" className="img2" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home2/product-img-8.png" alt="" className="img1" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home2/product-img-11.png" alt="" className="img2" />
                   </a>
                 </Link>
                 <div className="cart-btn-area">

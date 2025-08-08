@@ -102,8 +102,8 @@ const CategoryOnTop = () => {
   return (
     <>
      <div className="category-on-top-section">
-      <img src="/assets/img/inner-page/category-top-vector1.png" alt="" className="ct-vector1" />
-      <img src="/assets/img/inner-page/category-top-vector2.png" alt="" className="ct-vector2" />
+      <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/category-top-vector1.png" alt="" className="ct-vector1" />
+      <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/category-top-vector2.png" alt="" className="ct-vector2" />
       <div className="container position-relative">
         <div className="nav nav-pills" id="pills-tab" role="tablist">
           <Swiper {...slideSettings} className="swiper category-top-slider">
@@ -111,7 +111,7 @@ const CategoryOnTop = () => {
               <SwiperSlide className="swiper-slide">
                 <div className="nav-item" role="presentation">
                   <a href="#category-top-img1" className="nav-link active" id="category-top-img1-tab" data-bs-toggle="pill" data-bs-target="#category-top-img1" role="tab" aria-controls="category-top-img1" aria-selected="true">
-                    <img src="/assets/img/inner-page/category-top-nav-img1.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/category-top-nav-img1.png" alt="" />
                   </a>
                   <h6>Bath &amp; Body</h6>
                 </div>
@@ -119,7 +119,7 @@ const CategoryOnTop = () => {
               <SwiperSlide className="swiper-slide">
                 <div className="nav-item" role="presentation">
                   <a href="#" className="nav-link" id="category-top-img2-tab" data-bs-toggle="pill" data-bs-target="#category-top-img2" role="tab" aria-controls="category-top-img2" aria-selected="true">
-                    <img src="/assets/img/inner-page/category-top-nav-img2.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/category-top-nav-img2.png" alt="" />
                   </a>
                   <h6>Makeup</h6>
                 </div>
@@ -127,7 +127,7 @@ const CategoryOnTop = () => {
               <SwiperSlide className="swiper-slide">
                 <div className="nav-item" role="presentation">
                   <a href="#" className="nav-link" id="category-top-img3-tab" data-bs-toggle="pill" data-bs-target="#category-top-img3" role="tab" aria-controls="category-top-img3" aria-selected="true">
-                    <img src="/assets/img/inner-page/category-top-nav-img3.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/category-top-nav-img3.png" alt="" />
                   </a>
                   <h6>Skin Care</h6>
                 </div>
@@ -135,7 +135,7 @@ const CategoryOnTop = () => {
               <SwiperSlide className="swiper-slide">
                 <div className="nav-item" role="presentation">
                   <a href="#" className="nav-link" id="category-top-img4-tab" data-bs-toggle="pill" data-bs-target="#category-top-img4" role="tab" aria-controls="category-top-img4" aria-selected="true">
-                    <img src="/assets/img/inner-page/category-top-nav-img4.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/category-top-nav-img4.png" alt="" />
                   </a>
                   <h6>Fragrance </h6>
                 </div>
@@ -143,7 +143,7 @@ const CategoryOnTop = () => {
               <SwiperSlide className="swiper-slide">
                 <div className="nav-item" role="presentation">
                   <a href="#" className="nav-link" id="category-top-img5-tab" data-bs-toggle="pill" data-bs-target="#category-top-img5" role="tab" aria-controls="category-top-img5" aria-selected="true">
-                    <img src="/assets/img/inner-page/category-top-nav-img5.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/category-top-nav-img5.png" alt="" />
                   </a>
                   <h6>Hair Care</h6>
                 </div>
@@ -151,7 +151,7 @@ const CategoryOnTop = () => {
               <SwiperSlide className="swiper-slide">
                 <div className="nav-item" role="presentation">
                   <a href="#" className="nav-link" id="category-top-img6-tab" data-bs-toggle="pill" data-bs-target="#category-top-img6" role="tab" aria-controls="category-top-img6" aria-selected="true">
-                    <img src="/assets/img/inner-page/category-top-nav-img6.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/category-top-nav-img6.png" alt="" />
                   </a>
                   <h6>Accessories</h6>
                 </div>
@@ -287,7 +287,7 @@ const CategoryOnTop = () => {
                     <h5 className="shop-widget-title">Top Rated Product</h5>
                     <div className="top-product-widget mb-20">
                       <div className="top-product-img">
-                        <Link legacyBehavior href="/product-default"><a><img src="/assets/img/inner-page/top-product1.png" alt="" /></a></Link>
+                        <Link legacyBehavior href="/product-default"><a><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/top-product1.png" alt="" /></a></Link>
                       </div>
                       <div className="top-product-content">
                         <h6><Link legacyBehavior href="/product-default"><a>Estee Lauder new Body Lotion</a></Link></h6>
@@ -296,7 +296,7 @@ const CategoryOnTop = () => {
                     </div>
                     <div className="top-product-widget mb-20">
                       <div className="top-product-img">
-                        <Link legacyBehavior href="/product-default"><a><img src="/assets/img/inner-page/top-product2.png" alt="" /></a></Link>
+                        <Link legacyBehavior href="/product-default"><a><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/top-product2.png" alt="" /></a></Link>
                       </div>
                       <div className="top-product-content">
                         <h6><Link legacyBehavior href="/product-default"><a>Argan &amp; Olive Nature organ Oil</a></Link></h6>
@@ -305,7 +305,7 @@ const CategoryOnTop = () => {
                     </div>
                     <div className="top-product-widget">
                       <div className="top-product-img">
-                        <Link legacyBehavior href="/product-default"><a><img src="/assets/img/inner-page/top-product3.png" alt="" /></a></Link>
+                        <Link legacyBehavior href="/product-default"><a><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/top-product3.png" alt="" /></a></Link>
                       </div>
                       <div className="top-product-content">
                         <h6><Link legacyBehavior href="/product-default"><a>Char Pull black &amp; gray Face Mask</a></Link></h6>
@@ -328,37 +328,37 @@ const CategoryOnTop = () => {
                       <div className="tab-content" id="view-tabContent">
                         <div className="tab-pane fade show active" id="view-pills-img1" role="tabpanel">
                           <div className="shop-details-tab-img">
-                            <img src="/assets/img/inner-page/shop-details-tab-img1.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details-tab-img1.png" alt="" />
                           </div>
                         </div>
                         <div className="tab-pane fade" id="view-pills-img2" role="tabpanel">
                           <div className="shop-details-tab-img">
-                            <img src="/assets/img/inner-page/shop-details-tab-img2.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details-tab-img2.png" alt="" />
                           </div>
                         </div>
                         <div className="tab-pane fade" id="view-pills-img3" role="tabpanel">
                           <div className="shop-details-tab-img">
-                            <img src="/assets/img/inner-page/shop-details-tab-img3.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details-tab-img3.png" alt="" />
                           </div>
                         </div>
                         <div className="tab-pane fade" id="view-pills-img4" role="tabpanel">
                           <div className="shop-details-tab-img">
-                            <img src="/assets/img/inner-page/shop-details-tab-img4.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details-tab-img4.png" alt="" />
                           </div>
                         </div>
                       </div>
                       <div className="nav nav-pills" id="view-tab" role="tablist" aria-orientation="vertical">
                         <button className="nav-link active" id="view-pills-img1-tab" data-bs-toggle="pill" data-bs-target="#view-pills-img1" type="button" role="tab" aria-controls="view-pills-img1" aria-selected="true">
-                          <img src="/assets/img/inner-page/shop-details-nav-img1.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details-nav-img1.png" alt="" />
                         </button>
                         <button className="nav-link" id="view-pills-img2-tab" data-bs-toggle="pill" data-bs-target="#view-pills-img2" type="button" role="tab" aria-controls="view-pills-img2" aria-selected="false">
-                          <img src="/assets/img/inner-page/shop-details-nav-img2.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details-nav-img2.png" alt="" />
                         </button>
                         <button className="nav-link" id="view-pills-img3-tab" data-bs-toggle="pill" data-bs-target="#view-pills-img3" type="button" role="tab" aria-controls="view-pills-img3" aria-selected="false">
-                          <img src="/assets/img/inner-page/shop-details-nav-img3.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details-nav-img3.png" alt="" />
                         </button>
                         <button className="nav-link" id="view-pills-img4-tab" data-bs-toggle="pill" data-bs-target="#view-pills-img4" type="button" role="tab" aria-controls="view-pills-img4" aria-selected="false">
-                          <img src="/assets/img/inner-page/shop-details-nav-img4.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details-nav-img4.png" alt="" />
                         </button>
                       </div>
                     </div>
@@ -418,13 +418,13 @@ const CategoryOnTop = () => {
                       <div className="payment-method">
                         <h6>Guaranted Safe Checkout</h6>
                         <ul className="payment-card-list">
-                          <li><img src="/assets/img/inner-page/payment-img1.svg" alt="" /></li>
-                          <li><img src="/assets/img/inner-page/payment-img2.svg" alt="" /></li>
-                          <li><img src="/assets/img/inner-page/payment-img3.svg" alt="" /></li>
-                          <li><img src="/assets/img/inner-page/payment-img4.svg" alt="" /></li>
-                          <li><img src="/assets/img/inner-page/payment-img5.svg" alt="" /></li>
-                          <li><img src="/assets/img/inner-page/payment-img6.svg" alt="" /></li>
-                          <li><img src="/assets/img/inner-page/payment-img7.svg" alt="" /></li>
+                          <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img1.svg" alt="" /></li>
+                          <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img2.svg" alt="" /></li>
+                          <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img3.svg" alt="" /></li>
+                          <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img4.svg" alt="" /></li>
+                          <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img5.svg" alt="" /></li>
+                          <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img6.svg" alt="" /></li>
+                          <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img7.svg" alt="" /></li>
                         </ul>
                       </div>
                       <ul className="product-shipping-delivers">
@@ -556,8 +556,8 @@ const CategoryOnTop = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-4.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-7.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-4.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" className="img2" />
                           <div className="countdown-timer">
                             <ul data-countdown={endTime}>
                               <li className="times" data-days={days}>{days}D</li>
@@ -632,7 +632,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                            <img src="/assets/img/home1/product-img-5.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-5.png" alt="" />
                             <div className="batch">
                               <span className="new">New</span>
                             </div>
@@ -693,7 +693,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                            <img src="/assets/img/home1/product-img-6.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-6.png" alt="" />
                             <div className="batch">
                               <span>-14%</span>
                             </div>
@@ -747,7 +747,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-15.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-15.png" alt="" />
                           <div className="batch">
                             <span>-10%</span>
                           </div>
@@ -805,8 +805,8 @@ const CategoryOnTop = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-16.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-3.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-16.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-3.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-18%</span>
                           </div>
@@ -864,7 +864,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                       <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-7.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" />
                           <div className="batch">
                             <span className="new">New</span>
                           </div>
@@ -922,7 +922,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-21.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-21.png" alt="" />
                           <div className="batch">
                             <span className="new">New</span>
                           </div>
@@ -980,7 +980,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-14.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-14.png" alt="" />
                           <div className="batch">
                             <span>-18%</span>
                           </div>
@@ -1038,7 +1038,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-9.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-9.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1096,7 +1096,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-11.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-11.png" alt="" />
                           <div className="batch">
                             <span>-10%</span>
                           </div>
@@ -1154,7 +1154,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-18.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-18.png" alt="" />
                           <div className="batch">
                             <span className="new">New</span>
                           </div>
@@ -1212,7 +1212,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                       <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-20.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-20.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1373,8 +1373,8 @@ const CategoryOnTop = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-4.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-7.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-4.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" className="img2" />
                           <div className="countdown-timer">
                           <ul data-countdown={endTime}>
                               <li className="times" data-days={days}>{days}D</li>
@@ -1449,7 +1449,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                            <img src="/assets/img/home1/product-img-5.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-5.png" alt="" />
                             <div className="batch">
                               <span className="new">New</span>
                             </div>
@@ -1510,7 +1510,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                            <img src="/assets/img/home1/product-img-6.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-6.png" alt="" />
                             <div className="batch">
                               <span>-14%</span>
                             </div>
@@ -1564,7 +1564,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-15.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-15.png" alt="" />
                           <div className="batch">
                             <span>-10%</span>
                           </div>
@@ -1622,8 +1622,8 @@ const CategoryOnTop = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-16.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-3.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-16.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-3.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-18%</span>
                           </div>
@@ -1681,7 +1681,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-7.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" />
                           <div className="batch">
                             <span className="new">New</span>
                           </div>
@@ -1739,7 +1739,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-21.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-21.png" alt="" />
                           <div className="batch">
                             <span className="new">New</span>
                           </div>
@@ -1797,7 +1797,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-14.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-14.png" alt="" />
                           <div className="batch">
                             <span>-18%</span>
                           </div>
@@ -1855,7 +1855,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-9.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-9.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1913,7 +1913,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-11.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-11.png" alt="" />
                           <div className="batch">
                             <span>-10%</span>
                           </div>
@@ -1971,7 +1971,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-18.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-18.png" alt="" />
                           <div className="batch">
                             <span className="new">New</span>
                           </div>
@@ -2029,7 +2029,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-20.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-20.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -2189,8 +2189,8 @@ const CategoryOnTop = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-4.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-7.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-4.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" className="img2" />
                           <div className="countdown-timer">
                           <ul data-countdown={endTime}>
                               <li className="times" data-days={days}>{days}D</li>
@@ -2265,7 +2265,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                            <img src="/assets/img/home1/product-img-5.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-5.png" alt="" />
                             <div className="batch">
                               <span className="new">New</span>
                             </div>
@@ -2326,7 +2326,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                            <img src="/assets/img/home1/product-img-6.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-6.png" alt="" />
                             <div className="batch">
                               <span>-14%</span>
                             </div>
@@ -2380,7 +2380,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-15.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-15.png" alt="" />
                           <div className="batch">
                             <span>-10%</span>
                           </div>
@@ -2438,8 +2438,8 @@ const CategoryOnTop = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-16.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-3.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-16.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-3.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-18%</span>
                           </div>
@@ -2497,7 +2497,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                       <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-7.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" />
                           <div className="batch">
                             <span className="new">New</span>
                           </div>
@@ -2555,7 +2555,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-21.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-21.png" alt="" />
                           <div className="batch">
                             <span className="new">New</span>
                           </div>
@@ -2613,7 +2613,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-14.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-14.png" alt="" />
                           <div className="batch">
                             <span>-18%</span>
                           </div>
@@ -2671,7 +2671,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-9.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-9.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -2729,7 +2729,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-11.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-11.png" alt="" />
                           <div className="batch">
                             <span>-10%</span>
                           </div>
@@ -2787,7 +2787,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-18.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-18.png" alt="" />
                           <div className="batch">
                             <span className="new">New</span>
                           </div>
@@ -2845,7 +2845,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                       <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-20.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-20.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -3005,8 +3005,8 @@ const CategoryOnTop = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-4.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-7.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-4.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" className="img2" />
                           <div className="countdown-timer">
                           <ul data-countdown={endTime}>
                               <li className="times" data-days={days}>{days}D</li>
@@ -3081,7 +3081,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                            <img src="/assets/img/home1/product-img-5.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-5.png" alt="" />
                             <div className="batch">
                               <span className="new">New</span>
                             </div>
@@ -3142,7 +3142,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                            <img src="/assets/img/home1/product-img-6.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-6.png" alt="" />
                             <div className="batch">
                               <span>-14%</span>
                             </div>
@@ -3196,7 +3196,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-15.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-15.png" alt="" />
                           <div className="batch">
                             <span>-10%</span>
                           </div>
@@ -3254,8 +3254,8 @@ const CategoryOnTop = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-16.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-3.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-16.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-3.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-18%</span>
                           </div>
@@ -3313,7 +3313,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                       <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-7.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" />
                           <div className="batch">
                             <span className="new">New</span>
                           </div>
@@ -3371,7 +3371,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-21.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-21.png" alt="" />
                           <div className="batch">
                             <span className="new">New</span>
                           </div>
@@ -3429,7 +3429,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-14.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-14.png" alt="" />
                           <div className="batch">
                             <span>-18%</span>
                           </div>
@@ -3487,7 +3487,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-9.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-9.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -3545,7 +3545,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-11.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-11.png" alt="" />
                           <div className="batch">
                             <span>-10%</span>
                           </div>
@@ -3603,7 +3603,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-18.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-18.png" alt="" />
                           <div className="batch">
                             <span className="new">New</span>
                           </div>
@@ -3661,7 +3661,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                       <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-20.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-20.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -3821,8 +3821,8 @@ const CategoryOnTop = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-4.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-7.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-4.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" className="img2" />
                           <div className="countdown-timer">
                           <ul data-countdown={endTime}>
                               <li className="times" data-days={days}>{days}D</li>
@@ -3897,7 +3897,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                            <img src="/assets/img/home1/product-img-5.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-5.png" alt="" />
                             <div className="batch">
                               <span className="new">New</span>
                             </div>
@@ -3958,7 +3958,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                            <img src="/assets/img/home1/product-img-6.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-6.png" alt="" />
                             <div className="batch">
                               <span>-14%</span>
                             </div>
@@ -4012,7 +4012,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-15.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-15.png" alt="" />
                           <div className="batch">
                             <span>-10%</span>
                           </div>
@@ -4070,8 +4070,8 @@ const CategoryOnTop = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-16.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-3.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-16.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-3.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-18%</span>
                           </div>
@@ -4129,7 +4129,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                       <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-7.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" />
                           <div className="batch">
                             <span className="new">New</span>
                           </div>
@@ -4187,7 +4187,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-21.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-21.png" alt="" />
                           <div className="batch">
                             <span className="new">New</span>
                           </div>
@@ -4245,7 +4245,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-14.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-14.png" alt="" />
                           <div className="batch">
                             <span>-18%</span>
                           </div>
@@ -4303,7 +4303,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-9.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-9.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -4361,7 +4361,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-11.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-11.png" alt="" />
                           <div className="batch">
                             <span>-10%</span>
                           </div>
@@ -4419,7 +4419,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-18.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-18.png" alt="" />
                           <div className="batch">
                             <span className="new">New</span>
                           </div>
@@ -4477,7 +4477,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                       <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-20.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-20.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -4637,8 +4637,8 @@ const CategoryOnTop = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-4.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-7.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-4.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" className="img2" />
                           <div className="countdown-timer">
                           <ul data-countdown={endTime}>
                               <li className="times" data-days={days}>{days}D</li>
@@ -4713,7 +4713,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                            <img src="/assets/img/home1/product-img-5.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-5.png" alt="" />
                             <div className="batch">
                               <span className="new">New</span>
                             </div>
@@ -4774,7 +4774,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                            <img src="/assets/img/home1/product-img-6.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-6.png" alt="" />
                             <div className="batch">
                               <span>-14%</span>
                             </div>
@@ -4828,7 +4828,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-15.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-15.png" alt="" />
                           <div className="batch">
                             <span>-10%</span>
                           </div>
@@ -4886,8 +4886,8 @@ const CategoryOnTop = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-16.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-3.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-16.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-3.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-18%</span>
                           </div>
@@ -4945,7 +4945,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                       <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-7.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" />
                           <div className="batch">
                             <span className="new">New</span>
                           </div>
@@ -5003,7 +5003,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-21.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-21.png" alt="" />
                           <div className="batch">
                             <span className="new">New</span>
                           </div>
@@ -5061,7 +5061,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-14.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-14.png" alt="" />
                           <div className="batch">
                             <span>-18%</span>
                           </div>
@@ -5119,7 +5119,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-9.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-9.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -5177,7 +5177,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-11.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-11.png" alt="" />
                           <div className="batch">
                             <span>-10%</span>
                           </div>
@@ -5235,7 +5235,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-18.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-18.png" alt="" />
                           <div className="batch">
                             <span className="new">New</span>
                           </div>
@@ -5293,7 +5293,7 @@ const CategoryOnTop = () => {
                       <div className="product-card-img">
                       <Link legacyBehavior href="/shop">
                           <a>
-                          <img src="/assets/img/home1/product-img-20.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-20.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>

@@ -10,7 +10,7 @@ const BlogDetailsPage = () => {
             <div className="blog-author-meta">
               <div className="author-area">
                 <div className="author-img">
-                  <img src="/assets/img/inner-page/blog-author-img1.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/blog-author-img1.png" alt="" />
                 </div>
                 <div className="author-content">
                   <p>
@@ -56,7 +56,7 @@ const BlogDetailsPage = () => {
               </div>
             </div>
             <div className="blog-thumb">
-              <img src="/assets/img/inner-page/blog-thumb-img.png" alt="" />
+              <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/blog-thumb-img.png" alt="" />
               <Link legacyBehavior href="/blog-grid"><a>20 July, 2023</a></Link>
             </div>
             <div className="blog-content">
@@ -74,12 +74,12 @@ const BlogDetailsPage = () => {
                 <div className="row g-4">
                   <div className="col-lg-6">
                     <div className="blog-details-img">
-                      <img src="/assets/img/inner-page/blog-details-group-img1.png" alt="" />
+                      <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/blog-details-group-img1.png" alt="" />
                     </div>
                   </div>
                   <div className="col-lg-6">
                     <div className="blog-details-img">
-                      <img src="/assets/img/inner-page/blog-details-group-img2.png" alt="" />
+                      <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/blog-details-group-img2.png" alt="" />
                     </div>
                   </div>
                 </div>
@@ -133,7 +133,7 @@ const BlogDetailsPage = () => {
                 <h5 className="shop-widget-title">Recent Post</h5>
                 <div className="recent-post-widget mb-20">
                   <div className="recent-post-img">
-                    <Link legacyBehavior href="/blog-details"><a><img src="/assets/img/inner-page/recent-post-img1.png" alt="" /></a></Link>
+                    <Link legacyBehavior href="/blog-details"><a><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/recent-post-img1.png" alt="" /></a></Link>
                   </div>
                   <div className="recent-post-content">
                     <Link legacyBehavior href="/blog-grid"><a>20 July, 2023</a></Link>
@@ -142,7 +142,7 @@ const BlogDetailsPage = () => {
                 </div>
                 <div className="recent-post-widget mb-20">
                   <div className="recent-post-img">
-                    <Link legacyBehavior href="/blog-details"><a><img src="/assets/img/inner-page/recent-post-img2.png" alt="" /></a></Link>
+                    <Link legacyBehavior href="/blog-details"><a><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/recent-post-img2.png" alt="" /></a></Link>
                   </div>
                   <div className="recent-post-content">
                     <Link legacyBehavior href="/blog-grid"><a>12 July, 2023</a></Link>
@@ -151,7 +151,7 @@ const BlogDetailsPage = () => {
                 </div>
                 <div className="recent-post-widget mb-20">
                   <div className="recent-post-img">
-                    <Link legacyBehavior href="/blog-details"><a><img src="/assets/img/inner-page/recent-post-img3.png" alt="" /></a></Link>
+                    <Link legacyBehavior href="/blog-details"><a><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/recent-post-img3.png" alt="" /></a></Link>
                   </div>
                   <div className="recent-post-content">
                     <Link legacyBehavior href="/blog-grid"><a>04 July, 2023</a></Link>
@@ -267,7 +267,7 @@ const BlogDetailsPage = () => {
               <ul className="author-comment mb-100">
                 <li>
                   <div className="author-img">
-                    <img src="/assets/img/inner-page/comment-author1.png " alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/comment-author1.png " alt="" />
                   </div>
                   <div className="comment-content">
                     <div className="author-post">
@@ -287,7 +287,7 @@ const BlogDetailsPage = () => {
                 </li>
                 <li>
                   <div className="author-img">
-                    <img src="/assets/img/inner-page/comment-author2.png " alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/comment-author2.png " alt="" />
                   </div>
                   <div className="comment-content">
                     <div className="author-post">

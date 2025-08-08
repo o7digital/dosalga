@@ -15,10 +15,10 @@ const Scroll_1_olumn = () => {
           <div className="row gy-5">
             <div className="col-lg-6">
               <div className="shop-details-img style-3">  
-                <img src="/assets/img/inner-page/product-scroll-img1.png" alt="" />
-                <img src="/assets/img/inner-page/product-scroll-img2.png" alt="" />
-                <img src="/assets/img/inner-page/product-scroll-img3.png" alt="" />
-                <img src="/assets/img/inner-page/product-scroll-img4.png" alt="" />
+                <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/product-scroll-img1.png" alt="" />
+                <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/product-scroll-img2.png" alt="" />
+                <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/product-scroll-img3.png" alt="" />
+                <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/product-scroll-img4.png" alt="" />
               </div>
             </div>
             <div className="col-lg-6">
@@ -76,13 +76,13 @@ const Scroll_1_olumn = () => {
                 <div className="payment-method">
                   <h6>Guaranted Safe Checkout</h6>
                   <ul className="payment-card-list">
-                    <li><img src="/assets/img/inner-page/payment-img1.svg" alt="" /></li>
-                    <li><img src="/assets/img/inner-page/payment-img2.svg" alt="" /></li>
-                    <li><img src="/assets/img/inner-page/payment-img3.svg" alt="" /></li>
-                    <li><img src="/assets/img/inner-page/payment-img4.svg" alt="" /></li>
-                    <li><img src="/assets/img/inner-page/payment-img5.svg" alt="" /></li>
-                    <li><img src="/assets/img/inner-page/payment-img6.svg" alt="" /></li>
-                    <li><img src="/assets/img/inner-page/payment-img7.svg" alt="" /></li>
+                    <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img1.svg" alt="" /></li>
+                    <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img2.svg" alt="" /></li>
+                    <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img3.svg" alt="" /></li>
+                    <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img4.svg" alt="" /></li>
+                    <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img5.svg" alt="" /></li>
+                    <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img6.svg" alt="" /></li>
+                    <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img7.svg" alt="" /></li>
                   </ul>
                 </div>
                 <ul className="product-shipping-delivers">
@@ -157,7 +157,7 @@ const Scroll_1_olumn = () => {
                       </div>
                       <div className="col-lg-6 d-flex align-items-center justify-content-center">
                         <div className="description-tab-img">
-                          <img src="/assets/img/inner-page/shop-details-description-img.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details-description-img.png" alt="" />
                         </div>
                       </div>
                       <div className="col-lg-3">
@@ -217,7 +217,7 @@ const Scroll_1_olumn = () => {
                             <ul className="author-comment mb-100">
                               <li>
                                 <div className="author-img">
-                                  <img src="/assets/img/inner-page/comment-author1.png " alt="" />
+                                  <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/comment-author1.png " alt="" />
                                 </div>
                                 <div className="comment-content">
                                   <div className="author-post style-2">
@@ -243,7 +243,7 @@ const Scroll_1_olumn = () => {
                               </li>
                               <li>
                                 <div className="author-img">
-                                  <img src="/assets/img/inner-page/comment-author2.png " alt="" />
+                                  <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/comment-author2.png " alt="" />
                                 </div>
                                 <div className="comment-content">
                                   <div className="author-post style-2">

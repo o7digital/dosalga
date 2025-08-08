@@ -54,8 +54,8 @@ const Testimonial = () => {
 
   return (
     <div className="say-about-section mb-110">
-      <img src="/assets/img/home1/testimonial-vector-2.png" alt="" className="vector3" />
-      <img src="/assets/img/home1/testimonial-vector-1.png" alt="" className="vector4" />
+      <img src="https://beautico-nextjs.vercel.app/assets/img/home1/testimonial-vector-2.png" alt="" className="vector3" />
+      <img src="https://beautico-nextjs.vercel.app/assets/img/home1/testimonial-vector-1.png" alt="" className="vector4" />
       <div className="container-fluid p-0">
           <div className="section-title2 style-3">
           <h3>They Say About Our Product</h3>
@@ -88,7 +88,7 @@ const Testimonial = () => {
                       <div className="say-about-card-bottom">
                           <div className="author-area">
                           <div className="author-img">
-                              <img src="/assets/img/home2/testimonial-author-img1.png" alt="" />
+                              <img src="https://beautico-nextjs.vercel.app/assets/img/home2/testimonial-author-img1.png" alt="" />
                           </div>
                           <div className="author">
                               <h5>Jayden Carter</h5>
@@ -121,7 +121,7 @@ const Testimonial = () => {
                       <div className="say-about-card-bottom">
                           <div className="author-area">
                           <div className="author-img">
-                              <img src="/assets/img/home2/testimonial-author-img2.png" alt="" />
+                              <img src="https://beautico-nextjs.vercel.app/assets/img/home2/testimonial-author-img2.png" alt="" />
                           </div>
                           <div className="author">
                               <h5>Colton Roman</h5>
@@ -154,7 +154,7 @@ const Testimonial = () => {
                       <div className="say-about-card-bottom">
                           <div className="author-area">
                           <div className="author-img">
-                              <img src="/assets/img/home2/testimonial-author-img3.png" alt="" />
+                              <img src="https://beautico-nextjs.vercel.app/assets/img/home2/testimonial-author-img3.png" alt="" />
                           </div>
                           <div className="author">
                               <h5>Lincoln Miles</h5>

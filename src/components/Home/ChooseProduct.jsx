@@ -13,7 +13,7 @@ const ChooseProduct = () => {
             <div className="choose-product-card hover-img style-2">
               <Link legacyBehavior href="/shop">
                   <a>
-                      <img src="/assets/img/home1/choose-product-card-img1.png" alt="" />
+                      <img src="https://beautico-nextjs.vercel.app/assets/img/home1/choose-product-card-img1.png" alt="" />
                   </a>
               </Link>
               <div className="choose-product-card-content">
@@ -26,7 +26,7 @@ const ChooseProduct = () => {
             <div className="choose-product-card hover-img style-2">
               <Link legacyBehavior href="/shop">
                   <a>
-                      <img src="/assets/img/home1/choose-product-card-img2.png" alt="" />
+                      <img src="https://beautico-nextjs.vercel.app/assets/img/home1/choose-product-card-img2.png" alt="" />
                   </a>
               </Link>
               <div className="choose-product-card-content">
@@ -39,7 +39,7 @@ const ChooseProduct = () => {
             <div className="choose-product-card hover-img style-2">
               <Link legacyBehavior href="/shop">
                   <a>
-                      <img src="/assets/img/home1/choose-product-card-img3.png" alt="" />
+                      <img src="https://beautico-nextjs.vercel.app/assets/img/home1/choose-product-card-img3.png" alt="" />
                   </a>
               </Link>
               <div className="choose-product-card-content style-2">

@@ -65,22 +65,22 @@ const ProductFullWidth = () => {
             <div className="swiper-wrapper">
               <SwiperSlide className="swiper-slide">
                 <div className="product-full-width-img">
-                  <img src="/assets/img/inner-page/product-full-width-img1.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/product-full-width-img1.png" alt="" />
                 </div>
               </SwiperSlide>
               <SwiperSlide className="swiper-slide">
                 <div className="product-full-width-img">
-                  <img src="/assets/img/inner-page/product-full-width-img2.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/product-full-width-img2.png" alt="" />
                 </div>
               </SwiperSlide>
               <SwiperSlide className="swiper-slide">
                 <div className="product-full-width-img">
-                  <img src="/assets/img/inner-page/product-full-width-img3.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/product-full-width-img3.png" alt="" />
                 </div>
               </SwiperSlide>
               <SwiperSlide className="swiper-slide">
                 <div className="product-full-width-img">
-                  <img src="/assets/img/inner-page/product-full-width-img4.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/product-full-width-img4.png" alt="" />
                 </div>
               </SwiperSlide>
             </div>
@@ -156,13 +156,13 @@ const ProductFullWidth = () => {
               <div className="payment-method">
                 <h6>Guaranted Safe Checkout</h6>
                 <ul className="payment-card-list">
-                  <li><img src="/assets/img/inner-page/payment-img1.svg" alt="" /></li>
-                  <li><img src="/assets/img/inner-page/payment-img2.svg" alt="" /></li>
-                  <li><img src="/assets/img/inner-page/payment-img3.svg" alt="" /></li>
-                  <li><img src="/assets/img/inner-page/payment-img4.svg" alt="" /></li>
-                  <li><img src="/assets/img/inner-page/payment-img5.svg" alt="" /></li>
-                  <li><img src="/assets/img/inner-page/payment-img6.svg" alt="" /></li>
-                  <li><img src="/assets/img/inner-page/payment-img7.svg" alt="" /></li>
+                  <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img1.svg" alt="" /></li>
+                  <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img2.svg" alt="" /></li>
+                  <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img3.svg" alt="" /></li>
+                  <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img4.svg" alt="" /></li>
+                  <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img5.svg" alt="" /></li>
+                  <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img6.svg" alt="" /></li>
+                  <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img7.svg" alt="" /></li>
                 </ul>
               </div>
               <ul className="product-shipping-delivers">

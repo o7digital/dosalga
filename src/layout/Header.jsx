@@ -72,11 +72,11 @@ const Header = () => {
     <header ref={headerRef} className={`header-area ${state.scrollY > 10 ?"sticky":""}`}>
         <div className="container-xxl container-fluid position-relative  d-flex flex-nowrap align-items-center justify-content-between">
         <div className="header-logo d-lg-none d-flex">
-            <Link legacyBehavior href="/"><a><img alt="image" className="img-fluid" src="/assets/img/logo.svg" /></a></Link>
+            <Link legacyBehavior href="/"><a><img alt="image" className="img-fluid" src="https://beautico-nextjs.vercel.app/assets/img/logo.svg" /></a></Link>
         </div>
         <div className="category-dropdown">
             <div className="category-button" onClick={() => toggleMenu("categoryModal")}>
-            <img src="/assets/img/home1/icon/category-icon.svg" alt="" />
+            <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/category-icon.svg" alt="" />
             <span>Category</span>
             </div>
             <div className={`category-menu ${state.activeMenu === "categoryModal"?"active":""}`}>
@@ -121,7 +121,7 @@ const Header = () => {
         <div className={`main-menu ${state.isSidebarOpen ? "show-menu" : ""}`}>
             <div className="mobile-logo-area d-lg-none d-flex justify-content-between align-items-center">
             <div className="mobile-logo-wrap">
-                <Link legacyBehavior href="/"><a><img alt="image" src="/assets/img/logo.svg" /></a></Link>
+                <Link legacyBehavior href="/"><a><img alt="image" src="https://beautico-nextjs.vercel.app/assets/img/logo.svg" /></a></Link>
             </div>
             </div>
             <ul className="menu-list">
@@ -134,7 +134,7 @@ const Header = () => {
             </li>
             <li className="menu-item-has-children position-inherit">
                 <a href="#" className="drop-down">Face</a><i  onClick={() => toggleMenu("new-car")} className={`bi bi-${state.activeMenu === "new-car" ?"dash":"plus"} dropdown-icon`} />
-                <div className={`mega-menu2 ${state.activeMenu === "new-car"?"d-block":""}`} style={{backgroundImage: 'url("/assets/img/home1/megamenu2-face-bg.png")'}}>
+                <div className={`mega-menu2 ${state.activeMenu === "new-car"?"d-block":""}`} style={{backgroundImage: 'url("https://beautico-nextjs.vercel.app/assets/img/home1/megamenu2-face-bg.png")'}}>
                 <div className="megamenu-wrap">
                     <ul className="menu-row">
                     <li className="menu-single-item">
@@ -319,7 +319,7 @@ const Header = () => {
             </li> 
             <li className="menu-item-has-children position-inherit">
                 <a href="#" className="drop-down">Body</a><i  onClick={() => toggleMenu("body")} className={`bi bi-${state.activeMenu === "body" ?"dash":"plus"} dropdown-icon`} />
-                <div className={`mega-menu2 ${state.activeMenu === "body"?"d-block":""}`} style={{backgroundImage: 'url("/assets/img/home1/megamenu2-body-bg.png")'}}>
+                <div className={`mega-menu2 ${state.activeMenu === "body"?"d-block":""}`} style={{backgroundImage: 'url("https://beautico-nextjs.vercel.app/assets/img/home1/megamenu2-body-bg.png")'}}>
                 <div className="megamenu-wrap">
                     <ul className="menu-row">
                     <li className="menu-single-item">
@@ -504,7 +504,7 @@ const Header = () => {
             </li> 
             <li className="menu-item-has-children position-inherit">
                 <a href="#" className="drop-down">Hair</a><i  onClick={() => toggleMenu("hair")} className={`bi bi-${state.activeMenu === "hair" ?"dash":"plus"} dropdown-icon`} />
-                <div className={`mega-menu2 ${state.activeMenu === "hair"?"d-block":""}`} style={{backgroundImage: 'url("/assets/img/home1/megamenu2-hair-bg.png")'}}>
+                <div className={`mega-menu2 ${state.activeMenu === "hair"?"d-block":""}`} style={{backgroundImage: 'url("https://beautico-nextjs.vercel.app/assets/img/home1/megamenu2-hair-bg.png")'}}>
                 <div className="megamenu-wrap">
                     <ul className="menu-row">
                     <li className="menu-single-item">
@@ -689,7 +689,7 @@ const Header = () => {
             </li> 
             <li className="menu-item-has-children position-inherit">
                 <a href="#" className="drop-down">Makeup</a><i  onClick={() => toggleMenu("makeup")} className={`bi bi-${state.activeMenu === "makeup" ?"dash":"plus"} dropdown-icon`} />
-                <div className={`mega-menu2 ${state.activeMenu === "makeup"?"d-block":""}`} style={{backgroundImage: 'url("/assets/img/home1/megamenu2-bg1.png")'}}>
+                <div className={`mega-menu2 ${state.activeMenu === "makeup"?"d-block":""}`} style={{backgroundImage: 'url("https://beautico-nextjs.vercel.app/assets/img/home1/megamenu2-bg1.png")'}}>
                 <div className="megamenu-wrap">
                     <ul className="menu-row">
                     <li className="menu-single-item">

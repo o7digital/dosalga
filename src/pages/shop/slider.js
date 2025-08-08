@@ -99,8 +99,8 @@ const Slider = () => {
                       <div className="product-card-img double-img">
                       <Link legacyBehavior href="/shop/product-default">
                         <a>
-                        <img src="/assets/img/inner-page/face-product1.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-7.png" alt="" className="img2" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/face-product1.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" className="img2" />
                           <div className="countdown-timer">
                           <ul data-countdown={endTime}>
                               <li className="times" data-days={days}>{days}D</li>
@@ -175,7 +175,7 @@ const Slider = () => {
                       <div className="product-card-img">
                       <Link legacyBehavior href="/shop/product-default">
                         <a>
-                          <img src="/assets/img/inner-page/face-product2.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/face-product2.png" alt="" />
                           <div className="batch">
                           <span>-18%</span>
                           </div>
@@ -236,7 +236,7 @@ const Slider = () => {
                       <div className="product-card-img">
                       <Link legacyBehavior href="/shop/product-default">
                         <a>
-                          <img src="/assets/img/inner-page/face-product3.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/face-product3.png" alt="" />
                           <div className="batch"><span className="new">New</span></div>
                         </a>
                       </Link>
@@ -302,8 +302,8 @@ const Slider = () => {
                       <div className="product-card-img double-img">
                       <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/inner-page/face-product4.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/sp-product-img-02.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/face-product4.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/sp-product-img-02.png" alt="" className="img2" />
                           <div className="batch">
                           <span>-10%</span>
                           </div>
@@ -363,7 +363,7 @@ const Slider = () => {
                       <div className="product-card-img">
                       <Link legacyBehavior href="/shop/product-default">
                         <a>
-                          <img src="/assets/img/inner-page/product-img-5.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/product-img-5.png" alt="" />
                           <div className="batch"><span className="new">New</span></div>
                         </a>
                       </Link>
@@ -423,7 +423,7 @@ const Slider = () => {
                       <div className="product-card-img">
                       <Link legacyBehavior href="/shop/product-default">
                         <a  className="hover-underline">
-                          <img src="/assets/img/inner-page/product-img-6.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/product-img-6.png" alt="" />
                           <div className="batch">
                           <span>-13%</span>
                           </div>
@@ -504,7 +504,7 @@ const Slider = () => {
                     <div className="product-card-img">
                     <Link legacyBehavior href="/shop/product-default">
                       <a>
-                        <img src="/assets/img/inner-page/body-product1.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/body-product1.png" alt="" />
                         <div className="batch">
                         <span>-15%</span>
                         </div>
@@ -570,7 +570,7 @@ const Slider = () => {
                     <div className="product-card-img">
                     <Link legacyBehavior href="/shop/product-default">
                       <a >
-                        <img src="/assets/img/inner-page/body-product2.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/body-product2.png" alt="" />
                         <div className="countdown-timer">
                         <ul data-countdown={endTime}>
                             <li className="times" data-days={days}>{days}D</li>
@@ -644,8 +644,8 @@ const Slider = () => {
                     <div className="product-card-img double-img">
                     <Link legacyBehavior href="/shop/product-default">
                       <a>
-                        <img src="/assets/img/home1/product-img-15.png" alt="" className="img1" />
-                        <img src="/assets/img/home1/product-img-18.png" alt="" className="img2" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-15.png" alt="" className="img1" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-18.png" alt="" className="img2" />
                         <div className="batch">
                         <span>-15%</span>
                         </div>
@@ -699,7 +699,7 @@ const Slider = () => {
                     <div className="product-card-img">
                     <Link legacyBehavior href="/shop/product-default">
                       <a>
-                        <img src="/assets/img/inner-page/body-product4.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/body-product4.png" alt="" />
                         <div className="batch">
                         <span>-20%</span>
                         </div>
@@ -759,7 +759,7 @@ const Slider = () => {
                     <div className="product-card-img">
                     <Link legacyBehavior href="/shop/product-default">
                       <a>
-                        <img src="/assets/img/inner-page/product-img-5.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/product-img-5.png" alt="" />
                         <div className="batch"><span className="new">New</span></div>
                       </a>
                     </Link>
@@ -816,7 +816,7 @@ const Slider = () => {
                     <div className="product-card-img">
                     <Link legacyBehavior href="/shop/product-default">
                       <a>
-                        <img src="/assets/img/inner-page/product-img-6.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/product-img-6.png" alt="" />
                         <div className="batch">
                         <span>-13%</span>
                         </div>
@@ -898,7 +898,7 @@ const Slider = () => {
                     <div className="product-card-img">
                       <Link legacyBehavior href="/shop/product-default">
                         <a>
-                        <img src="/assets/img/inner-page/hair-product1.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/hair-product1.png" alt="" />
                         <div className="batch">
                           <span>-15%</span>
                         </div>
@@ -957,7 +957,7 @@ const Slider = () => {
                     <div className="product-card-img">
                       <Link legacyBehavior href="/shop/product-default">
                         <a >
-                        <img src="/assets/img/inner-page/hair-product2.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/hair-product2.png" alt="" />
                         <div className="batch">
                           <span>-13%</span>
                         </div>
@@ -1017,7 +1017,7 @@ const Slider = () => {
                     <div className="product-card-img">
                       <Link legacyBehavior href="/shop/product-default">
                         <a>
-                        <img src="/assets/img/inner-page/hair-product3.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/hair-product3.png" alt="" />
                         <div className="batch">
                           <span>-15%</span>
                         </div>
@@ -1076,7 +1076,7 @@ const Slider = () => {
                     <div className="product-card-img">
                       <Link legacyBehavior href="/shop/product-default">
                         <a>
-                        <img src="/assets/img/inner-page/hair-product4.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/hair-product4.png" alt="" />
                         <div className="batch"><span className="new">New</span></div>
                         </a>
                       </Link>
@@ -1133,7 +1133,7 @@ const Slider = () => {
                     <div className="product-card-img">
                       <Link legacyBehavior href="/shop/product-default">
                         <a >
-                        <img src="/assets/img/home1/product-img-4.png " alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-4.png " alt="" />
                         <div className="batch">
                           <span>-18%</span>
                         </div>
@@ -1193,7 +1193,7 @@ const Slider = () => {
                     <div className="product-card-img">
                       <Link legacyBehavior href="/shop/product-default">
                         <a >
-                        <img src="/assets/img/home1/product-img-7.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" />
                         <div className="batch">
                           <span>-10%</span>
                         </div>
@@ -1275,7 +1275,7 @@ const Slider = () => {
                     <div className="product-card-img">
                       <Link legacyBehavior href="/shop/product-default">
                         <a>
-                        <img src="/assets/img/home1/product-img-1.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-1.png" alt="" />
                         <div className="batch"><span className="new">New</span></div>
                         </a>
                       </Link>
@@ -1334,7 +1334,7 @@ const Slider = () => {
                     <div className="product-card-img">
                       <Link legacyBehavior href="/shop/product-default">
                         <a>
-                        <img src="/assets/img/home1/product-img-12.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-12.png" alt="" />
                         <div className="batch">
                           <span>-13%</span>
                         </div>
@@ -1395,7 +1395,7 @@ const Slider = () => {
                     <div className="product-card-img">
                       <Link legacyBehavior href="/shop/product-default">
                         <a>
-                        <img src="/assets/img/home1/product-img-8.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-8.png" alt="" />
                         <div className="batch">
                           <span>-15%</span>
                         </div>
@@ -1453,7 +1453,7 @@ const Slider = () => {
                     <div className="product-card-img">
                       <Link legacyBehavior href="/shop/product-default">
                         <a>
-                        <img src="/assets/img/home1/product-img-16.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-16.png" alt="" />
                         <div className="batch"><span className="new">New</span></div>
                         </a>
                       </Link>
@@ -1512,7 +1512,7 @@ const Slider = () => {
                     <div className="product-card-img">
                       <Link legacyBehavior href="/shop/product-default">
                         <a  className="hover-underline">
-                        <img src="/assets/img/home1/product-img-20.png " alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-20.png " alt="" />
                         <div className="batch">
                           <span>-18%</span>
                         </div>
@@ -1572,7 +1572,7 @@ const Slider = () => {
                     <div className="product-card-img">
                       <Link legacyBehavior href="/shop/product-default">
                         <a >
-                        <img src="/assets/img/home1/product-img-21.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-21.png" alt="" />
                         <div className="batch">
                           <span>-10%</span>
                         </div>

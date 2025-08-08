@@ -9,7 +9,7 @@ const MakeupSection = () => {
           <div className="row align-items-center justify-content-center g-0 gy-4">
             <div className="col-lg-6">
               <div className="makeup-img hover-img">
-                <img src="/assets/img/home1/makeup-img1.png" alt="" />
+                <img src="https://beautico-nextjs.vercel.app/assets/img/home1/makeup-img1.png" alt="" />
               </div>
             </div>
             <div className="col-lg-6">
@@ -32,7 +32,7 @@ const MakeupSection = () => {
           </div>
           <div className="col-lg-6 order-lg-2 order-1">
             <div className="makeup-img hover-img">
-              <img src="/assets/img/home1/makeup-img2.png" alt="" />
+              <img src="https://beautico-nextjs.vercel.app/assets/img/home1/makeup-img2.png" alt="" />
             </div>
           </div>
         </div>

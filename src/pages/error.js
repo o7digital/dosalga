@@ -9,7 +9,7 @@ const error = () => {
           <div className="col-lg-8 ">
             <div className="error-wrapper">
               <div className="error-img">
-                <img src="/assets/img/inner-page/404-img.png" alt="" />
+                <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/404-img.png" alt="" />
               </div>
               <div className="error-content">
                 <h1>Something Went Wrong</h1>

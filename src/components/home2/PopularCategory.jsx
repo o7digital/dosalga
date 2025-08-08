@@ -25,7 +25,7 @@ const PopularCategory = () => {
               <div className="category-card-img">
                 <Link legacyBehavior href="/shop">
                   <a>
-                  <img src="/assets/img/home2/home2-category-img1.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home2/home2-category-img1.png" alt="" />
                   </a>
                 </Link>
               </div>
@@ -41,7 +41,7 @@ const PopularCategory = () => {
               <div className="category-card-img">
                 <Link legacyBehavior href="/shop">
                   <a>
-                  <img src="/assets/img/home2/home2-category-img2.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home2/home2-category-img2.png" alt="" />
                   </a>
                 </Link>
               </div>
@@ -58,7 +58,7 @@ const PopularCategory = () => {
               <div className="category-card-img">
                 <Link legacyBehavior href="/shop">
                   <a>
-                  <img src="/assets/img/home2/home2-category-img3.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home2/home2-category-img3.png" alt="" />
                   </a>
                 </Link>
               </div>
@@ -74,7 +74,7 @@ const PopularCategory = () => {
               <div className="category-card-img">
                 <Link legacyBehavior href="/shop">
                   <a>
-                  <img src="/assets/img/home2/home2-category-img4.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home2/home2-category-img4.png" alt="" />
                   </a>
                 </Link>
               </div>
@@ -90,7 +90,7 @@ const PopularCategory = () => {
               <div className="category-card-img">
                 <Link legacyBehavior href="/shop">
                   <a>
-                  <img src="/assets/img/home2/home2-category-img5.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home2/home2-category-img5.png" alt="" />
                   </a>
                 </Link>
               </div>
@@ -106,7 +106,7 @@ const PopularCategory = () => {
               <div className="category-card-img">
                 <Link legacyBehavior href="/shop">
                   <a>
-                  <img src="/assets/img/home2/home2-category-img6.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home2/home2-category-img6.png" alt="" />
                   </a>
                 </Link>
               </div>

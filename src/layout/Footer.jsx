@@ -4,9 +4,9 @@ import React from 'react'
 const Footer = () => {
   return (
     <footer className="footer-section">
-        <img src="/assets/img/home1/icon/vector-2.svg" alt="" className="vector1" />
-        <img src="/assets/img/home1/icon/banner-vector1.svg" alt="" className="vector2" />
-        <img src="/assets/img/home1/icon/vector-4.svg" alt="" className="vector3" />
+        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/vector-2.svg" alt="" className="vector1" />
+        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/banner-vector1.svg" alt="" className="vector2" />
+        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/vector-4.svg" alt="" className="vector3" />
         <div className="container">
             <div className="footer-top">
             <div className="row g-lg-4 gy-5 justify-content-center">
@@ -66,19 +66,19 @@ const Footer = () => {
                     <p>Form App Store or Google Play</p>
                     <div className="app-store">
                     <a href="#">
-                        <img src="/assets/img/home1/google-play.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/google-play.png" alt="" />
                     </a>
                     <a href="#">
-                        <img src="/assets/img/home1/app-store.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/app-store.png" alt="" />
                     </a>
                     </div>
                     <div className="payment-gateway">
                     <p>Secured Payment Gateways</p>
                     <div className="icons">
-                        <img src="/assets/img/home1/icon/visa.png" alt="" />
-                        <img src="/assets/img/home1/icon/mastercard.png" alt="" />
-                        <img src="/assets/img/home1/icon/american-express.png" alt="" />
-                        <img src="/assets/img/home1/icon/maestro.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/visa.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/mastercard.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/american-express.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/maestro.png" alt="" />
                     </div>
                     </div>
                 </div>
@@ -92,7 +92,7 @@ const Footer = () => {
                     <p>©Copyright 2023 Beautico | Design By <a href="https://www.egenslab.com/">Egens Lab</a></p>
                 </div>
                 <div className="footer-logo">
-                    <Link legacyBehavior href="/"><a><img src="/assets/img/logo.svg" alt="" /></a></Link>
+                    <Link legacyBehavior href="/"><a><img src="https://beautico-nextjs.vercel.app/assets/img/logo.svg" alt="" /></a></Link>
                 </div>
                 <div className="footer-contact">
                     <div className="logo">

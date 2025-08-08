@@ -253,7 +253,7 @@ const MyAccount = () => {
                       </thead>
                       <tbody>
                         <tr>
-                          <td data-label="Image"><img alt="image" src="/assets/img/inner-page/whistlist-img1.png" className="img-fluid" />
+                          <td data-label="Image"><img alt="image" src="https://beautico-nextjs.vercel.app/assets/img/inner-page/whistlist-img1.png" className="img-fluid" />
                           </td>
                           <td data-label="Order ID">#4ce345c3e</td>
                           <td data-label="Product Details">Eau De Blue Perfume</td>
@@ -261,7 +261,7 @@ const MyAccount = () => {
                           <td data-label="Status" className="text-green">Shipped</td>
                         </tr>
                         <tr>
-                          <td data-label="Image"><img alt="image" src="/assets/img/inner-page/whistlist-img2.png" className="img-fluid" />
+                          <td data-label="Image"><img alt="image" src="https://beautico-nextjs.vercel.app/assets/img/inner-page/whistlist-img2.png" className="img-fluid" />
                           </td>
                           <td data-label="Order ID">#4ce3533e</td>
                           <td data-label="Product Details">Smooth Makeup Box</td>
@@ -269,7 +269,7 @@ const MyAccount = () => {
                           <td data-label="Status" className="text-red">Pending</td>
                         </tr>
                         <tr>
-                          <td data-label="Image"><img alt="image" src="/assets/img/inner-page/whistlist-img3.png" className="img-fluid" />
+                          <td data-label="Image"><img alt="image" src="https://beautico-nextjs.vercel.app/assets/img/inner-page/whistlist-img3.png" className="img-fluid" />
                           </td>
                           <td data-label="Order ID">#8ce3533e</td>
                           <td data-label="Product Details">Modern Red Lipstick </td>
@@ -277,7 +277,7 @@ const MyAccount = () => {
                           <td data-label="Status" className="text-red">Pending</td>
                         </tr>
                         <tr>
-                          <td data-label="Image"><img alt="image" src="/assets/img/inner-page/whistlist-img4.png" className="img-fluid" />
+                          <td data-label="Image"><img alt="image" src="https://beautico-nextjs.vercel.app/assets/img/inner-page/whistlist-img4.png" className="img-fluid" />
                           </td>
                           <td data-label="Order ID">#8ce3533e</td>
                           <td data-label="Product Details">New Botanical Shampoo</td>

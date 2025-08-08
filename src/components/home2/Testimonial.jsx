@@ -101,7 +101,7 @@ const Testimonial = () => {
                   </div>
                   <div className="author-img-and-rating">
                     <div className="author-img">
-                      <img src="/assets/img/home2/testimonial-author-img1.png" alt="" />
+                      <img src="https://beautico-nextjs.vercel.app/assets/img/home2/testimonial-author-img1.png" alt="" />
                     </div>
                   </div>
                 </SwiperSlide>
@@ -138,7 +138,7 @@ const Testimonial = () => {
                   </div>
                   <div className="author-img-and-rating">
                     <div className="author-img">
-                      <img src="/assets/img/home2/testimonial-author-img2.png" alt="" />
+                      <img src="https://beautico-nextjs.vercel.app/assets/img/home2/testimonial-author-img2.png" alt="" />
                     </div>
                   </div>
                 </SwiperSlide>
@@ -175,7 +175,7 @@ const Testimonial = () => {
                   </div>
                   <div className="author-img-and-rating">
                     <div className="author-img">
-                      <img src="/assets/img/home2/testimonial-author-img3.png" alt="" />
+                      <img src="https://beautico-nextjs.vercel.app/assets/img/home2/testimonial-author-img3.png" alt="" />
                     </div>
                   </div>
                 </SwiperSlide>
@@ -212,7 +212,7 @@ const Testimonial = () => {
                   </div>
                   <div className="author-img-and-rating">
                     <div className="author-img">
-                      <img src="/assets/img/home2/testimonial-author-img4.png" alt="" />
+                      <img src="https://beautico-nextjs.vercel.app/assets/img/home2/testimonial-author-img4.png" alt="" />
                     </div>
                   </div>
                 </SwiperSlide>

@@ -4,8 +4,8 @@ import React from 'react'
 const JustForSection = () => {
   return (
     <div className="just-for-section mb-110">
-      <img src="/assets/img/home1/icon/vector-1.svg" alt="" className="vector1" />
-      <img src="/assets/img/home1/icon/vector-2.svg" alt="" className="vector2" />
+      <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/vector-1.svg" alt="" className="vector1" />
+      <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/vector-2.svg" alt="" className="vector2" />
       <div className="container">
         <div className="section-title2 style-2">
           <h3>Just For You</h3>
@@ -62,7 +62,7 @@ const JustForSection = () => {
               </button>
             </div>
             <div className="offer-img hover-img">
-              <img src="/assets/img/home1/offer-img.png" alt="" />
+              <img src="https://beautico-nextjs.vercel.app/assets/img/home1/offer-img.png" alt="" />
               <div className="discount-buy">
                 <div className="discount">
                   <svg width={65} height={65} viewBox="0 0 65 65" xmlns="http://www.w3.org/2000/svg">
@@ -83,8 +83,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-7.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-22.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-22.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -119,7 +119,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-8.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-8.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -157,8 +157,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-9.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-21.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-9.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-21.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -193,7 +193,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-10.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-10.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -228,8 +228,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-11.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-14.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-11.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-14.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -264,7 +264,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-12.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-12.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -303,8 +303,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-7.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-22.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-22.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -339,7 +339,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-8.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-8.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -374,8 +374,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-9.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-21.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-9.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-21.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -410,7 +410,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-10.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-10.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -445,8 +445,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-11.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-14.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-11.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-14.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -481,7 +481,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-12.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-12.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -520,8 +520,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-7.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-22.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-22.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -556,7 +556,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-8.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-8.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -591,8 +591,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-9.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-21.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-9.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-21.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -627,7 +627,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-10.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-10.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -662,8 +662,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-11.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-14.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-11.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-14.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -698,7 +698,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-12.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-12.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -737,8 +737,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-7.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-22.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-22.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -773,7 +773,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-8.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-8.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -808,8 +808,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-9.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-21.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-9.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-21.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -844,7 +844,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-10.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-10.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -879,8 +879,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-11.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-14.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-11.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-14.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -915,7 +915,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-12.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-12.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -954,8 +954,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-7.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-22.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-22.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -990,7 +990,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-8.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-8.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1025,8 +1025,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-9.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-21.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-9.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-21.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1061,7 +1061,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-10.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-10.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1096,8 +1096,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-11.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-14.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-11.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-14.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1132,7 +1132,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-12.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-12.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1171,8 +1171,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-7.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-22.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-22.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1207,7 +1207,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-8.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-8.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1242,8 +1242,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-9.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-21.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-9.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-21.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1278,7 +1278,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-10.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-10.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1313,8 +1313,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-11.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-14.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-11.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-14.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1349,7 +1349,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-12.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-12.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1388,8 +1388,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-7.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-22.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-22.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1424,7 +1424,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-8.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-8.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1459,8 +1459,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-9.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-21.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-9.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-21.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1495,7 +1495,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-10.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-10.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1530,8 +1530,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-11.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-14.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-11.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-14.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1566,7 +1566,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-12.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-12.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1605,8 +1605,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-7.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-22.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-22.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1641,7 +1641,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-8.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-8.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1676,8 +1676,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-9.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-21.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-9.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-21.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1712,7 +1712,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-10.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-10.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1747,8 +1747,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-11.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-14.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-11.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-14.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1783,7 +1783,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-12.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-12.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1822,8 +1822,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-7.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-22.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-7.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-22.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1858,7 +1858,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-8.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-8.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1893,8 +1893,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-9.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-21.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-9.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-21.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1929,7 +1929,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-10.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-10.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -1964,8 +1964,8 @@ const JustForSection = () => {
                       <div className="product-card-img double-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-11.png" alt="" className="img1" />
-                          <img src="/assets/img/home1/product-img-14.png" alt="" className="img2" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-11.png" alt="" className="img1" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-14.png" alt="" className="img2" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>
@@ -2000,7 +2000,7 @@ const JustForSection = () => {
                       <div className="product-card-img">
                         <Link legacyBehavior href="/shop/product-default">
                           <a>
-                          <img src="/assets/img/home1/product-img-12.png" alt="" />
+                          <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-12.png" alt="" />
                           <div className="batch">
                             <span>-15%</span>
                           </div>

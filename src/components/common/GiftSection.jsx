@@ -5,12 +5,12 @@ function GiftSection() {
   return (
     <div className="gift-section">
       <img
-        src="/assets/img/home1/gift-card-img1.png"
+        src="https://beautico-nextjs.vercel.app/assets/img/home1/gift-card-img1.png"
         alt=""
         className="gift-img1"
       />
       <img
-        src="/assets/img/home1/gift-card-img2.png"
+        src="https://beautico-nextjs.vercel.app/assets/img/home1/gift-card-img2.png"
         alt=""
         className="gift-img2"
       />

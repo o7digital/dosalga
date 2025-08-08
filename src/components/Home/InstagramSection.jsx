@@ -66,28 +66,28 @@ const InstagramSection = () => {
           <Swiper {...sldieSettings} className="swiper instagram-slider">
             <div className="swiper-wrapper">
               <SwiperSlide className="swiper-slide">
-                <a href="https://www.instagram.com/"><img src="/assets/img/home1/insta-img1.png" alt="" /></a>
+                <a href="https://www.instagram.com/"><img src="https://beautico-nextjs.vercel.app/assets/img/home1/insta-img1.png" alt="" /></a>
               </SwiperSlide>
               <SwiperSlide className="swiper-slide">
-                <a href="https://www.instagram.com/"><img src="/assets/img/home1/insta-img2.png" alt="" /></a>
+                <a href="https://www.instagram.com/"><img src="https://beautico-nextjs.vercel.app/assets/img/home1/insta-img2.png" alt="" /></a>
               </SwiperSlide>
               <SwiperSlide className="swiper-slide">
-                <a href="https://www.instagram.com/"><img src="/assets/img/home1/insta-img3.png" alt="" /></a>
+                <a href="https://www.instagram.com/"><img src="https://beautico-nextjs.vercel.app/assets/img/home1/insta-img3.png" alt="" /></a>
               </SwiperSlide>
               <SwiperSlide className="swiper-slide">
-                <a href="https://www.instagram.com/"><img src="/assets/img/home1/insta-img4.png" alt="" /></a>
+                <a href="https://www.instagram.com/"><img src="https://beautico-nextjs.vercel.app/assets/img/home1/insta-img4.png" alt="" /></a>
               </SwiperSlide>
               <SwiperSlide className="swiper-slide">
-                <a href="https://www.instagram.com/"><img src="/assets/img/home1/insta-img5.png" alt="" /></a>
+                <a href="https://www.instagram.com/"><img src="https://beautico-nextjs.vercel.app/assets/img/home1/insta-img5.png" alt="" /></a>
               </SwiperSlide>
               <SwiperSlide className="swiper-slide">
-                <a href="https://www.instagram.com/"><img src="/assets/img/home1/insta-img6.png" alt="" /></a>
+                <a href="https://www.instagram.com/"><img src="https://beautico-nextjs.vercel.app/assets/img/home1/insta-img6.png" alt="" /></a>
               </SwiperSlide>
               <SwiperSlide className="swiper-slide">
-                <a href="https://www.instagram.com/"><img src="/assets/img/home1/insta-img7.png" alt="" /></a>
+                <a href="https://www.instagram.com/"><img src="https://beautico-nextjs.vercel.app/assets/img/home1/insta-img7.png" alt="" /></a>
               </SwiperSlide>
               <SwiperSlide className="swiper-slide">
-                <a href="https://www.instagram.com/"><img src="/assets/img/home1/insta-img8.png" alt="" /></a>
+                <a href="https://www.instagram.com/"><img src="https://beautico-nextjs.vercel.app/assets/img/home1/insta-img8.png" alt="" /></a>
               </SwiperSlide>
             </div>
           </Swiper>

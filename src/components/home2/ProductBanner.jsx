@@ -41,42 +41,42 @@ const ProductBanner = () => {
                   <SwiperSlide className="swiper-slide">
                     <div className="product-banner-wrapper">
                       <div className="product-banner-left-img">
-                        <img src="/assets/img/home2/product-banner-img1.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home2/product-banner-img1.png" alt="" />
                       </div>
                       <div className="product-banner-content"> 
                         <h2>Try fresh product for your face.</h2>
                         <Link legacyBehavior href="/shop"><a  className="primary-btn3 black-bg hover-btn5 hover-white">Shop Now</a></Link>
                       </div>
                       <div className="product-banner-right-img">
-                        <img src="/assets/img/home2/product-banner-img2.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home2/product-banner-img2.png" alt="" />
                       </div>
                     </div>
                   </SwiperSlide>
                   <SwiperSlide className="swiper-slide">
                     <div className="product-banner-wrapper">
                       <div className="product-banner-left-img">
-                        <img src="/assets/img/home2/product-banner-img4.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home2/product-banner-img4.png" alt="" />
                       </div>
                       <div className="product-banner-content"> 
                         <h2>Refreshing Skin Revival Elixir</h2>
                         <Link legacyBehavior href="/shop"><a  className="primary-btn3 black-bg hover-btn5 hover-white">Shop Now</a></Link>
                       </div>
                       <div className="product-banner-right-img">
-                        <img src="/assets/img/home2/product-banner-img3.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home2/product-banner-img3.png" alt="" />
                       </div>
                     </div>
                   </SwiperSlide>
                   <SwiperSlide className="swiper-slide">
                     <div className="product-banner-wrapper">
                       <div className="product-banner-left-img">
-                        <img src="/assets/img/home2/product-banner-img5.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home2/product-banner-img5.png" alt="" />
                       </div>
                       <div className="product-banner-content"> 
                         <h2>Renewing Facial Awakening Serum</h2>
                         <Link legacyBehavior href="/shop"><a  className="primary-btn3 black-bg hover-btn5 hover-white">Shop Now</a></Link>
                       </div>
                       <div className="product-banner-right-img">
-                        <img src="/assets/img/home2/product-banner-img6.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home2/product-banner-img6.png" alt="" />
                       </div>
                     </div>
                   </SwiperSlide>

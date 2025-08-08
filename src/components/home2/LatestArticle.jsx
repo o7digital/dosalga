@@ -14,7 +14,7 @@ const LatestArticle = () => {
               <div className="article-image">
                 <Link legacyBehavior href="/blog-details">
                   <a  className="article-card-img hover-img">
-                  <img src="/assets/img/home2/latest-article-img1.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home2/latest-article-img1.png" alt="" />
                   </a>
                 </Link>
               </div>
@@ -42,7 +42,7 @@ const LatestArticle = () => {
               <div className="article-image">
                 <Link legacyBehavior href="/blog-details">
                   <a  className="article-card-img hover-img">
-                  <img src="/assets/img/home2/latest-article-img2.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home2/latest-article-img2.png" alt="" />
                   </a>
                 </Link>
               </div>
@@ -70,7 +70,7 @@ const LatestArticle = () => {
               <div className="article-image">
                 <Link legacyBehavior href="/blog-details">
                   <a  className="article-card-img hover-img">
-                  <img src="/assets/img/home2/latest-article-img3.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home2/latest-article-img3.png" alt="" />
                   </a>
                 </Link>
               </div>
@@ -98,7 +98,7 @@ const LatestArticle = () => {
               <div className="article-image">
                 <Link legacyBehavior href="/blog-details">
                   <a  className="article-card-img hover-img">
-                  <img src="/assets/img/home2/latest-article-img4.png" alt="" />
+                  <img src="https://beautico-nextjs.vercel.app/assets/img/home2/latest-article-img4.png" alt="" />
                   </a>
                 </Link>
               </div>

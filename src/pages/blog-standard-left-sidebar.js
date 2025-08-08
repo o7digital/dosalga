@@ -60,7 +60,7 @@ const BlogStandardLeftSidebarPage = () => {
                       <Link legacyBehavior href="/blog-details">
                         <a>
                         <img
-                          src="/assets/img/inner-page/recent-post-img1.png"
+                          src="https://beautico-nextjs.vercel.app/assets/img/inner-page/recent-post-img1.png"
                           alt=""
                         />
                         </a>
@@ -83,7 +83,7 @@ const BlogStandardLeftSidebarPage = () => {
                       <Link legacyBehavior href="/blog-details">
                         <a>
                         <img
-                          src="/assets/img/inner-page/recent-post-img2.png"
+                          src="https://beautico-nextjs.vercel.app/assets/img/inner-page/recent-post-img2.png"
                           alt=""
                         />
                         </a>
@@ -106,7 +106,7 @@ const BlogStandardLeftSidebarPage = () => {
                       <Link legacyBehavior href="/blog-details">
                         <a>
                         <img
-                          src="/assets/img/inner-page/recent-post-img3.png"
+                          src="https://beautico-nextjs.vercel.app/assets/img/inner-page/recent-post-img3.png"
                           alt=""
                         />
                         </a>

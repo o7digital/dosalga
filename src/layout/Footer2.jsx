@@ -74,10 +74,10 @@ const Footer2 = () => {
                 <div className="payment-gateway">
                   <p>Secured Payment Gateways</p>
                   <div className="icons">
-                    <img src="/assets/img/home1/icon/visa.png" alt="" />
-                    <img src="/assets/img/home1/icon/mastercard.png" alt="" />
-                    <img src="/assets/img/home1/icon/american-express.png" alt="" />
-                    <img src="/assets/img/home1/icon/maestro.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/visa.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/mastercard.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/american-express.png" alt="" />
+                    <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/maestro.png" alt="" />
                   </div>
                 </div>
               </div>
@@ -91,7 +91,7 @@ const Footer2 = () => {
                 <p>©Copyright 2023 Beautico | Design By <a href="https://www.egenslab.com/">Egens Lab</a></p>
               </div>
               <div className="footer-logo">
-                <Link legacyBehavior href="/"><a><img src="/assets/img/logo.svg" alt="" /></a></Link>
+                <Link legacyBehavior href="/"><a><img src="https://beautico-nextjs.vercel.app/assets/img/logo.svg" alt="" /></a></Link>
               </div>
               <div className="footer-contact">
                 <div className="logo">

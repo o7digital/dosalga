@@ -8,7 +8,7 @@ function OfferBanner() {
         <div className="row gy-4">
           <div className="col-lg-6">
             <div className="offer-banner-left hover-img">
-              <img src="/assets/img/home1/offer-banner-left.png" alt="" />
+              <img src="https://beautico-nextjs.vercel.app/assets/img/home1/offer-banner-left.png" alt="" />
               <div className="offer-banner-left-content">
                 <div className="left-text">
                   <h5>Limited Offer</h5>
@@ -21,7 +21,7 @@ function OfferBanner() {
           </div>
           <div className="col-lg-6">
             <div className="offer-banner-right hover-img">
-              <img src="/assets/img/home1/offer-banner-right.png" alt="" />
+              <img src="https://beautico-nextjs.vercel.app/assets/img/home1/offer-banner-right.png" alt="" />
               <div className="offer-banner-right-content">
                 <h5>All Makeup Product</h5>
                 <h4>30% <span>off</span></h4>

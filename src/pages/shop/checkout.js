@@ -106,7 +106,7 @@ const Checkout = () => {
                   <li className="single-product">
                     <div className="product-area">
                       <div className="product-img">
-                        <img src="/assets/img/inner-page/checkout-product-img1.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/checkout-product-img1.png" alt="" />
                       </div>
                       <div className="product-info">
                         <h5><a href="#">Brand new Nail Polish</a></h5>
@@ -125,7 +125,7 @@ const Checkout = () => {
                   <li className="single-product">
                     <div className="product-area">
                       <div className="product-img">
-                        <img src="/assets/img/inner-page/checkout-product-img2.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/checkout-product-img2.png" alt="" />
                       </div>
                       <div className="product-info">
                         <h5><a href="#">Brand new Face Product</a></h5>
@@ -144,7 +144,7 @@ const Checkout = () => {
                   <li className="single-product">
                     <div className="product-area">
                       <div className="product-img">
-                        <img src="/assets/img/inner-page/checkout-product-img3.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/checkout-product-img3.png" alt="" />
                       </div>
                       <div className="product-info">
                         <h5><a href="#">Brand new Shampoo</a></h5>
@@ -218,7 +218,7 @@ const Checkout = () => {
                     <li className="paypal">
                       <div className="form-check payment-check paypal">
                         <h6>Paypal</h6>
-                        <img src="/assets/img/inner-page/payment.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment.png" alt="" />
                         <a href="#" className="about-paypal">What is PayPal?</a>
                       </div>
                       <div className="checked">
@@ -238,7 +238,7 @@ const Checkout = () => {
                           <label>Card Number</label>
                           <div className="input-field">
                             <input type="text" placeholder="1234 1234 1234 1234" />
-                            <img src="/assets/img/inner-page/payment.png" alt="" />
+                            <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment.png" alt="" />
                           </div>
                         </div>
                       </div>

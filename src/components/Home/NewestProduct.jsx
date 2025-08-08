@@ -78,8 +78,8 @@ const NewestProduct = () => {
                     <div className="product-card-img double-img">
                       <Link legacyBehavior href="/shop/product-default">
                         <a>
-                        <img src="/assets/img/home1/product-img-13.png" alt="" className="img1" />
-                        <img src="/assets/img/home1/product-img-12.png" alt="" className="img2" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-13.png" alt="" className="img1" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-12.png" alt="" className="img2" />
                         <div className="countdown-timer">
                           <ul data-countdown={endTime}>
                             <li className="times" data-days={days}>{days} <span>{days}</span> <span>D</span></li>
@@ -154,7 +154,7 @@ const NewestProduct = () => {
                     <div className="product-card-img">
                       <Link legacyBehavior href="/shop/product-default">
                         <a  className="hover-underline">
-                        <img src="/assets/img/home1/product-img-14.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-14.png" alt="" />
                         <div className="batch">
                           <span>-15%</span>
                         </div>
@@ -212,8 +212,8 @@ const NewestProduct = () => {
                     <div className="product-card-img double-img">
                       <Link legacyBehavior href="/shop/product-default">
                         <a>
-                        <img src="/assets/img/home1/product-img-15.png" alt="" className="img1" />
-                        <img src="/assets/img/home1/product-img-18.png" alt="" className="img2" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-15.png" alt="" className="img1" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-18.png" alt="" className="img2" />
                         <div className="batch">
                           <span>-15%</span>
                         </div>
@@ -271,7 +271,7 @@ const NewestProduct = () => {
                     <div className="product-card-img">
                       <Link legacyBehavior href="/shop/product-default">
                       <a>
-                        <img src="/assets/img/home1/product-img-16.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/product-img-16.png" alt="" />
                         <div className="batch">
                           <span>-15%</span>
                         </div>
@@ -344,37 +344,37 @@ const NewestProduct = () => {
                   <div className="tab-content" id="view-tabContent">
                     <div className="tab-pane fade show active" id="view-pills-img1" role="tabpanel">
                       <div className="shop-details-tab-img">
-                        <img src="/assets/img/inner-page/shop-details-tab-img1.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details-tab-img1.png" alt="" />
                       </div>
                     </div>
                     <div className="tab-pane fade" id="view-pills-img2" role="tabpanel">
                       <div className="shop-details-tab-img">
-                        <img src="/assets/img/inner-page/shop-details-tab-img2.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details-tab-img2.png" alt="" />
                       </div>
                     </div>
                     <div className="tab-pane fade" id="view-pills-img3" role="tabpanel">
                       <div className="shop-details-tab-img">
-                        <img src="/assets/img/inner-page/shop-details-tab-img3.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details-tab-img3.png" alt="" />
                       </div>
                     </div>
                     <div className="tab-pane fade" id="view-pills-img4" role="tabpanel">
                       <div className="shop-details-tab-img">
-                        <img src="/assets/img/inner-page/shop-details-tab-img4.png" alt="" />
+                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details-tab-img4.png" alt="" />
                       </div>
                     </div>
                   </div>
                   <div className="nav nav-pills" id="view-tab" role="tablist" aria-orientation="vertical">
                     <button className="nav-link active" id="view-pills-img1-tab" data-bs-toggle="pill" data-bs-target="#view-pills-img1" type="button" role="tab" aria-controls="view-pills-img1" aria-selected="true">
-                      <img src="/assets/img/inner-page/shop-details-nav-img1.png" alt="" />
+                      <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details-nav-img1.png" alt="" />
                     </button>
                     <button className="nav-link" id="view-pills-img2-tab" data-bs-toggle="pill" data-bs-target="#view-pills-img2" type="button" role="tab" aria-controls="view-pills-img2" aria-selected="false">
-                      <img src="/assets/img/inner-page/shop-details-nav-img2.png" alt="" />
+                      <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details-nav-img2.png" alt="" />
                     </button>
                     <button className="nav-link" id="view-pills-img3-tab" data-bs-toggle="pill" data-bs-target="#view-pills-img3" type="button" role="tab" aria-controls="view-pills-img3" aria-selected="false">
-                      <img src="/assets/img/inner-page/shop-details-nav-img3.png" alt="" />
+                      <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details-nav-img3.png" alt="" />
                     </button>
                     <button className="nav-link" id="view-pills-img4-tab" data-bs-toggle="pill" data-bs-target="#view-pills-img4" type="button" role="tab" aria-controls="view-pills-img4" aria-selected="false">
-                      <img src="/assets/img/inner-page/shop-details-nav-img4.png" alt="" />
+                      <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/shop-details-nav-img4.png" alt="" />
                     </button>
                   </div>
                 </div>
@@ -434,13 +434,13 @@ const NewestProduct = () => {
                   <div className="payment-method">
                     <h6>Guaranted Safe Checkout</h6>
                     <ul className="payment-card-list">
-                      <li><img src="/assets/img/inner-page/payment-img1.svg" alt="" /></li>
-                      <li><img src="/assets/img/inner-page/payment-img2.svg" alt="" /></li>
-                      <li><img src="/assets/img/inner-page/payment-img3.svg" alt="" /></li>
-                      <li><img src="/assets/img/inner-page/payment-img4.svg" alt="" /></li>
-                      <li><img src="/assets/img/inner-page/payment-img5.svg" alt="" /></li>
-                      <li><img src="/assets/img/inner-page/payment-img6.svg" alt="" /></li>
-                      <li><img src="/assets/img/inner-page/payment-img7.svg" alt="" /></li>
+                      <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img1.svg" alt="" /></li>
+                      <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img2.svg" alt="" /></li>
+                      <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img3.svg" alt="" /></li>
+                      <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img4.svg" alt="" /></li>
+                      <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img5.svg" alt="" /></li>
+                      <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img6.svg" alt="" /></li>
+                      <li><img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment-img7.svg" alt="" /></li>
                     </ul>
                   </div>
                   <ul className="product-shipping-delivers">

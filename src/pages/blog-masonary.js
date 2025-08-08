@@ -14,7 +14,7 @@ const BlogMasonaryPage = () => {
                   <div className="article-image">
                     <Link legacyBehavior href="/blog-details">
                       <a  className="article-card-img style-2 hover-img">
-                      <img src="/assets/img/inner-page/blog-masonary-img1.png" alt="" />
+                      <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/blog-masonary-img1.png" alt="" />
                       </a>
                     </Link>
                     <div className="blog-date">
@@ -48,7 +48,7 @@ const BlogMasonaryPage = () => {
                       <div className="article-image">
                         <Link legacyBehavior href="/blog-details">
                           <a  className="article-card-img hover-img">
-                              <img src="/assets/img/inner-page/blog-masonary-img2.png" alt="" />
+                              <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/blog-masonary-img2.png" alt="" />
                           </a>
                         </Link>
                         <div className="blog-date">
@@ -81,7 +81,7 @@ const BlogMasonaryPage = () => {
                       <div className="article-image">
                         <Link legacyBehavior href="/blog-details">
                           <a  className="article-card-img hover-img">
-                              <img src="/assets/img/inner-page/blog-masonary-img3.png" alt="" />
+                              <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/blog-masonary-img3.png" alt="" />
                           </a>
                         </Link>
                         <div className="blog-date">
@@ -119,7 +119,7 @@ const BlogMasonaryPage = () => {
                       <div className="article-image">
                         <Link legacyBehavior href="/blog-details">
                           <a  className="article-card-img hover-img">
-                              <img src="/assets/img/inner-page/blog-masonary-img5.png" alt="" />
+                              <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/blog-masonary-img5.png" alt="" />
                           </a>
                         </Link>
                         <div className="blog-date">
@@ -151,7 +151,7 @@ const BlogMasonaryPage = () => {
                       <div className="article-image">
                         <Link legacyBehavior href="/blog-details">
                           <a  className="article-card-img hover-img">
-                              <img src="/assets/img/inner-page/blog-masonary-img6.png" alt="" />
+                              <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/blog-masonary-img6.png" alt="" />
                           </a>
                         </Link>
                         <div className="blog-date">
@@ -185,7 +185,7 @@ const BlogMasonaryPage = () => {
                   <div className="article-image">
                     <Link legacyBehavior href="/blog-details">
                       <a  className="article-card-img hover-img">
-                      <img src="/assets/img/inner-page/blog-masonary-img4.png" alt="" />
+                      <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/blog-masonary-img4.png" alt="" />
                       </a>
                     </Link>
                     <div className="blog-date">
@@ -220,7 +220,7 @@ const BlogMasonaryPage = () => {
                   <div className="article-image">
                     <Link legacyBehavior href="/blog-details">
                       <a  className="article-card-img style-2 hover-img">
-                      <img src="/assets/img/inner-page/blog-masonary-img7.png" alt="" />
+                      <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/blog-masonary-img7.png" alt="" />
                       </a>
                     </Link>
                     <div className="blog-date">
@@ -255,7 +255,7 @@ const BlogMasonaryPage = () => {
                       <div className="article-image">
                         <Link legacyBehavior href="/blog-details">
                           <a  className="article-card-img hover-img">
-                              <img src="/assets/img/inner-page/blog-masonary-img8.png" alt="" />
+                              <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/blog-masonary-img8.png" alt="" />
                           </a>
                         </Link>
                         <div className="blog-date">
@@ -287,7 +287,7 @@ const BlogMasonaryPage = () => {
                       <div className="article-image">
                         <Link legacyBehavior href="/blog-details">
                           <a  className="article-card-img hover-img">
-                              <img src="/assets/img/inner-page/blog-masonary-img3.png" alt="" />
+                              <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/blog-masonary-img3.png" alt="" />
                           </a>
                         </Link>
                         <div className="blog-date">

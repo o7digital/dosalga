@@ -49,24 +49,24 @@ const Banner = () => {
                         <div className="banner-wrapper">
                           <div className="banner-left">
                             <img
-                              src="/assets/img/home1/icon/banner-vector1.svg"
+                              src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/banner-vector1.svg"
                               alt=""
                               className="banner-vector1"
                             />
                             <img
-                              src="/assets/img/home1/icon/banner-vector2.svg"
+                              src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/banner-vector2.svg"
                               alt=""
                               className="banner-vector2"
                             />
                             <img
-                              src="/assets/img/home1/icon/banner-vector3.svg"
+                              src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/banner-vector3.svg"
                               alt=""
                               className="banner-vector3"
                             />
                             <div className="banner-content">
                               <div className="discount">
                                 <img
-                                  src="/assets/img/home1/discount-bg.svg"
+                                  src="https://beautico-nextjs.vercel.app/assets/img/home1/discount-bg.svg"
                                   alt=""
                                 />
                                 <p>
@@ -86,7 +86,7 @@ const Banner = () => {
                             <div className="banner-right-img">
                               {blackFriday ? (
                                 <img
-                                  src="/assets/img/home1/banner-right-tag.png"
+                                  src="https://beautico-nextjs.vercel.app/assets/img/home1/banner-right-tag.png"
                                   alt=""
                                   className="discount-tag"
                                 />
