@@ -5727,7 +5727,7 @@ header.style-2 .nav-right::after {
   Newsletter section
 ........................*/
 .newsletter-section .newsletter-banner {
-  background-image: linear-gradient(rgba(34, 34, 34, 0.6999999881), rgba(34, 34, 34, 0.6999999881)), url("../img/home1/newsletter-bg.png");
+  background-image: linear-gradient(rgba(34, 34, 34, 0.6999999881), rgba(34, 34, 34, 0.6999999881)), url("https://beautico-nextjs.vercel.app/assets/img/home1/newsletter-bg.png");
   -o-object-fit: cover;
      object-fit: cover;
   background-repeat: no-repeat;
@@ -6197,7 +6197,7 @@ header.style-2 .nav-right::after {
   letter-spacing: 0.54px;
 }
 .footer-section.style-2 {
-  background-image: url(../img/home2/footer-bg.png);
+  background-image: url(https://beautico-nextjs.vercel.app/assets/img/home2/footer-bg.png);
 }
 .footer-section.style-2 .footer-top .pr-25 {
   padding-right: 25px;
@@ -9985,7 +9985,7 @@ header.style-2 .nav-right::after {
   }
 }
 .blog-details-section .blog-content blockquote p::before {
-  content: url(../img/home1/icon/blockqoutes-quote1.svg);
+  content: url(https://beautico-nextjs.vercel.app/assets/img/home1/icon/blockqoutes-quote1.svg);
   position: absolute;
   top: -10px;
   left: -30px;
@@ -10006,7 +10006,7 @@ header.style-2 .nav-right::after {
   }
 }
 .blog-details-section .blog-content blockquote p::after {
-  content: url(../img/home1/icon/blockqoutes-quote2.svg);
+  content: url(https://beautico-nextjs.vercel.app/assets/img/home1/icon/blockqoutes-quote2.svg);
   position: absolute;
   bottom: -8px;
   right: 22%;
@@ -10027,7 +10027,7 @@ header.style-2 .nav-right::after {
   }
 }
 .blog-details-section .blog-content blockquote::after {
-  content: url(../img/inner-page/blockquotes-bg.svg);
+  content: url(https://beautico-nextjs.vercel.app/assets/img/inner-page/blockquotes-bg.svg);
   position: absolute;
   top: 20px;
   left: 50%;
@@ -10591,7 +10591,7 @@ header.style-2 .nav-right::after {
  Error Css
 =======================================*/
 .error-section {
-  background-image: url(../img/inner-page/error-bg.png);
+  background-image: url(https://beautico-nextjs.vercel.app/assets/img/inner-page/error-bg.png);
   background-size: cover;
   background-repeat: no-repeat;
   padding: 150px 0;
@@ -10980,7 +10980,7 @@ home2 Banner Css
   }
 }
 .banner-2-section .banner-2-right .banner-2-right-img-bg .banner-2-right-content h1 strong, .banner-2-section .banner-2-right .banner-2-right-img-bg .banner-2-right-content h2 strong {
-  background-image: url(../img/home2/banner2-price-bg.png);
+  background-image: url(https://beautico-nextjs.vercel.app/assets/img/home2/banner2-price-bg.png);
   color: var(--white-color);
   font-size: 45px;
   font-weight: 700;
