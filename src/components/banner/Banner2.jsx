@@ -55,7 +55,7 @@ const Banner2 = () => {
                       className="banner-2-right-img-bg"
                       style={{
                         backgroundImage:
-                          "url(assets/img/home2/banner-right-bg-img1.png)",
+                          "url(/assets/img/home2/banner-right-bg-img1.png)",
                       }}
                     >
                       <div className="banner-2-right-content">
@@ -80,7 +80,7 @@ const Banner2 = () => {
                       className="banner-2-right-img-bg"
                       style={{
                         backgroundImage:
-                          "url(assets/img/home2/banner-right-bg-img2.png)",
+                          "url(/assets/img/home2/banner-right-bg-img2.png)",
                       }}
                     >
                       <div className="banner-2-right-content">
@@ -105,7 +105,7 @@ const Banner2 = () => {
                       className="banner-2-right-img-bg"
                       style={{
                         backgroundImage:
-                          "url(assets/img/home2/banner-right-bg-img3.png)",
+                          "url(/assets/img/home2/banner-right-bg-img3.png)",
                       }}
                     >
                       <div className="banner-2-right-content">
@@ -130,7 +130,7 @@ const Banner2 = () => {
                       className="banner-2-right-img-bg"
                       style={{
                         backgroundImage:
-                          "url(assets/img/home2/banner-right-bg-img4.png)",
+                          "url(/assets/img/home2/banner-right-bg-img4.png)",
                       }}
                     >
                       <div className="banner-2-right-content">
