@@ -1,0 +1,35 @@
+# Node dependencies
+node_modules/
+
+# Build outputs
+build/
+dist/
+
+# Strapi cache and logs
+.cache/
+.tmp/
+.log/
+logs/
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+
+# Yarn & npm logs
+yarn-error.log
+npm-debug.log*
+
+# Coverage / test
+coverage/
