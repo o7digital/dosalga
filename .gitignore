@@ -3,3 +3,10 @@ node_modules
 .env
 .env.local
 .DS_Store
+
+# Backend (supprimé - utilise WooCommerce)
+dosalga-back/
+
+# WooCommerce WordPress
+dosalga-wp/wordpress/
+dosalga-wp/db_data/

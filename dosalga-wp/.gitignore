@@ -1,0 +1,16 @@
+# WordPress core files
+wordpress/
+
+# Database data
+db_data/
+
+# Environment files
+.env
+.env.local
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
