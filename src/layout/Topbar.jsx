@@ -9,7 +9,7 @@ const Topbar = () => {
           <div className="col-lg-12 d-flex align-items-center justify-content-between gap-3">
             <div className="top-bar-left">
               <p>
-                *New Winter Product 2023{" "}
+                *New Winter Product 2025{" "}
                 <Link legacyBehavior href="/shop">
                   <a>Shop Now*</a>
                 </Link>
@@ -18,7 +18,7 @@ const Topbar = () => {
             <div className="company-logo">
               <Link legacyBehavior href="/">
                 <a>
-                  <img src="https://beautico-nextjs.vercel.app/assets/img/logo.svg" alt="" />
+                  <span style={{fontSize: '24px', fontWeight: 'bold', color: '#000'}}>DOSALGA</span>
                 </a>
               </Link>
             </div>
