@@ -1,10 +1,8 @@
 import React from "react";
-import MainLayout from "../layout/MainLayout";
 
 const PrivacyPolicy = () => {
   return (
-    <MainLayout>
-      <div className="privacy-policy-section pt-120 pb-120">
+    <div className="privacy-policy-section pt-120 pb-120">
         <div className="container">
           <div className="row">
             <div className="col-lg-12">
@@ -281,7 +279,7 @@ const PrivacyPolicy = () => {
           </div>
         </div>
       </div>
-    </MainLayout>
+    </div>
   );
 };
 
