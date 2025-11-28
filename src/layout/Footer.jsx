@@ -25,7 +25,7 @@ const Footer = () => {
                     <li><Link legacyBehavior href="/contact"><a>Help &amp; Contact Us</a></Link></li>
                     <li><a href="#">Return &amp; Refunds</a></li>
                     <li><Link legacyBehavior href="/shop"><a>Online Stores</a></Link></li>
-                    <li><a href="#">Privacy Policy</a></li>
+                    <li><Link legacyBehavior href="/privacy-policy"><a>Privacy Policy</a></Link></li>
                     <li><Link legacyBehavior href="/my-account"><a>Profile</a></Link></li>
                     </ul>
                 </div>
