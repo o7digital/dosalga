@@ -8,27 +8,33 @@ const HeroSlider = () => {
     const slides = [
         {
             id: 1,
-            subtitle: "New Collection 2025",
-            title: "Sports & Active Wear",
-            description: "Discover our latest collection of premium sportswear designed for performance and style.",
-            image: "https://uomo-nextjs-ecommerce.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fhome%2Fdemo10%2Fgrid_banner_1.jpg&w=1920&q=75",
-            bgColor: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+            badge: "NEW ARRIVALS",
+            title: "Modern Jogger",
+            price: "399,50 TL",
+            description: "Shop Now",
+            image: "https://uomo-nextjs-ecommerce.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fhome%2Fdemo10%2Fproduct_1.jpg&w=1920&q=75",
+            bgColor: "#f5f5f5",
+            textAlign: "left"
         },
         {
             id: 2,
-            subtitle: "Premium Quality",
-            title: "Performance Ready",
-            description: "Engineered for athletes, designed for champions. Push your limits with confidence.",
-            image: "https://uomo-nextjs-ecommerce.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fhome%2Fdemo10%2Fgrid_banner_2.jpg&w=1920&q=75",
-            bgColor: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+            badge: "BEST SELLERS",
+            title: "Fitness & Lifestyle",
+            price: "",
+            description: "From gym to street, elevate your style with our versatile collection.",
+            image: "https://uomo-nextjs-ecommerce.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fhome%2Fdemo10%2Fgrid_banner_3.jpg&w=1920&q=75",
+            bgColor: "#e8f4f8",
+            textAlign: "left"
         },
         {
             id: 3,
-            subtitle: "Best Sellers",
-            title: "Fitness & Lifestyle",
-            description: "From gym to street, elevate your style with our versatile collection.",
-            image: "https://uomo-nextjs-ecommerce.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fhome%2Fdemo10%2Fgrid_banner_3.jpg&w=1920&q=75",
-            bgColor: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+            badge: "PREMIUM QUALITY",
+            title: "Performance Ready",
+            price: "",
+            description: "Engineered for athletes, designed for champions.",
+            image: "https://uomo-nextjs-ecommerce.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fhome%2Fdemo10%2Fgrid_banner_1.jpg&w=1920&q=75",
+            bgColor: "#fff9f0",
+            textAlign: "left"
         }
     ];
 
@@ -62,49 +68,37 @@ const HeroSlider = () => {
 
     return (
         <section className="hero-slider-section">
-            <div className="slider-container">
+            <div className="slider-wrapper">
                 {slides.map((slide, index) => (
                     <div
                         key={slide.id}
-                        className={`hero-slide ${index === currentSlide ? 'active' : ''} ${
-                            index === currentSlide - 1 || (currentSlide === 0 && index === slides.length - 1)
-                                ? 'prev'
-                                : ''
-                        } ${
-                            index === currentSlide + 1 || (currentSlide === slides.length - 1 && index === 0)
-                                ? 'next'
-                                : ''
-                        }`}
-                        style={{ background: slide.bgColor }}
+                        className={`hero-slide ${index === currentSlide ? 'active' : ''}`}
+                        style={{ backgroundColor: slide.bgColor }}
                     >
-                        <div className="container h-100">
-                            <div className="row h-100 align-items-center">
-                                <div className="col-lg-6">
+                        <div className="container">
+                            <div className="row align-items-center">
+                                <div className="col-lg-5 order-lg-1 order-2">
                                     <div className="hero-content">
-                                        <span className="hero-subtitle">{slide.subtitle}</span>
-                                        <h1 className="hero-title">
-                                            {slide.title.split(' ').map((word, i, arr) => (
-                                                <React.Fragment key={i}>
-                                                    {word}
-                                                    {i === Math.floor(arr.length / 2) - 1 && <br />}
-                                                    {i !== arr.length - 1 && ' '}
-                                                </React.Fragment>
-                                            ))}
-                                        </h1>
+                                        <span className="hero-badge">{slide.badge}</span>
+                                        <h1 className="hero-title">{slide.title}</h1>
+                                        {slide.price && (
+                                            <div className="hero-price">{slide.price}</div>
+                                        )}
                                         <p className="hero-description">{slide.description}</p>
                                         <div className="hero-actions">
                                             <Link legacyBehavior href="/shop">
-                                                <a className="btn-primary">Shop Now</a>
-                                            </Link>
-                                            <Link legacyBehavior href="/about-us">
-                                                <a className="btn-secondary">Learn More</a>
+                                                <a className="btn-shop-now">Shop Now</a>
                                             </Link>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-lg-6">
-                                    <div className="hero-image">
-                                        <img src={slide.image} alt={slide.title} className="img-fluid" />
+                                <div className="col-lg-7 order-lg-2 order-1">
+                                    <div className="hero-image-wrapper">
+                                        <img 
+                                            src={slide.image} 
+                                            alt={slide.title}
+                                            className="hero-image"
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -112,24 +106,24 @@ const HeroSlider = () => {
                     </div>
                 ))}
 
-                <button className="slider-arrow prev-arrow" onClick={prevSlide} aria-label="Previous slide">
+                <button className="slider-nav prev-nav" onClick={prevSlide} aria-label="Previous">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                         <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                 </button>
-                <button className="slider-arrow next-arrow" onClick={nextSlide} aria-label="Next slide">
+                <button className="slider-nav next-nav" onClick={nextSlide} aria-label="Next">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                         <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                 </button>
 
-                <div className="slider-indicators">
+                <div className="slider-dots">
                     {slides.map((_, index) => (
                         <button
                             key={index}
-                            className={`indicator ${index === currentSlide ? 'active' : ''}`}
+                            className={`dot ${index === currentSlide ? 'active' : ''}`}
                             onClick={() => goToSlide(index)}
-                            aria-label={`Go to slide ${index + 1}`}
+                            aria-label={`Slide ${index + 1}`}
                         />
                     ))}
                 </div>
@@ -140,9 +134,10 @@ const HeroSlider = () => {
                     position: relative;
                     width: 100%;
                     overflow: hidden;
+                    background: #fff;
                 }
 
-                .slider-container {
+                .slider-wrapper {
                     position: relative;
                     width: 100%;
                     height: 600px;
@@ -155,190 +150,165 @@ const HeroSlider = () => {
                     width: 100%;
                     height: 100%;
                     opacity: 0;
-                    transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
-                    transform: scale(0.95);
+                    visibility: hidden;
+                    transition: opacity 0.6s ease-in-out, visibility 0.6s ease-in-out;
+                    display: flex;
+                    align-items: center;
                 }
 
                 .hero-slide.active {
                     opacity: 1;
-                    z-index: 2;
-                    transform: scale(1);
-                }
-
-                .hero-slide.prev,
-                .hero-slide.next {
-                    opacity: 0;
+                    visibility: visible;
                     z-index: 1;
                 }
 
                 .hero-content {
-                    z-index: 3;
-                    position: relative;
+                    padding: 60px 0;
                 }
 
-                .hero-subtitle {
+                .hero-badge {
                     display: inline-block;
-                    font-size: 14px;
-                    font-weight: 600;
-                    text-transform: uppercase;
-                    letter-spacing: 2px;
-                    color: rgba(255, 255, 255, 0.9);
-                    margin-bottom: 15px;
                     padding: 8px 20px;
-                    background: rgba(255, 255, 255, 0.2);
-                    backdrop-filter: blur(10px);
-                    border-radius: 30px;
+                    background: #ffd700;
+                    color: #000;
+                    font-size: 12px;
+                    font-weight: 700;
+                    letter-spacing: 1px;
+                    text-transform: uppercase;
+                    border-radius: 20px;
+                    margin-bottom: 20px;
                 }
 
                 .hero-title {
-                    font-size: 72px;
-                    font-weight: 800;
+                    font-size: 64px;
+                    font-weight: 400;
                     line-height: 1.1;
+                    color: #222;
+                    margin-bottom: 15px;
+                    font-family: 'Jost', sans-serif;
+                }
+
+                .hero-price {
+                    font-size: 48px;
+                    font-weight: 500;
+                    color: #222;
                     margin-bottom: 25px;
-                    color: #fff;
-                    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
                 }
 
                 .hero-description {
-                    font-size: 18px;
-                    line-height: 1.8;
+                    font-size: 16px;
+                    line-height: 1.6;
+                    color: #666;
                     margin-bottom: 35px;
-                    color: rgba(255, 255, 255, 0.95);
-                    max-width: 500px;
+                    max-width: 450px;
                 }
 
                 .hero-actions {
                     display: flex;
                     gap: 15px;
-                    flex-wrap: wrap;
                 }
 
-                .btn-primary,
-                .btn-secondary {
+                .btn-shop-now {
                     display: inline-block;
-                    padding: 16px 40px;
-                    font-size: 16px;
+                    padding: 14px 45px;
+                    background: #222;
+                    color: #fff;
+                    font-size: 14px;
                     font-weight: 600;
                     text-transform: uppercase;
-                    letter-spacing: 1px;
-                    border-radius: 50px;
-                    transition: all 0.3s ease;
+                    letter-spacing: 0.5px;
+                    border-radius: 0;
                     text-decoration: none;
+                    transition: all 0.3s ease;
+                    border: 2px solid #222;
                 }
 
-                .btn-primary {
-                    background: #fff;
-                    color: #000;
-                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+                .btn-shop-now:hover {
+                    background: #000;
+                    border-color: #000;
+                    transform: translateY(-2px);
                 }
 
-                .btn-primary:hover {
-                    background: #f0f0f0;
-                    transform: translateY(-3px);
-                    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-                }
-
-                .btn-secondary {
-                    background: transparent;
-                    color: #fff;
-                    border: 2px solid rgba(255, 255, 255, 0.5);
-                }
-
-                .btn-secondary:hover {
-                    background: rgba(255, 255, 255, 0.2);
-                    border-color: #fff;
-                    transform: translateY(-3px);
+                .hero-image-wrapper {
+                    position: relative;
+                    height: 600px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                 }
 
                 .hero-image {
-                    position: relative;
-                    z-index: 2;
-                }
-
-                .hero-image img {
                     width: 100%;
-                    height: auto;
-                    object-fit: cover;
-                    border-radius: 20px;
-                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-                    animation: float 6s ease-in-out infinite;
+                    height: 100%;
+                    object-fit: contain;
+                    object-position: center;
                 }
 
-                @keyframes float {
-                    0%, 100% {
-                        transform: translateY(0);
-                    }
-                    50% {
-                        transform: translateY(-20px);
-                    }
-                }
-
-                .slider-arrow {
+                .slider-nav {
                     position: absolute;
                     top: 50%;
                     transform: translateY(-50%);
                     z-index: 10;
-                    background: rgba(255, 255, 255, 0.2);
-                    backdrop-filter: blur(10px);
-                    border: 1px solid rgba(255, 255, 255, 0.3);
-                    color: #fff;
                     width: 50px;
                     height: 50px;
+                    background: rgba(255, 255, 255, 0.9);
+                    border: 1px solid #ddd;
                     border-radius: 50%;
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     cursor: pointer;
                     transition: all 0.3s ease;
+                    color: #222;
                 }
 
-                .slider-arrow:hover {
-                    background: rgba(255, 255, 255, 0.3);
-                    transform: translateY(-50%) scale(1.1);
+                .slider-nav:hover {
+                    background: #222;
+                    border-color: #222;
+                    color: #fff;
                 }
 
-                .prev-arrow {
+                .prev-nav {
                     left: 30px;
                 }
 
-                .next-arrow {
+                .next-nav {
                     right: 30px;
                 }
 
-                .slider-indicators {
+                .slider-dots {
                     position: absolute;
                     bottom: 30px;
                     left: 50%;
                     transform: translateX(-50%);
                     display: flex;
-                    gap: 12px;
+                    gap: 10px;
                     z-index: 10;
                 }
 
-                .indicator {
-                    width: 12px;
-                    height: 12px;
+                .dot {
+                    width: 10px;
+                    height: 10px;
                     border-radius: 50%;
-                    background: rgba(255, 255, 255, 0.4);
-                    border: 2px solid rgba(255, 255, 255, 0.6);
+                    background: rgba(0, 0, 0, 0.2);
+                    border: none;
                     cursor: pointer;
                     transition: all 0.3s ease;
                     padding: 0;
                 }
 
-                .indicator:hover {
-                    background: rgba(255, 255, 255, 0.6);
-                    transform: scale(1.2);
+                .dot:hover {
+                    background: rgba(0, 0, 0, 0.4);
                 }
 
-                .indicator.active {
-                    background: #fff;
-                    width: 40px;
-                    border-radius: 10px;
+                .dot.active {
+                    background: #222;
+                    width: 30px;
+                    border-radius: 5px;
                 }
 
                 @media (max-width: 992px) {
-                    .slider-container {
+                    .slider-wrapper {
                         height: 500px;
                     }
 
@@ -346,43 +316,62 @@ const HeroSlider = () => {
                         font-size: 48px;
                     }
 
-                    .hero-description {
-                        font-size: 16px;
+                    .hero-price {
+                        font-size: 36px;
                     }
 
-                    .slider-arrow {
+                    .hero-image-wrapper {
+                        height: 400px;
+                    }
+
+                    .slider-nav {
                         width: 40px;
                         height: 40px;
                     }
 
-                    .prev-arrow {
+                    .prev-nav {
                         left: 15px;
                     }
 
-                    .next-arrow {
+                    .next-nav {
                         right: 15px;
                     }
                 }
 
                 @media (max-width: 768px) {
-                    .slider-container {
-                        height: 700px;
+                    .slider-wrapper {
+                        height: auto;
+                        min-height: 600px;
+                    }
+
+                    .hero-content {
+                        padding: 30px 0;
+                        text-align: center;
                     }
 
                     .hero-title {
                         font-size: 36px;
                     }
 
-                    .hero-content {
-                        text-align: center;
-                        margin-bottom: 30px;
+                    .hero-price {
+                        font-size: 28px;
+                    }
+
+                    .hero-description {
+                        margin-left: auto;
+                        margin-right: auto;
                     }
 
                     .hero-actions {
                         justify-content: center;
                     }
 
-                    .slider-arrow {
+                    .hero-image-wrapper {
+                        height: 300px;
+                        margin-bottom: 20px;
+                    }
+
+                    .slider-nav {
                         display: none;
                     }
                 }
