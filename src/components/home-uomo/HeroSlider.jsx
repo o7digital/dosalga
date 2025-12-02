@@ -11,8 +11,8 @@ const HeroSlider = () => {
             title: "Modern Jogger",
             price: "399,50 TL",
             cta: "Shop Now",
-            image: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=1200&q=80&fit=crop&crop=center",
-            bgColor: "#f5f5f5"
+            image: "/assets/images/home/demo10/slideshow-character1.png",
+            bgColor: "#f7f7f7"
         }
     ];
 
@@ -113,6 +113,8 @@ const HeroSlider = () => {
                     transition: opacity 0.6s ease-in-out;
                     display: flex;
                     align-items: center;
+                    background: linear-gradient(135deg, #f7f7f7 0%, #ffffff 70%);
+                    overflow: hidden;
                 }
 
                 .slide.active {
@@ -121,8 +123,34 @@ const HeroSlider = () => {
                     z-index: 1;
                 }
 
+                .slide::before {
+                    content: "";
+                    position: absolute;
+                    inset: -120px -80px;
+                    background-image:
+                        linear-gradient(120deg, rgba(0,0,0,0.03) 1px, transparent 1px),
+                        linear-gradient(-120deg, rgba(0,0,0,0.02) 1px, transparent 1px);
+                    background-size: 36px 36px;
+                    opacity: 0.45;
+                    z-index: 0;
+                }
+
+                .slide::after {
+                    content: "";
+                    position: absolute;
+                    right: 6%;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 620px;
+                    height: 620px;
+                    background: radial-gradient(circle at center, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.18) 55%, rgba(255,255,255,0) 72%);
+                    z-index: 0;
+                }
+
                 .slide-content {
                     padding: 60px 0;
+                    position: relative;
+                    z-index: 1;
                 }
 
                 .badge {
@@ -175,12 +203,15 @@ const HeroSlider = () => {
                     display: flex;
                     align-items: center;
                     justify-content: center;
+                    z-index: 1;
                 }
 
                 .slide-image img {
                     max-width: 100%;
                     max-height: 600px;
                     object-fit: contain;
+                    filter: drop-shadow(0 28px 50px rgba(0, 0, 0, 0.16));
+                    transform: translateY(-10px);
                 }
 
                 .nav-btn {
@@ -266,6 +297,12 @@ const HeroSlider = () => {
                     .slide-image img {
                         max-height: 400px;
                     }
+
+                    .slide::after {
+                        width: 420px;
+                        height: 420px;
+                        right: -10%;
+                    }
                 }
 
                 @media (max-width: 768px) {
@@ -294,6 +331,12 @@ const HeroSlider = () => {
 
                     .slide-image img {
                         max-height: 300px;
+                    }
+
+                    .slide::after {
+                        width: 320px;
+                        height: 320px;
+                        right: -20%;
                     }
 
                     .nav-btn {

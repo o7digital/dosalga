@@ -1,35 +1,71 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
 
 const VideoSection = () => {
+    const videoRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
+
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!video) return;
+
+        const onPlay = () => setIsPlaying(true);
+        const onPause = () => setIsPlaying(false);
+
+        video.addEventListener('play', onPlay);
+        video.addEventListener('pause', onPause);
+
+        return () => {
+            video.removeEventListener('play', onPlay);
+            video.removeEventListener('pause', onPause);
+        };
+    }, []);
+
+    const togglePlay = () => {
+        const video = videoRef.current;
+        if (!video) return;
+        if (video.paused || video.ended) {
+            video.play();
+        } else {
+            video.pause();
+        }
+    };
 
     return (
         <section className="video-section">
             <div className="video-wrapper">
-                <div className="video-overlay"></div>
-                <div 
+                <div className="video-overlay" />
+
+                <video
+                    ref={videoRef}
                     className="video-background"
-                    style={{
-                        backgroundImage: 'url(https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1920&q=80)',
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center'
-                    }}
+                    poster="/assets/images/home/demo10/slideshow-character1.png"
+                    preload="metadata"
+                    playsInline
+                    muted
                 >
-                    <div className="play-button-wrapper">
-                        <button 
-                            className="play-button"
-                            onClick={() => setIsPlaying(!isPlaying)}
-                            aria-label="Play video"
-                        >
-                            <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-                                <circle cx="30" cy="30" r="28" stroke="white" strokeWidth="2"/>
-                                <path d="M24 20L40 30L24 40V20Z" fill="white"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                
+                    <source src="/assets/videos/video_1.mp4" type="video/mp4" />
+                </video>
+
+                <button
+                    className={`play-button ${isPlaying ? 'playing' : ''}`}
+                    onClick={togglePlay}
+                    aria-label={isPlaying ? 'Pause video' : 'Play video'}
+                >
+                    <span className="play-icon">
+                        <svg width="26" height="32" viewBox="0 0 26 32" fill="none">
+                            {isPlaying ? (
+                                <g stroke="white" strokeWidth="3" strokeLinecap="round">
+                                    <line x1="7" y1="4" x2="7" y2="28" />
+                                    <line x1="19" y1="4" x2="19" y2="28" />
+                                </g>
+                            ) : (
+                                <path d="M24 16L4 28V4L24 16Z" fill="white" />
+                            )}
+                        </svg>
+                    </span>
+                </button>
+
                 <div className="video-content">
                     <div className="container">
                         <div className="content-wrapper">
@@ -59,6 +95,9 @@ const VideoSection = () => {
                     display: flex;
                     align-items: center;
                     justify-content: center;
+                    border-radius: 18px;
+                    overflow: hidden;
+                    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
                 }
 
                 .video-background {
@@ -68,6 +107,7 @@ const VideoSection = () => {
                     width: 100%;
                     height: 100%;
                     z-index: 1;
+                    object-fit: cover;
                 }
 
                 .video-overlay {
@@ -76,37 +116,46 @@ const VideoSection = () => {
                     left: 0;
                     width: 100%;
                     height: 100%;
-                    background: rgba(0, 0, 0, 0.3);
+                    background: linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.55) 100%);
                     z-index: 2;
                 }
 
-                .play-button-wrapper {
+                .play-button {
                     position: absolute;
                     top: 50%;
                     left: 50%;
                     transform: translate(-50%, -50%);
+                    width: 86px;
+                    height: 86px;
+                    border-radius: 50%;
+                    background: rgba(255, 255, 255, 0.14);
+                    border: 2px solid rgba(255, 255, 255, 0.4);
+                    display: grid;
+                    place-items: center;
                     z-index: 3;
-                }
-
-                .play-button {
-                    background: transparent;
-                    border: none;
                     cursor: pointer;
                     transition: all 0.3s ease;
-                    padding: 0;
+                    backdrop-filter: blur(4px);
                 }
 
                 .play-button:hover {
-                    transform: scale(1.1);
+                    transform: translate(-50%, -50%) scale(1.05);
+                    border-color: rgba(255, 255, 255, 0.8);
+                    background: rgba(255, 255, 255, 0.2);
                 }
 
-                .play-button svg {
-                    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+                .play-button.playing {
+                    background: rgba(0, 0, 0, 0.25);
+                    border-color: rgba(255, 255, 255, 0.75);
+                }
+
+                .play-icon svg {
+                    filter: drop-shadow(0 6px 20px rgba(0,0,0,0.45));
                 }
 
                 .video-content {
                     position: absolute;
-                    bottom: 80px;
+                    bottom: 70px;
                     left: 0;
                     width: 100%;
                     z-index: 4;
@@ -115,6 +164,7 @@ const VideoSection = () => {
                 .content-wrapper {
                     max-width: 600px;
                     color: #fff;
+                    padding-left: 20px;
                 }
 
                 .studio-brand {
