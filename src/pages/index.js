@@ -4,6 +4,8 @@ import CategoryBanners from "../components/home-uomo/CategoryBanners";
 import VideoSection from "../components/home-uomo/VideoSection";
 import TrendingNow from "../components/home-uomo/TrendingNow";
 import BrandsSlider from "../components/home-uomo/BrandsSlider";
+import FeaturedProducts from "../components/home-uomo/FeaturedProducts";
+import LatestNews from "../components/home-uomo/LatestNews";
 
 export default function Home() {
   return (
@@ -20,6 +22,8 @@ export default function Home() {
       <BrandsSlider />
       <TrendingNow />
       <VideoSection />
+      <FeaturedProducts />
+      <LatestNews />
     </>
   );
 }
