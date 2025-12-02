@@ -12,7 +12,7 @@ const HeroSlider = () => {
             title: "Modern Jogger",
             price: "399,50 TL",
             description: "Shop Now",
-            image: "https://uomo-nextjs-ecommerce.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fhome%2Fdemo10%2Fproduct_1.jpg&w=1920&q=75",
+            image: "https://uomo-nextjs-ecommerce.vercel.app/assets/images/home/demo10/product_1.jpg",
             bgColor: "#f5f5f5",
             textAlign: "left"
         },
@@ -22,7 +22,7 @@ const HeroSlider = () => {
             title: "Fitness & Lifestyle",
             price: "",
             description: "From gym to street, elevate your style with our versatile collection.",
-            image: "https://uomo-nextjs-ecommerce.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fhome%2Fdemo10%2Fgrid_banner_3.jpg&w=1920&q=75",
+            image: "https://uomo-nextjs-ecommerce.vercel.app/assets/images/home/demo10/grid_banner_3.jpg",
             bgColor: "#e8f4f8",
             textAlign: "left"
         },
@@ -32,7 +32,7 @@ const HeroSlider = () => {
             title: "Performance Ready",
             price: "",
             description: "Engineered for athletes, designed for champions.",
-            image: "https://uomo-nextjs-ecommerce.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fhome%2Fdemo10%2Fgrid_banner_1.jpg&w=1920&q=75",
+            image: "https://uomo-nextjs-ecommerce.vercel.app/assets/images/home/demo10/grid_banner_1.jpg",
             bgColor: "#fff9f0",
             textAlign: "left"
         }
