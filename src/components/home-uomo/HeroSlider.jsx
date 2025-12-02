@@ -11,17 +11,8 @@ const HeroSlider = () => {
             title: "Modern Jogger",
             price: "399,50 TL",
             cta: "Shop Now",
-            image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1200&q=80",
-            bgColor: "#f8f8f8"
-        },
-        {
-            id: 2,
-            badge: "BEST SELLERS",
-            title: "Running Pro",
-            price: "299,00 TL",
-            cta: "Shop Now",
-            image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=1200&q=80",
-            bgColor: "#fff"
+            image: "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?w=1200&q=80&fit=crop&crop=center",
+            bgColor: "#f5f5f5"
         }
     ];
 
