@@ -17,9 +17,9 @@ export default function Home() {
 
       <HeroSlider />
       <CategoryBanners />
-      <VideoSection />
       <BrandsSlider />
       <TrendingNow />
+      <VideoSection />
     </>
   );
 }
