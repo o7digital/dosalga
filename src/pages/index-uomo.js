@@ -5,7 +5,7 @@ import TrendingNow from "../components/home-uomo/TrendingNow";
 import UomoStudioCollection from "../components/home-uomo/UomoStudioCollection";
 import BrandsSlider from "../components/home-uomo/BrandsSlider";
 
-export default function Home() {
+export default function HomeUomo() {
   return (
     <>
       <Head>

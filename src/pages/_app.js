@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import MainLayout from "../layout/MainLayout";
+import MainLayoutUomo from "../layout/MainLayoutUomo";
 import Head from "next/head";
 import { CartProvider } from "../contexts/CartContext";
 import "../../public/assets/css/bootstrap.min.css";
@@ -11,6 +11,7 @@ import "../../public/assets/css/swiper-bundle.min.css";
 import "../../public/assets/css/nice-select.css";
 import "../../public/assets/css/animate.min.css";
 import "../../public/assets/css/style.css";
+import "../../public/assets/css/uomo-style.css";
 
 export default function App({ Component, pageProps }) {
   useEffect(() => {
@@ -19,19 +20,19 @@ export default function App({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>DOSALGA - Cosmétiques & Beauté</title>
+        <title>DOSALGA - Premium Sportswear & Active Lifestyle</title>
         <meta charSet="UTF-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge"></meta>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1.0"
         ></meta>
-        <meta name="description" content="DOSALGA - Vos produits de beauté et cosmétiques" />
+        <meta name="description" content="DOSALGA - Premium sportswear and active lifestyle products" />
       </Head>
       <CartProvider>
-        <MainLayout>
+        <MainLayoutUomo>
           <Component {...pageProps} />
-        </MainLayout>
+        </MainLayoutUomo>
       </CartProvider>
     </>
   );

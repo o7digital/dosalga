@@ -2,10 +2,35 @@
 
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const Breadcrumb = () => {
   const router = useRouter();
-  const currentPath = router.asPath.replace(/\/$/, ""); // Remove trailing slash
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  
+  if (!mounted) {
+    return (
+      <div className="breadcrumb-section">
+        <div className="container">
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb">
+              <li className="breadcrumb-item">
+                <Link legacyBehavior href="/">
+                  <a>Home</a>
+                </Link>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    );
+  }
+  
+  const currentPath = router.pathname.replace(/\/$/, ""); // Remove trailing slash
   const currentRoute = currentPath.split("/").filter(Boolean);
 
   // Check if there are segments in the currentRoute

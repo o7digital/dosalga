@@ -1,53 +1,19 @@
-import React, { useEffect, useReducer, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Cart from '../components/common/Cart'
-const initialState = {
-    activeMenu: "",
-    activeSubMenu: "",
-    isSidebarOpen: false,
-    isLeftSidebarOpen: false,
-  };
-  function reducer(state, action) {
-      switch (action.type) {
-        case "TOGGLE_MENU":
-          return {
-            ...state,
-    
-            activeMenu: state.activeMenu === action.menu ? "" : action.menu,
-            activeSubMenu:
-              state.activeMenu === action.menu ? state.activeSubMenu : "",
-          };
-        case "TOGGLE_SUB_MENU":
-          return {
-            ...state,
-            activeSubMenu:
-              state.activeSubMenu === action.subMenu ? "" : action.subMenu,
-          };
-        case "TOGGLE_SIDEBAR":
-          return {
-            ...state,
-            isSidebarOpen: !state.isSidebarOpen,
-          };
-        case "setScrollY":
-          return { ...state, scrollY: action.payload };
-        case "TOGGLE_LEFT_SIDEBAR":
-          return {
-            ...state,
-            isLeftSidebarOpen: !state.isLeftSidebarOpen,
-          };
-        default:
-          return state;
-      }
-    }
-  
-  
+
 const Header = () => {
-    const [state, dispatch] = useReducer(reducer, initialState);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isCartOpen, setIsCartOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
     const headerRef = useRef(null);
+    const router = useRouter();
+
     const handleScroll = () => {
-      const { scrollY } = window;
-      dispatch({ type: "setScrollY", payload: scrollY });
+      const scrollY = window.scrollY;
+      setScrolled(scrollY > 100);
     };
     const currentRoute = useRouter().pathname;
     useEffect(() => {
