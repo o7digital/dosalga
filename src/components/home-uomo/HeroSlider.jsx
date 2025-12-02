@@ -1,198 +1,312 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 const HeroSlider = () => {
-    const [isPlaying, setIsPlaying] = useState(false);
+    const [currentSlide, setCurrentSlide] = useState(0);
+
+    const slides = [
+        {
+            id: 1,
+            badge: "NEW ARRIVALS",
+            title: "Modern Jogger",
+            price: "399,50 TL",
+            cta: "Shop Now",
+            image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=1200&q=80",
+            bgColor: "#f8f8f8"
+        },
+        {
+            id: 2,
+            badge: "BEST SELLERS",
+            title: "Running Pro",
+            price: "299,00 TL",
+            cta: "Shop Now",
+            image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=1200&q=80",
+            bgColor: "#fff"
+        }
+    ];
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentSlide((prev) => (prev + 1) % slides.length);
+        }, 5000);
+        return () => clearInterval(interval);
+    }, [slides.length]);
+
+    const goToSlide = (index) => {
+        setCurrentSlide(index);
+    };
+
+    const nextSlide = () => {
+        setCurrentSlide((prev) => (prev + 1) % slides.length);
+    };
+
+    const prevSlide = () => {
+        setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+    };
 
     return (
-        <section className="hero-video-section">
-            <div className="hero-video-wrapper">
-                <div className="video-overlay"></div>
-                <div 
-                    className="video-background"
-                    style={{
-                        backgroundImage: 'url(https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1920&q=80)',
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center'
-                    }}
-                >
-                    <div className="play-button-wrapper">
-                        <button 
-                            className="play-button"
-                            onClick={() => setIsPlaying(!isPlaying)}
-                            aria-label="Play video"
-                        >
-                            <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-                                <circle cx="30" cy="30" r="28" stroke="white" strokeWidth="2"/>
-                                <path d="M24 20L40 30L24 40V20Z" fill="white"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                
-                <div className="hero-video-content">
-                    <div className="container">
-                        <div className="content-wrapper">
-                            <h2 className="studio-brand">DOSALGA</h2>
-                            <h1 className="studio-title">Studio Collection</h1>
-                            <p className="studio-subtitle">Low impact for the high powered.</p>
-                            <Link legacyBehavior href="/shop">
-                                <a className="btn-shop-now">Shop Now</a>
-                            </Link>
+        <section className="hero-slider">
+            <div className="slider-container">
+                {slides.map((slide, index) => (
+                    <div
+                        key={slide.id}
+                        className={`slide ${index === currentSlide ? 'active' : ''}`}
+                        style={{ backgroundColor: slide.bgColor }}
+                    >
+                        <div className="container">
+                            <div className="row align-items-center">
+                                <div className="col-lg-5 col-md-6">
+                                    <div className="slide-content">
+                                        <span className="badge">{slide.badge}</span>
+                                        <h1 className="title">{slide.title}</h1>
+                                        <div className="price">{slide.price}</div>
+                                        <Link legacyBehavior href="/shop">
+                                            <a className="shop-link">{slide.cta}</a>
+                                        </Link>
+                                    </div>
+                                </div>
+                                <div className="col-lg-7 col-md-6">
+                                    <div className="slide-image">
+                                        <img src={slide.image} alt={slide.title} />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                ))}
+
+                <button className="nav-btn prev-btn" onClick={prevSlide}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2"/>
+                    </svg>
+                </button>
+                <button className="nav-btn next-btn" onClick={nextSlide}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2"/>
+                    </svg>
+                </button>
+
+                <div className="dots">
+                    {slides.map((_, index) => (
+                        <button
+                            key={index}
+                            className={`dot ${index === currentSlide ? 'active' : ''}`}
+                            onClick={() => goToSlide(index)}
+                        />
+                    ))}
                 </div>
             </div>
 
             <style jsx>{`
-                .hero-video-section {
+                .hero-slider {
                     position: relative;
                     width: 100%;
                     overflow: hidden;
+                    background: #fff;
                 }
 
-                .hero-video-wrapper {
+                .slider-container {
                     position: relative;
                     width: 100%;
-                    height: 700px;
+                    height: 650px;
+                }
+
+                .slide {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    opacity: 0;
+                    visibility: hidden;
+                    transition: opacity 0.6s ease-in-out;
+                    display: flex;
+                    align-items: center;
+                }
+
+                .slide.active {
+                    opacity: 1;
+                    visibility: visible;
+                    z-index: 1;
+                }
+
+                .slide-content {
+                    padding: 60px 0;
+                }
+
+                .badge {
+                    display: inline-block;
+                    padding: 8px 20px;
+                    background: #ffd700;
+                    color: #000;
+                    font-size: 12px;
+                    font-weight: 700;
+                    letter-spacing: 1px;
+                    text-transform: uppercase;
+                    border-radius: 20px;
+                    margin-bottom: 20px;
+                }
+
+                .title {
+                    font-size: 64px;
+                    font-weight: 400;
+                    line-height: 1.1;
+                    color: #222;
+                    margin-bottom: 20px;
+                }
+
+                .price {
+                    font-size: 48px;
+                    font-weight: 500;
+                    color: #222;
+                    margin-bottom: 30px;
+                }
+
+                .shop-link {
+                    display: inline-block;
+                    color: #222;
+                    font-size: 16px;
+                    font-weight: 500;
+                    text-decoration: none;
+                    border-bottom: 2px solid #222;
+                    padding-bottom: 3px;
+                    transition: all 0.3s ease;
+                }
+
+                .shop-link:hover {
+                    color: #ffd700;
+                    border-color: #ffd700;
+                }
+
+                .slide-image {
+                    position: relative;
+                    height: 650px;
                     display: flex;
                     align-items: center;
                     justify-content: center;
                 }
 
-                .video-background {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    z-index: 1;
+                .slide-image img {
+                    max-width: 100%;
+                    max-height: 600px;
+                    object-fit: contain;
                 }
 
-                .video-overlay {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0, 0, 0, 0.3);
-                    z-index: 2;
-                }
-
-                .play-button-wrapper {
+                .nav-btn {
                     position: absolute;
                     top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    z-index: 3;
+                    transform: translateY(-50%);
+                    z-index: 10;
+                    width: 50px;
+                    height: 50px;
+                    background: rgba(255, 255, 255, 0.9);
+                    border: 1px solid #ddd;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    color: #222;
                 }
 
-                .play-button {
-                    background: transparent;
+                .nav-btn:hover {
+                    background: #222;
+                    border-color: #222;
+                    color: #fff;
+                }
+
+                .prev-btn {
+                    left: 30px;
+                }
+
+                .next-btn {
+                    right: 30px;
+                }
+
+                .dots {
+                    position: absolute;
+                    bottom: 40px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    display: flex;
+                    gap: 10px;
+                    z-index: 10;
+                }
+
+                .dot {
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                    background: rgba(0, 0, 0, 0.2);
                     border: none;
                     cursor: pointer;
                     transition: all 0.3s ease;
                     padding: 0;
                 }
 
-                .play-button:hover {
-                    transform: scale(1.1);
+                .dot:hover {
+                    background: rgba(0, 0, 0, 0.4);
                 }
 
-                .play-button svg {
-                    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
-                }
-
-                .hero-video-content {
-                    position: absolute;
-                    bottom: 80px;
-                    left: 0;
-                    width: 100%;
-                    z-index: 4;
-                }
-
-                .content-wrapper {
-                    max-width: 600px;
-                    color: #fff;
-                }
-
-                .studio-brand {
-                    font-size: 18px;
-                    font-weight: 700;
-                    letter-spacing: 3px;
-                    text-transform: uppercase;
-                    margin-bottom: 10px;
-                    color: #fff;
-                }
-
-                .studio-title {
-                    font-size: 56px;
-                    font-weight: 400;
-                    line-height: 1.2;
-                    margin-bottom: 15px;
-                    color: #fff;
-                }
-
-                .studio-subtitle {
-                    font-size: 18px;
-                    line-height: 1.6;
-                    margin-bottom: 30px;
-                    color: rgba(255, 255, 255, 0.9);
-                }
-
-                .btn-shop-now {
-                    display: inline-block;
-                    padding: 14px 45px;
-                    background: #ffd700;
-                    color: #000;
-                    font-size: 14px;
-                    font-weight: 700;
-                    text-transform: uppercase;
-                    letter-spacing: 0.5px;
-                    border-radius: 30px;
-                    text-decoration: none;
-                    transition: all 0.3s ease;
-                }
-
-                .btn-shop-now:hover {
-                    background: #ffed4e;
-                    transform: translateY(-2px);
-                    box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+                .dot.active {
+                    background: #222;
+                    width: 30px;
+                    border-radius: 5px;
                 }
 
                 @media (max-width: 992px) {
-                    .hero-video-wrapper {
-                        height: 600px;
+                    .slider-container {
+                        height: 550px;
                     }
 
-                    .studio-title {
-                        font-size: 42px;
+                    .title {
+                        font-size: 48px;
                     }
 
-                    .hero-video-content {
-                        bottom: 60px;
+                    .price {
+                        font-size: 36px;
+                    }
+
+                    .slide-image {
+                        height: 450px;
+                    }
+
+                    .slide-image img {
+                        max-height: 400px;
                     }
                 }
 
                 @media (max-width: 768px) {
-                    .hero-video-wrapper {
-                        height: 500px;
+                    .slider-container {
+                        height: auto;
+                        min-height: 700px;
                     }
 
-                    .studio-title {
-                        font-size: 32px;
-                    }
-
-                    .studio-subtitle {
-                        font-size: 16px;
-                    }
-
-                    .hero-video-content {
-                        bottom: 40px;
-                    }
-
-                    .content-wrapper {
+                    .slide-content {
+                        padding: 40px 0;
                         text-align: center;
+                    }
+
+                    .title {
+                        font-size: 36px;
+                    }
+
+                    .price {
+                        font-size: 28px;
+                    }
+
+                    .slide-image {
+                        height: 350px;
+                        margin-bottom: 20px;
+                    }
+
+                    .slide-image img {
+                        max-height: 300px;
+                    }
+
+                    .nav-btn {
+                        display: none;
                     }
                 }
             `}</style>
