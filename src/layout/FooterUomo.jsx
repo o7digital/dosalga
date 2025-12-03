@@ -170,7 +170,7 @@ const FooterUomo = () => {
                 }
 
                 .footer-logo-img {
-                    height: 36px;
+                    height: 72px;
                     width: auto;
                     display: block;
                 }
