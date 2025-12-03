@@ -40,7 +40,7 @@ const HeaderUomo = () => {
                         <div className="header-logo">
                             <Link legacyBehavior href="/">
                                 <a className="logo-link">
-                                    <span className="logo-text">DOSALGA</span>
+                                    <img src="/logo-dosalga.png" alt="Dosalga" className="logo-img" />
                                 </a>
                             </Link>
                         </div>
@@ -48,9 +48,9 @@ const HeaderUomo = () => {
                         {/* Desktop Navigation */}
                         <nav className="header-nav d-none d-lg-flex">
                             <ul className="nav-menu">
-                                <li className={router.pathname === '/' ? 'active' : ''}>
-                                    <Link legacyBehavior href="/">
-                                        <a>HOME</a>
+                                <li className={router.pathname === '/about-us' ? 'active' : ''}>
+                                    <Link legacyBehavior href="/about-us">
+                                        <a>ABOUT US</a>
                                     </Link>
                                 </li>
                                 <li className={router.pathname.includes('/shop') ? 'active' : ''}>
@@ -58,14 +58,9 @@ const HeaderUomo = () => {
                                         <a>SHOP</a>
                                     </Link>
                                 </li>
-                                <li className={router.pathname.includes('/blog') ? 'active' : ''}>
-                                    <Link legacyBehavior href="/blog-grid">
-                                        <a>BLOG</a>
-                                    </Link>
-                                </li>
-                                <li className={router.pathname === '/about-us' ? 'active' : ''}>
-                                    <Link legacyBehavior href="/about-us">
-                                        <a>ABOUT</a>
+                                <li className={router.pathname === '/services' ? 'active' : ''}>
+                                    <Link legacyBehavior href="/services">
+                                        <a>SERVICES</a>
                                     </Link>
                                 </li>
                                 <li className={router.pathname === '/contact' ? 'active' : ''}>
@@ -163,7 +158,9 @@ const HeaderUomo = () => {
                     <div className="mobile-menu-content">
                         <div className="mobile-menu-header">
                             <Link legacyBehavior href="/">
-                                <a className="mobile-logo">DOSALGA</a>
+                                <a className="mobile-logo">
+                                    <img src="/logo-dosalga.png" alt="Dosalga" />
+                                </a>
                             </Link>
                             <button className="close-mobile-menu" onClick={toggleMobileMenu}>
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -173,8 +170,8 @@ const HeaderUomo = () => {
                         </div>
                         <ul className="mobile-nav-menu">
                             <li>
-                                <Link legacyBehavior href="/">
-                                    <a onClick={toggleMobileMenu}>HOME</a>
+                                <Link legacyBehavior href="/about-us">
+                                    <a onClick={toggleMobileMenu}>ABOUT US</a>
                                 </Link>
                             </li>
                             <li>
@@ -183,13 +180,8 @@ const HeaderUomo = () => {
                                 </Link>
                             </li>
                             <li>
-                                <Link legacyBehavior href="/blog-grid">
-                                    <a onClick={toggleMobileMenu}>BLOG</a>
-                                </Link>
-                            </li>
-                            <li>
-                                <Link legacyBehavior href="/about-us">
-                                    <a onClick={toggleMobileMenu}>ABOUT</a>
+                                <Link legacyBehavior href="/services">
+                                    <a onClick={toggleMobileMenu}>SERVICES</a>
                                 </Link>
                             </li>
                             <li>
@@ -226,16 +218,16 @@ const HeaderUomo = () => {
                     height: 80px;
                 }
 
-                .logo-text {
-                    font-size: 28px;
-                    font-weight: 800;
-                    letter-spacing: 2px;
-                    color: #000;
-                    transition: color 0.3s ease;
+                .logo-img {
+                    height: 34px;
+                    width: auto;
+                    display: block;
                 }
 
-                .logo-text:hover {
-                    color: #222;
+                .mobile-logo img {
+                    height: 28px;
+                    width: auto;
+                    display: block;
                 }
 
                 .nav-menu {
