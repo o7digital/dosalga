@@ -20,7 +20,9 @@ const FooterUomo = () => {
                         <div className="col-lg-3 col-md-6">
                             <div className="footer-widget">
                                 <Link legacyBehavior href="/">
-                                    <a className="footer-logo">DOSALGA</a>
+                                    <a className="footer-logo">
+                                        <img src="/logo-dosalga.png" alt="Dosalga" className="footer-logo-img" />
+                                    </a>
                                 </Link>
                                 <p className="footer-description">
                                     Premium sportswear and active lifestyle products for everyone.
@@ -28,7 +30,7 @@ const FooterUomo = () => {
                                 <div className="footer-contact">
                                     <p>1418 River Drive, Suite 35<br />Cottonhall, CA 9622<br />United States</p>
                                     <p>
-                                        <a href="mailto:contact@dosalga.com">contact@dosalga.com</a>
+                                        <a href="mailto:contact@dosalga.mx">contact@dosalga.mx</a>
                                     </p>
                                     <p>
                                         <a href="tel:+33XXXXXXXXX">+33 X XX XX XX XX</a>
@@ -65,7 +67,7 @@ const FooterUomo = () => {
                                 <h6 className="footer-widget-title">COMPANY</h6>
                                 <ul className="footer-links">
                                     <li><Link legacyBehavior href="/about-us"><a>About Us</a></Link></li>
-                                    <li><Link legacyBehavior href="/about-us"><a>Careers</a></Link></li>
+                                    <li><Link legacyBehavior href="/services"><a>Services</a></Link></li>
                                     <li><Link legacyBehavior href="/about-us"><a>Affiliates</a></Link></li>
                                     <li><Link legacyBehavior href="/blog-grid"><a>Blog</a></Link></li>
                                     <li><Link legacyBehavior href="/contact"><a>Contact Us</a></Link></li>
@@ -94,7 +96,7 @@ const FooterUomo = () => {
                                 <ul className="footer-links">
                                     <li><Link legacyBehavior href="/about-us"><a>Customer Service</a></Link></li>
                                     <li><Link legacyBehavior href="/my-account"><a>My Account</a></Link></li>
-                                    <li><Link legacyBehavior href="/contact"><a>Find a Store</a></Link></li>
+                                    
                                     <li><Link legacyBehavior href="/privacy-policy"><a>Legal & Privacy</a></Link></li>
                                     <li><Link legacyBehavior href="/contact"><a>Contact</a></Link></li>
                                     <li><Link legacyBehavior href="/gift-card"><a>Gift Card</a></Link></li>
@@ -126,14 +128,7 @@ const FooterUomo = () => {
                                         </button>
                                     </div>
                                 </form>
-                                <div className="app-download">
-                                    <a href="https://www.apple.com/app-store/" target="_blank" rel="noopener noreferrer">
-                                        <img src="/assets/img/home1/app-store.png" alt="App Store" />
-                                    </a>
-                                    <a href="https://play.google.com/store/apps" target="_blank" rel="noopener noreferrer">
-                                        <img src="/assets/img/home1/google-play.png" alt="Google Play" />
-                                    </a>
-                                </div>
+                               
                             </div>
                         </div>
                     </div>
@@ -170,13 +165,14 @@ const FooterUomo = () => {
                 }
 
                 .footer-logo {
-                    font-size: 28px;
-                    font-weight: 800;
-                    letter-spacing: 2px;
-                    color: #fff;
-                    text-decoration: none;
                     display: inline-block;
                     margin-bottom: 20px;
+                }
+
+                .footer-logo-img {
+                    height: 36px;
+                    width: auto;
+                    display: block;
                 }
 
                 .footer-description {
