@@ -21,7 +21,7 @@ const FooterUomo = () => {
                             <div className="footer-widget">
                                 <Link legacyBehavior href="/">
                                     <a className="footer-logo">
-                                        <img src="/logo-dosalga.png" alt="Dosalga" className="footer-logo-img" />
+                                        <img src="/logo2.jpg" alt="Dosalga" className="footer-logo-img" />
                                     </a>
                                 </Link>
                                 <p className="footer-description">
