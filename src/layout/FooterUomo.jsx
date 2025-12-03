@@ -156,7 +156,7 @@ const FooterUomo = () => {
 
             <style jsx>{`
                 .uomo-footer {
-                    background: rgba(34, 34, 34, 0.5);
+                    background: #222;
                     color: #fff;
                 }
 
