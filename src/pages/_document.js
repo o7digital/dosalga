@@ -17,6 +17,20 @@ export default function Document() {
           data-blockingmode="auto"
           type="text/javascript"
         />
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-NXYGGSH0NR"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-NXYGGSH0NR');
+            `,
+          }}
+        />
       </Head>
       <body>
         <Main />
