@@ -41,7 +41,7 @@ export default function Home() {
       <BrandsSlider />
       <TrendingNow />
       <VideoSection />
-      <LatestNews />
+      {/* <LatestNews /> */}
     </>
   );
 }
