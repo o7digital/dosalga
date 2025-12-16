@@ -6,27 +6,27 @@ const slides = [
     {
         id: 1,
         badge: "NEW ARRIVALS",
-        title: "Modern Jogger",
-        price: "399,50 TL",
-        cta: "Shop Now",
+        title: "Activewear Designed for Real Life",
+        subtitle: "Comfort, simplicity, and movement for everyday routines.",
+        cta: "Shop Essentials",
         image: "/slider/gemini1.png",
         alt: "Lifestyle activewear designed for real life"
     },
     {
         id: 2,
         badge: "NEW ARRIVALS",
-        title: "Modern Jogger",
-        price: "399,50 TL",
-        cta: "Shop Now",
+        title: "Move Through Your Day With Ease",
+        subtitle: "Versatile activewear made to fit your lifestyle, not the gym.",
+        cta: "Discover the Collection",
         image: "/slider/gemini2.png",
         alt: "Everyday activewear for modern lifestyles"
     },
     {
         id: 3,
         badge: "NEW ARRIVALS",
-        title: "Modern Jogger",
-        price: "399,50 TL",
-        cta: "Shop Now",
+        title: "Comfort That Goes Wherever You Do",
+        subtitle: "Light layers and everyday essentials for real movement.",
+        cta: "Explore Dosalga",
         image: "/slider/gemini3.png",
         alt: "Comfortable activewear in real environments"
     }
@@ -70,7 +70,7 @@ const HeroSlider = () => {
                             <div className="content-inner">
                                 <span className="badge">{slide.badge}</span>
                                 <h1 className="title">{slide.title}</h1>
-                                <div className="price">{slide.price}</div>
+                                {slide.subtitle && <p className="subtitle">{slide.subtitle}</p>}
                                 <Link legacyBehavior href="/shop">
                                     <a className="shop-link">{slide.cta}</a>
                                 </Link>
@@ -128,7 +128,7 @@ const HeroSlider = () => {
                 .media-overlay {
                     position: absolute;
                     inset: 0;
-                    background: linear-gradient(120deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.52) 28%, rgba(0,0,0,0.28) 62%, rgba(0,0,0,0.08) 100%);
+                    background: linear-gradient(120deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.35) 35%, rgba(0,0,0,0.2) 65%, rgba(0,0,0,0.08) 100%);
                 }
 
                 .slide-content {
@@ -170,10 +170,11 @@ const HeroSlider = () => {
                     margin: 0;
                 }
 
-                .price {
-                    font-size: clamp(28px, 4vw, 44px);
-                    font-weight: 500;
-                    margin: 0 0 6px;
+                .subtitle {
+                    font-size: clamp(16px, 2.6vw, 20px);
+                    color: rgba(248,248,248,0.9);
+                    margin: 6px 0 12px;
+                    line-height: 1.5;
                 }
 
                 .shop-link {
