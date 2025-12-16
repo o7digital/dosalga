@@ -25,9 +25,9 @@ const AboutPage = () => {
       </Head>
       
       <div className="about-page pt-100 pb-100">
-      <div className="container">
-        <div className="row justify-content-center mb-60">
-          <div className="col-lg-8 text-center">
+        <div className="container">
+          <div className="row justify-content-center mb-60">
+            <div className="col-lg-8 text-center">
             <h1 className="mb-3">About Dosalga</h1>
             <p className="text-muted">
               Dosalga is a modern activewear lifestyle brand built around comfortable sportswear that moves with you every day.
@@ -87,6 +87,7 @@ const AboutPage = () => {
               <p>
                 Dosalga is for people who value comfort and ease. We keep the focus on real movement and real routines—no trends, no over-engineering, just everyday activewear essentials you can depend on.
               </p>
+            </div>
             </div>
           </div>
         </div>

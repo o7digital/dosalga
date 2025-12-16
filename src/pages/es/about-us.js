@@ -25,9 +25,9 @@ const AboutPageES = () => {
       </Head>
       
       <div className="about-page pt-100 pb-100">
-      <div className="container">
-        <div className="row justify-content-center mb-60">
-          <div className="col-lg-8 text-center">
+        <div className="container">
+          <div className="row justify-content-center mb-60">
+            <div className="col-lg-8 text-center">
             <h1 className="mb-3">Sobre Dosalga</h1>
             <p className="text-muted">
               Dosalga es una marca moderna de estilo de vida de ropa deportiva construida alrededor de ropa deportiva cómoda que se mueve contigo todos los días.
@@ -77,6 +77,7 @@ const AboutPageES = () => {
               <p>
                 Dosalga es para personas que valoran la comodidad todos los días. Nos centramos en mantener la vida simple, construir hábitos saludables y movernos a tu propio ritmo. Si buscas ropa deportiva que simplemente funcione, estás en el lugar correcto.
               </p>
+            </div>
             </div>
           </div>
         </div>
