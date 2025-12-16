@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const HeroSlider = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -11,7 +12,38 @@ const HeroSlider = () => {
             title: "Modern Jogger",
             price: "399,50 TL",
             cta: "Shop Now",
-            image: "/assets/images/home/demo10/slideshow-character1.png",
+            image: "/slider/shoe.png",
+            alt: "Lifestyle activewear designed for everyday movement",
+            bgColor: "#f7f7f7"
+        },
+        {
+            id: 2,
+            badge: "NEW ARRIVALS",
+            title: "Modern Jogger",
+            price: "399,50 TL",
+            cta: "Shop Now",
+            image: "/slider/gemini1.png",
+            alt: "Comfortable activewear for real life",
+            bgColor: "#f7f7f7"
+        },
+        {
+            id: 3,
+            badge: "NEW ARRIVALS",
+            title: "Modern Jogger",
+            price: "399,50 TL",
+            cta: "Shop Now",
+            image: "/slider/gemini2.png",
+            alt: "Modern activewear worn in everyday environments",
+            bgColor: "#f7f7f7"
+        },
+        {
+            id: 4,
+            badge: "NEW ARRIVALS",
+            title: "Modern Jogger",
+            price: "399,50 TL",
+            cta: "Shop Now",
+            image: "/slider/gemini3.png",
+            alt: "Lifestyle activewear designed for everyday movement",
             bgColor: "#f7f7f7"
         }
     ];
@@ -58,7 +90,16 @@ const HeroSlider = () => {
                                 </div>
                                 <div className="col-lg-7 col-md-6">
                                     <div className="slide-image">
-                                        <img src={slide.image} alt={slide.title} />
+                                        <div className="slide-image-inner">
+                                            <Image
+                                                src={slide.image}
+                                                alt={slide.alt}
+                                                fill
+                                                sizes="(max-width: 768px) 90vw, (max-width: 1200px) 50vw, 700px"
+                                                priority={index === 0}
+                                                style={{ objectFit: 'contain' }}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -206,10 +247,14 @@ const HeroSlider = () => {
                     z-index: 1;
                 }
 
-                .slide-image img {
-                    max-width: 100%;
-                    max-height: 600px;
-                    object-fit: contain;
+                .slide-image-inner {
+                    position: relative;
+                    width: 100%;
+                    max-width: 820px;
+                    height: 600px;
+                }
+
+                .slide-image :global(img) {
                     filter: drop-shadow(0 28px 50px rgba(0, 0, 0, 0.16));
                     transform: translateY(-10px);
                 }
@@ -294,8 +339,8 @@ const HeroSlider = () => {
                         height: 450px;
                     }
 
-                    .slide-image img {
-                        max-height: 400px;
+                    .slide-image-inner {
+                        height: 400px;
                     }
 
                     .slide::after {
@@ -329,8 +374,8 @@ const HeroSlider = () => {
                         margin-bottom: 20px;
                     }
 
-                    .slide-image img {
-                        max-height: 300px;
+                    .slide-image-inner {
+                        height: 300px;
                     }
 
                     .slide::after {
