@@ -152,8 +152,9 @@ const FooterUomo = () => {
 
             <style jsx>{`
                 .uomo-footer {
-                    background: #222;
-                    color: #fff;
+                    background: #bcbcbc;
+                    color: #000;
+                    border-top: 3px solid #d20000;
                 }
 
                 .footer-main {
@@ -173,26 +174,26 @@ const FooterUomo = () => {
 
                 .footer-description {
                     font-size: 14px;
-                    color: #999;
+                    color: #111;
                     line-height: 1.6;
                     margin-bottom: 20px;
                 }
 
                 .footer-contact p {
                     font-size: 14px;
-                    color: #999;
+                    color: #111;
                     margin-bottom: 12px;
                     line-height: 1.6;
                 }
 
                 .footer-contact a {
-                    color: #fff;
+                    color: #000;
                     text-decoration: none;
                     transition: color 0.3s ease;
                 }
 
                 .footer-contact a:hover {
-                    color: #ddd;
+                    color: #d20000;
                 }
 
                 .footer-social {
@@ -207,15 +208,15 @@ const FooterUomo = () => {
                     justify-content: center;
                     width: 40px;
                     height: 40px;
-                    background: rgba(255,255,255,0.1);
+                    background: rgba(0,0,0,0.08);
                     border-radius: 50%;
-                    color: #fff;
+                    color: #000;
                     transition: all 0.3s ease;
                 }
 
                 .footer-social a:hover {
-                    background: #fff;
-                    color: #222;
+                    background: #d20000;
+                    color: #fff;
                     transform: translateY(-2px);
                 }
 
@@ -224,7 +225,7 @@ const FooterUomo = () => {
                     font-weight: 700;
                     letter-spacing: 1px;
                     text-transform: uppercase;
-                    color: #fff;
+                    color: #000;
                     margin-bottom: 24px;
                 }
 
@@ -240,20 +241,20 @@ const FooterUomo = () => {
 
                 .footer-links a {
                     font-size: 14px;
-                    color: #999;
+                    color: #111;
                     text-decoration: none;
                     transition: all 0.3s ease;
                     display: inline-block;
                 }
 
                 .footer-links a:hover {
-                    color: #fff;
+                    color: #d20000;
                     transform: translateX(4px);
                 }
 
                 .newsletter-text {
                     font-size: 14px;
-                    color: #999;
+                    color: #111;
                     line-height: 1.6;
                     margin-bottom: 20px;
                 }
@@ -270,9 +271,9 @@ const FooterUomo = () => {
                 .form-control {
                     flex: 1;
                     padding: 12px 50px 12px 16px;
-                    border: 1px solid rgba(255,255,255,0.2);
-                    background: rgba(255,255,255,0.05);
-                    color: #fff;
+                    border: 1px solid rgba(0,0,0,0.3);
+                    background: rgba(255,255,255,0.9);
+                    color: #000;
                     border-radius: 50px;
                     font-size: 14px;
                     outline: none;
@@ -280,12 +281,12 @@ const FooterUomo = () => {
                 }
 
                 .form-control:focus {
-                    border-color: #fff;
-                    background: rgba(255,255,255,0.1);
+                    border-color: #d20000;
+                    background: #fff;
                 }
 
                 .form-control::placeholder {
-                    color: #999;
+                    color: #555;
                 }
 
                 .btn-submit {
@@ -297,8 +298,8 @@ const FooterUomo = () => {
                     height: 40px;
                     border-radius: 50%;
                     border: none;
-                    background: #fff;
-                    color: #222;
+                    background: #000;
+                    color: #fff;
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -307,7 +308,7 @@ const FooterUomo = () => {
                 }
 
                 .btn-submit:hover {
-                    background: #ddd;
+                    background: #d20000;
                 }
 
                 .app-download {
@@ -329,23 +330,23 @@ const FooterUomo = () => {
 
                 .footer-bottom {
                     padding: 24px 0;
-                    border-top: 1px solid rgba(255,255,255,0.1);
+                    border-top: 1px solid rgba(0,0,0,0.12);
                 }
 
                 .copyright {
                     font-size: 14px;
-                    color: #999;
+                    color: #111;
                     margin: 0;
                 }
 
                 .copyright a {
-                    color: #fff;
+                    color: #000;
                     text-decoration: none;
                     transition: color 0.3s ease;
                 }
 
                 .copyright a:hover {
-                    color: #ddd;
+                    color: #d20000;
                 }
 
                 .payment-methods {
@@ -358,7 +359,7 @@ const FooterUomo = () => {
                 .payment-methods img {
                     height: 24px;
                     width: auto;
-                    opacity: 0.6;
+                    opacity: 0.8;
                     transition: opacity 0.3s ease;
                 }
 
