@@ -1,9 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const VideoSection = () => {
     const videoRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
+    const { pathname } = useRouter();
+    const isSpanish = pathname.startsWith('/es');
 
     useEffect(() => {
         const video = videoRef.current;
@@ -70,10 +73,14 @@ const VideoSection = () => {
                     <div className="container">
                         <div className="content-wrapper">
                             <h2 className="studio-brand">DOSALGA</h2>
-                            <h1 className="studio-title">Studio Collection</h1>
-                            <p className="studio-subtitle">Low impact for the high powered.</p>
+                            <h1 className="studio-title">
+                              {isSpanish ? 'Colección Studio' : 'Studio Collection'}
+                            </h1>
+                            <p className="studio-subtitle">
+                              {isSpanish ? 'Impacto ligero para un día con energía.' : 'Low impact for the high powered.'}
+                            </p>
                             <Link legacyBehavior href="/shop">
-                                <a className="btn-shop-now">Shop Now</a>
+                                <a className="btn-shop-now">{isSpanish ? 'Comprar ahora' : 'Shop Now'}</a>
                             </Link>
                         </div>
                     </div>

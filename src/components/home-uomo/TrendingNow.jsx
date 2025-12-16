@@ -1,15 +1,24 @@
 import React from 'react';
 import Link from 'next/link';
 import { useProducts } from '../../hooks/useProducts';
+import { useRouter } from 'next/router';
 
 const TrendingNow = () => {
     const { products, loading, error } = useProducts({ limit: 8 });
+    const { pathname } = useRouter();
+    const isSpanish = pathname.startsWith('/es');
 
-    const categories = [
-        { id: 'all', name: 'All', active: true },
-        { id: 'sportwear', name: 'Sportwear' },
-        { id: 'running', name: 'Running' }
-    ];
+    const categories = isSpanish
+        ? [
+            { id: 'all', name: 'Todos', active: true },
+            { id: 'sportwear', name: 'Sportwear' },
+            { id: 'running', name: 'Running' }
+        ]
+        : [
+            { id: 'all', name: 'All', active: true },
+            { id: 'sportwear', name: 'Sportwear' },
+            { id: 'running', name: 'Running' }
+        ];
 
     if (loading) {
         return (
@@ -29,7 +38,7 @@ const TrendingNow = () => {
         <section className="trending-section py-5">
             <div className="container">
                 <div className="section-header text-center mb-5">
-                    <h2 className="section-title">Trending Now</h2>
+                    <h2 className="section-title">{isSpanish ? 'Tendencias' : 'Trending Now'}</h2>
                     <div className="category-filter mt-4">
                         {categories.map((cat) => (
                             <button 

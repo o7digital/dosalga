@@ -10,6 +10,7 @@ const HeaderUomo = () => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const router = useRouter();
+    const isSpanish = router.pathname.startsWith('/es');
 
     useEffect(() => {
         const handleScroll = () => {
@@ -49,19 +50,19 @@ const HeaderUomo = () => {
                         {/* Desktop Navigation */}
                         <nav className="header-nav d-none d-lg-flex">
                             <ul className="nav-menu">
-                                <li className={router.pathname === '/about-us' ? 'active' : ''}>
-                                    <Link legacyBehavior href="/about-us">
-                                        <a>ABOUT US</a>
+                                <li className={router.pathname === (isSpanish ? '/es/about-us' : '/about-us') ? 'active' : ''}>
+                                    <Link legacyBehavior href={isSpanish ? "/es/about-us" : "/about-us"}>
+                                        <a>{isSpanish ? 'SOBRE NOSOTROS' : 'ABOUT US'}</a>
                                     </Link>
                                 </li>
-                                <li className={router.pathname === '/services' ? 'active' : ''}>
-                                    <Link legacyBehavior href="/services">
-                                        <a>SERVICES</a>
+                                <li className={router.pathname === (isSpanish ? '/es/services' : '/services') ? 'active' : ''}>
+                                    <Link legacyBehavior href={isSpanish ? "/es/services" : "/services"}>
+                                        <a>{isSpanish ? 'SERVICIOS' : 'SERVICES'}</a>
                                     </Link>
                                 </li>
-                                <li className={router.pathname === '/contact' ? 'active' : ''}>
-                                    <Link legacyBehavior href="/contact">
-                                        <a>CONTACT</a>
+                                <li className={router.pathname === (isSpanish ? '/es/contact' : '/contact') ? 'active' : ''}>
+                                    <Link legacyBehavior href={isSpanish ? "/es/contact" : "/contact"}>
+                                        <a>{isSpanish ? 'CONTACTO' : 'CONTACT'}</a>
                                     </Link>
                                 </li>
                             </ul>
@@ -171,18 +172,18 @@ const HeaderUomo = () => {
                         </div>
                         <ul className="mobile-nav-menu">
                             <li>
-                                <Link legacyBehavior href="/about-us">
-                                    <a onClick={toggleMobileMenu}>ABOUT US</a>
+                                <Link legacyBehavior href={isSpanish ? "/es/about-us" : "/about-us"}>
+                                    <a onClick={toggleMobileMenu}>{isSpanish ? 'SOBRE NOSOTROS' : 'ABOUT US'}</a>
                                 </Link>
                             </li>
                             <li>
-                                <Link legacyBehavior href="/services">
-                                    <a onClick={toggleMobileMenu}>SERVICES</a>
+                                <Link legacyBehavior href={isSpanish ? "/es/services" : "/services"}>
+                                    <a onClick={toggleMobileMenu}>{isSpanish ? 'SERVICIOS' : 'SERVICES'}</a>
                                 </Link>
                             </li>
                             <li>
-                                <Link legacyBehavior href="/contact">
-                                    <a onClick={toggleMobileMenu}>CONTACT</a>
+                                <Link legacyBehavior href={isSpanish ? "/es/contact" : "/contact"}>
+                                    <a onClick={toggleMobileMenu}>{isSpanish ? 'CONTACTO' : 'CONTACT'}</a>
                                 </Link>
                             </li>
                         </ul>
