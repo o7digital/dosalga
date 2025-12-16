@@ -53,11 +53,6 @@ const HeaderUomo = () => {
                                         <a>ABOUT US</a>
                                     </Link>
                                 </li>
-                                <li className={router.pathname.includes('/shop') ? 'active' : ''}>
-                                    <Link legacyBehavior href="/shop">
-                                        <a>SHOP</a>
-                                    </Link>
-                                </li>
                                 <li className={router.pathname === '/services' ? 'active' : ''}>
                                     <Link legacyBehavior href="/services">
                                         <a>SERVICES</a>
@@ -172,11 +167,6 @@ const HeaderUomo = () => {
                             <li>
                                 <Link legacyBehavior href="/about-us">
                                     <a onClick={toggleMobileMenu}>ABOUT US</a>
-                                </Link>
-                            </li>
-                            <li>
-                                <Link legacyBehavior href="/shop">
-                                    <a onClick={toggleMobileMenu}>SHOP</a>
                                 </Link>
                             </li>
                             <li>
