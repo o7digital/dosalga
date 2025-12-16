@@ -128,7 +128,7 @@ const HeroSlider = () => {
                 .media-overlay {
                     position: absolute;
                     inset: 0;
-                    background: linear-gradient(110deg, rgba(255,255,255,0.82) 0%, rgba(255,255,255,0.72) 22%, rgba(255,255,255,0.4) 38%, rgba(0,0,0,0.18) 78%, rgba(0,0,0,0.04) 100%);
+                    background: linear-gradient(120deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.52) 28%, rgba(0,0,0,0.28) 62%, rgba(0,0,0,0.08) 100%);
                 }
 
                 .slide-content {
@@ -143,7 +143,7 @@ const HeroSlider = () => {
 
                 .content-inner {
                     max-width: 520px;
-                    color: #0f0f0f;
+                    color: #f8f8f8;
                     display: flex;
                     flex-direction: column;
                     gap: 18px;
@@ -152,14 +152,14 @@ const HeroSlider = () => {
                 .badge {
                     display: inline-block;
                     padding: 8px 20px;
-                    background: rgba(0,0,0,0.06);
-                    color: #0f0f0f;
+                    background: rgba(255,255,255,0.12);
+                    color: #f8f8f8;
                     font-size: 12px;
                     font-weight: 700;
                     letter-spacing: 1px;
                     text-transform: uppercase;
                     border-radius: 20px;
-                    border: 1px solid rgba(0,0,0,0.08);
+                    border: 1px solid rgba(255,255,255,0.2);
                     width: fit-content;
                 }
 
@@ -178,19 +178,19 @@ const HeroSlider = () => {
 
                 .shop-link {
                     display: inline-block;
-                    color: #0f0f0f;
+                    color: #f8f8f8;
                     font-size: 16px;
                     font-weight: 500;
                     text-decoration: none;
-                    border-bottom: 2px solid rgba(15,15,15,0.9);
+                    border-bottom: 2px solid rgba(248,248,248,0.9);
                     padding-bottom: 3px;
                     transition: all 0.3s ease;
                     width: fit-content;
                 }
 
                 .shop-link:hover {
-                    color: #c08b00;
-                    border-color: #c08b00;
+                    color: #ffd700;
+                    border-color: #ffd700;
                 }
 
                 .dots {

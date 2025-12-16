@@ -28,12 +28,8 @@ const FooterUomo = () => {
                                     Premium sportswear and active lifestyle products for everyone.
                                 </p>
                                 <div className="footer-contact">
-                                    <p>1418 River Drive, Suite 35<br />Cottonhall, CA 9622<br />United States</p>
                                     <p>
-                                        <a href="mailto:contact@dosalga.mx">contact@dosalga.mx</a>
-                                    </p>
-                                    <p>
-                                        <a href="tel:+33XXXXXXXXX">+33 X XX XX XX XX</a>
+                                        <a href="mailto:contact@dosalga.store">contact@dosalga.store</a>
                                     </p>
                                 </div>
                                 <div className="footer-social">
