@@ -1,8 +1,29 @@
 import React from 'react';
+import Head from 'next/head';
 
 const ContactPage = () => {
+  const siteUrl = "https://dosalga.com";
+  
   return (
     <>
+      <Head>
+        <title>Contact Dosalga - Get in Touch</title>
+        <meta name="description" content="Contact Dosalga for any inquiries about our premium activewear products. Reach us anytime." />
+        
+        {/* Hreflang tags */}
+        <link rel="alternate" hrefLang="en" href={`${siteUrl}/contact`} />
+        <link rel="alternate" hrefLang="es" href={`${siteUrl}/es/contact`} />
+        <link rel="alternate" hrefLang="x-default" href={`${siteUrl}/contact`} />
+        
+        {/* Open Graph */}
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`${siteUrl}/contact`} />
+        <meta property="og:title" content="Contact Dosalga - Get in Touch" />
+        <meta property="og:description" content="Contact Dosalga for any inquiries about our premium activewear products. Reach us anytime." />
+        <meta property="og:site_name" content="Dosalga" />
+      </Head>
+      
       <div className="contact-page pt-100 mb-100">
         <div className="container">
           <div className="row justify-content-center">

@@ -1,8 +1,30 @@
 import React from "react";
+import Head from "next/head";
 
 const AboutPage = () => {
+  const siteUrl = "https://dosalga.com";
+  
   return (
-    <div className="about-page pt-100 pb-100">
+    <>
+      <Head>
+        <title>About Dosalga - Premium Activewear Brand</title>
+        <meta name="description" content="Learn about Dosalga, a modern activewear lifestyle brand built for everyday movement. Comfortable sportswear for real life." />
+        
+        {/* Hreflang tags */}
+        <link rel="alternate" hrefLang="en" href={`${siteUrl}/about-us`} />
+        <link rel="alternate" hrefLang="es" href={`${siteUrl}/es/about-us`} />
+        <link rel="alternate" hrefLang="x-default" href={`${siteUrl}/about-us`} />
+        
+        {/* Open Graph */}
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`${siteUrl}/about-us`} />
+        <meta property="og:title" content="About Dosalga - Premium Activewear Brand" />
+        <meta property="og:description" content="Learn about Dosalga, a modern activewear lifestyle brand built for everyday movement. Comfortable sportswear for real life." />
+        <meta property="og:site_name" content="Dosalga" />
+      </Head>
+      
+      <div className="about-page pt-100 pb-100">
       <div className="container">
         <div className="row justify-content-center mb-60">
           <div className="col-lg-8 text-center">
@@ -69,7 +91,7 @@ const AboutPage = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
