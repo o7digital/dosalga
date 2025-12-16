@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import Cart from '../components/common/Cart'
+import Cart from '../components/common/Cart';
+import LanguageSwitcher from '../components/common/LanguageSwitcher';
 
 const Header = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -127,6 +128,8 @@ const Header = () => {
             </div>
         </div>
         <div className="nav-right d-flex jsutify-content-end align-items-center">
+            {/* Language Switcher */}
+            <LanguageSwitcher />
             {/* Button trigger modal */}
             <div className="dropdown">
                 

@@ -22,8 +22,8 @@ const Footer = () => {
                     <h5>Support</h5>
                     </div>
                     <ul className="widget-list">
-                    <li><Link legacyBehavior href="/contact"><a>Help &amp; Contact Us</a></Link></li>
-                    <li><a href="#">Return &amp; Refunds</a></li>
+                    <li><Link legacyBehavior href="/contact"><a>Help & Contact Us</a></Link></li>
+                    <li><a href="#">Return & Refunds</a></li>
                     <li><Link legacyBehavior href="/shop"><a>Online Stores</a></Link></li>
                     <li><Link legacyBehavior href="/privacy-policy"><a>Privacy Policy</a></Link></li>
                     <li><Link legacyBehavior href="/my-account"><a>Profile</a></Link></li>
@@ -50,10 +50,10 @@ const Footer = () => {
                     <h5>Category</h5>
                     </div>
                     <ul className="widget-list">
-                    <li><Link legacyBehavior href="/shop"><a>Bath &amp; Body</a></Link></li>
+                    <li><Link legacyBehavior href="/shop"><a>Bath & Body</a></Link></li>
                     <li><Link legacyBehavior href="/shop"><a>Skin Care</a></Link></li>
                     <li><Link legacyBehavior href="/shop"><a>Hair Care</a></Link></li>
-                    <li><Link legacyBehavior href="/shop"><a>Kids &amp; Baby</a></Link></li>
+                    <li><Link legacyBehavior href="/shop"><a>Kids & Baby</a></Link></li>
                     <li><Link legacyBehavior href="/shop"><a>Fragrance</a></Link></li>
                     </ul>
                 </div>
