@@ -6,6 +6,23 @@ const LanguageSwitcher = () => {
   const router = useRouter();
   const isSpanish = router.pathname.startsWith('/es');
 
+  // Mapping des routes EN vers ES
+  const getEnglishPath = () => {
+    if (router.pathname === '/es' || router.pathname === '/es/index') return '/';
+    if (router.pathname.startsWith('/es/')) {
+      return router.pathname.replace('/es/', '/');
+    }
+    return router.pathname;
+  };
+
+  const getSpanishPath = () => {
+    if (router.pathname === '/') return '/es';
+    if (!router.pathname.startsWith('/es')) {
+      return `/es${router.pathname}`;
+    }
+    return router.pathname;
+  };
+
   return (
     <div className="language-switcher" style={{
       display: 'flex',
@@ -13,7 +30,7 @@ const LanguageSwitcher = () => {
       alignItems: 'center',
       marginRight: '15px'
     }}>
-      <Link href={isSpanish ? router.pathname.replace('/es', '') || '/' : router.pathname}>
+      <Link href={getEnglishPath()}>
         <button
           className={`lang-btn ${!isSpanish ? 'active' : ''}`}
           style={{
@@ -31,7 +48,7 @@ const LanguageSwitcher = () => {
           EN
         </button>
       </Link>
-      <Link href={isSpanish ? router.pathname : `/es${router.pathname}`}>
+      <Link href={getSpanishPath()}>
         <button
           className={`lang-btn ${isSpanish ? 'active' : ''}`}
           style={{
