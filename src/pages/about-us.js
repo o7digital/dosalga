@@ -16,34 +16,54 @@ const AboutPage = () => {
         <div className="row justify-content-center">
           <div className="col-lg-10">
             <div className="about-card bg-light p-4 p-lg-5 mb-40 rounded-3">
-              <span className="text-uppercase small text-muted d-block mb-2">Who We Are</span>
-              <h2 className="h4 mb-3">A Modern Activewear & Lifestyle Brand</h2>
+              <h2 className="h4 mb-3">Activewear Designed for Real Life</h2>
               <p>
-                Dosalga is a modern activewear and lifestyle brand shaped around comfort, versatility, and everyday movement. We create pieces that feel premium yet easy, keeping you ready for school runs, coffee stops, and everything between—real life over extreme performance.
+                Dosalga is a modern lifestyle activewear brand built for everyday movement. We focus on comfort you can live in—pieces that feel good for morning stretches, errands, remote work, or walking the city—without chasing extreme performance.
               </p>
             </div>
 
             <div className="about-card bg-white border p-4 p-lg-5 mb-40 rounded-3">
-              <span className="text-uppercase small text-muted d-block mb-2">Our Philosophy</span>
-              <h2 className="h4 mb-3">Designed for Everyday Movement</h2>
+              <h2 className="h4 mb-3">How Dosalga Started</h2>
               <p>
-                Comfort comes first so you can move without pressure. Our everyday activewear works for light workouts, walks, or stretching at home, and transitions smoothly from studio to street with a clean, minimal look.
+                We launched Dosalga after realizing most people spend more time in real routines than in the gym. The goal was simple: create activewear that adapts to daily life, prioritizing simplicity, comfort, and versatility over hype.
               </p>
             </div>
 
             <div className="about-card bg-light p-4 p-lg-5 mb-40 rounded-3">
-              <span className="text-uppercase small text-muted d-block mb-2">What We Create</span>
-              <h2 className="h4 mb-3">Versatile Activewear Essentials</h2>
+              <h2 className="h4 mb-3">Our Mission</h2>
               <p>
-                We design comfortable sportswear for men, women, and kids—everyday joggers, breathable tops, and light layers made for mild and transitional climates. Every piece is built to mix, match, and keep up with your day-to-day routine.
+                Our mission is to deliver activewear essentials that support modern lifestyles. Every piece is designed to move with you through the day—at home, on casual errands, or during light activity—so your clothes never slow you down.
               </p>
             </div>
 
-            <div className="about-card bg-white border p-4 p-lg-5 rounded-3">
-              <span className="text-uppercase small text-muted d-block mb-2">Our Commitment</span>
-              <h2 className="h4 mb-3">Quality, Simplicity & Confidence</h2>
+            <div className="about-card bg-white border p-4 p-lg-5 mb-40 rounded-3">
+              <h2 className="h4 mb-3">What Makes Dosalga Different</h2>
               <p>
-                We focus on quality materials, clean design, and long-lasting comfort so you feel confident in every wear. Dosalga champions an inclusive, modern lifestyle with dependable, everyday activewear essentials.
+                We choose everyday comfort over extreme performance, with versatile designs and clean, modern silhouettes. Our fabrics and fits work for mild and changing climates, keeping the look simple and practical so you can wear each piece often.
+              </p>
+            </div>
+
+            <div className="about-card bg-light p-4 p-lg-5 mb-40 rounded-3">
+              <h2 className="h4 mb-3">What We Create</h2>
+              <p>
+                We make joggers, breathable tops, light layers, and everyday essentials for men, women, and kids. Every item is built to mix easily, hold up to frequent wear, and deliver comfortable sportswear for real life.
+              </p>
+            </div>
+
+            <div className="about-card bg-white border p-4 p-lg-5 mb-40 rounded-3">
+              <h2 className="h4 mb-3">Our Values</h2>
+              <ul className="mb-0">
+                <li>Comfort First</li>
+                <li>Simplicity</li>
+                <li>Reliability</li>
+                <li>Modern Everyday Lifestyle</li>
+              </ul>
+            </div>
+
+            <div className="about-card bg-light p-4 p-lg-5 rounded-3">
+              <h2 className="h4 mb-3">Why Dosalga</h2>
+              <p>
+                Dosalga is for people who value comfort and ease. We keep the focus on real movement and real routines—no trends, no over-engineering, just everyday activewear essentials you can depend on.
               </p>
             </div>
           </div>
