@@ -124,7 +124,7 @@ const FooterUomo = () => {
                 }
 
                 .footer-main {
-                    padding: 80px 0 40px;
+                    padding: 40px 0 20px;
                 }
 
                 .footer-logo {
@@ -165,7 +165,7 @@ const FooterUomo = () => {
                 .footer-social {
                     display: flex;
                     gap: 15px;
-                    margin-top: 20px;
+                    margin-top: 6px;
                 }
 
                 .footer-social a {
@@ -295,7 +295,7 @@ const FooterUomo = () => {
                 }
 
                 .footer-bottom {
-                    padding: 24px 0;
+                    padding: 16px 0;
                     border-top: 1px solid rgba(0,0,0,0.12);
                 }
 
