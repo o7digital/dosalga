@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import CartUomo from '../components/common/CartUomo';
+import LanguageSwitcher from '../components/common/LanguageSwitcher';
 
 const HeaderUomo = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -101,6 +102,11 @@ const HeaderUomo = () => {
                                     </svg>
                                 </a>
                             </Link>
+
+                            {/* Language Switcher */}
+                            <div className="header-action-btn lang-switcher-wrapper">
+                                <LanguageSwitcher />
+                            </div>
 
                             {/* Cart */}
                             <div className="header-action-btn cart-wrapper">
