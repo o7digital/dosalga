@@ -38,21 +38,6 @@ const FooterUomo = () => {
                                             <path d="M20 10C20 4.48 15.52 0 10 0S0 4.48 0 10c0 4.84 3.44 8.87 8 9.8V13H6v-3h2V7.5C8 5.57 9.57 4 11.5 4H14v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"/>
                                         </svg>
                                     </a>
-                                    <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M6.29 18.25c7.55 0 11.67-6.25 11.67-11.67v-.53c.8-.59 1.49-1.3 2.04-2.13-.75.33-1.54.55-2.36.65a4.12 4.12 0 0 0 1.8-2.27c-.8.48-1.68.81-2.6 1a4.1 4.1 0 0 0-7 3.74 11.65 11.65 0 0 1-8.45-4.3 4.1 4.1 0 0 0 1.27 5.49C2.01 8.2 1.37 8.03.8 7.7v.05a4.1 4.1 0 0 0 3.3 4.03 4.1 4.1 0 0 1-1.86.07 4.1 4.1 0 0 0 3.83 2.85A8.23 8.23 0 0 1 0 16.4a11.62 11.62 0 0 0 6.29 1.84"/>
-                                        </svg>
-                                    </a>
-                                    <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M10 0C7.28 0 6.94 0 5.88.05 4.82.1 4.07.28 3.42.53A4.92 4.92 0 0 0 1.67 1.68 4.92 4.92 0 0 0 .53 3.43C.27 4.08.1 4.83.05 5.89 0 6.95 0 7.29 0 10.01c0 2.72 0 3.06.05 4.12.05 1.06.23 1.81.48 2.46.26.63.61 1.17 1.15 1.71.54.54 1.08.89 1.71 1.15.65.25 1.4.43 2.46.48 1.06.05 1.4.05 4.12.05 2.72 0 3.06 0 4.12-.05 1.06-.05 1.81-.23 2.46-.48a4.92 4.92 0 0 0 1.71-1.15c.54-.54.89-1.08 1.15-1.71.25-.65.43-1.4.48-2.46.05-1.06.05-1.4.05-4.12 0-2.72 0-3.06-.05-4.12-.05-1.06-.23-1.81-.48-2.46a4.92 4.92 0 0 0-1.15-1.71 4.92 4.92 0 0 0-1.71-1.15c-.65-.25-1.4-.43-2.46-.48C13.06 0 12.72 0 10 0zm0 1.8c2.67 0 2.99 0 4.04.05.98.05 1.5.22 1.86.37.47.18.8.4 1.15.75.35.35.57.68.75 1.15.15.36.32.88.37 1.86.05 1.05.05 1.37.05 4.04 0 2.67 0 2.99-.05 4.04-.05.98-.22 1.5-.37 1.86-.18.47-.4.8-.75 1.15-.35.35-.68.57-1.15.75-.36.15-.88.32-1.86.37-1.05.05-1.37.05-4.04.05-2.67 0-2.99 0-4.04-.05-.98-.05-1.5-.22-1.86-.37a3.1 3.1 0 0 1-1.15-.75 3.1 3.1 0 0 1-.75-1.15c-.15-.36-.32-.88-.37-1.86C1.8 13 1.8 12.68 1.8 10.01c0-2.67 0-2.99.05-4.04.05-.98.22-1.5.37-1.86.18-.47.4-.8.75-1.15.35-.35.68-.57 1.15-.75.36-.15.88-.32 1.86-.37C7.01 1.8 7.33 1.8 10 1.8zm0 3.07a5.13 5.13 0 1 0 0 10.26 5.13 5.13 0 0 0 0-10.26zM10 13.34A3.34 3.34 0 1 1 10 6.68a3.34 3.34 0 0 1 0 6.66zm6.54-8.46a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0z"/>
-                                        </svg>
-                                    </a>
-                                    <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
-                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                                            <path d="M19.59 6.69a2.5 2.5 0 0 0-1.76-1.77C16.25 4.5 10 4.5 10 4.5s-6.25 0-7.83.42A2.5 2.5 0 0 0 .41 6.69 26.28 26.28 0 0 0 0 10a26.28 26.28 0 0 0 .41 3.31 2.5 2.5 0 0 0 1.76 1.77c1.58.42 7.83.42 7.83.42s6.25 0 7.83-.42a2.5 2.5 0 0 0 1.76-1.77A26.28 26.28 0 0 0 20 10a26.28 26.28 0 0 0-.41-3.31zM8 12.5V7.5L13 10l-5 2.5z"/>
-                                        </svg>
-                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -64,23 +49,7 @@ const FooterUomo = () => {
                                 <ul className="footer-links">
                                     <li><Link legacyBehavior href="/about-us"><a>About Us</a></Link></li>
                                     <li><Link legacyBehavior href="/services"><a>Services</a></Link></li>
-                                    <li><Link legacyBehavior href="/about-us"><a>Affiliates</a></Link></li>
-                                    <li><Link legacyBehavior href="/blog-grid"><a>Blog</a></Link></li>
-                                    <li><Link legacyBehavior href="/contact"><a>Contact Us</a></Link></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        {/* Shop Links */}
-                        <div className="col-lg-2 col-md-6 col-sm-6">
-                            <div className="footer-widget">
-                                <h6 className="footer-widget-title">SHOP</h6>
-                                <ul className="footer-links">
-                                    <li><Link legacyBehavior href="/shop"><a>New Arrivals</a></Link></li>
-                                    <li><Link legacyBehavior href="/shop"><a>Accessories</a></Link></li>
-                                    <li><Link legacyBehavior href="/shop?category=men"><a>Men</a></Link></li>
-                                    <li><Link legacyBehavior href="/shop?category=women"><a>Women</a></Link></li>
-                                    <li><Link legacyBehavior href="/shop"><a>Shop All</a></Link></li>
+                                    <li><Link legacyBehavior href="/contact"><a>Contact</a></Link></li>
                                 </ul>
                             </div>
                         </div>
@@ -90,12 +59,9 @@ const FooterUomo = () => {
                             <div className="footer-widget">
                                 <h6 className="footer-widget-title">HELP</h6>
                                 <ul className="footer-links">
-                                    <li><Link legacyBehavior href="/about-us"><a>Customer Service</a></Link></li>
                                     <li><Link legacyBehavior href="/my-account"><a>My Account</a></Link></li>
                                     
                                     <li><Link legacyBehavior href="/privacy-policy"><a>Legal & Privacy</a></Link></li>
-                                    <li><Link legacyBehavior href="/contact"><a>Contact</a></Link></li>
-                                    <li><Link legacyBehavior href="/gift-card"><a>Gift Card</a></Link></li>
                                 </ul>
                             </div>
                         </div>
