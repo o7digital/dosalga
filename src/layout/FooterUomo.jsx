@@ -1,8 +1,11 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 
 const FooterUomo = () => {
     const [email, setEmail] = useState('');
+    const { pathname } = useRouter();
+    const isSpanish = pathname.startsWith('/es');
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -25,7 +28,9 @@ const FooterUomo = () => {
                                     </a>
                                 </Link>
                                 <p className="footer-description">
-                                    Premium sportswear and active lifestyle products for everyone.
+                                    {isSpanish
+                                      ? 'Ropa deportiva premium y estilo de vida activo para todos.'
+                                      : 'Premium sportswear and active lifestyle products for everyone.'}
                                 </p>
                                 <div className="footer-contact">
                                     <p>
@@ -45,11 +50,11 @@ const FooterUomo = () => {
                         {/* Company Links */}
                         <div className="col-lg-2 col-md-6 col-sm-6">
                             <div className="footer-widget">
-                                <h6 className="footer-widget-title">COMPANY</h6>
+                                <h6 className="footer-widget-title">{isSpanish ? 'COMPAÑÍA' : 'COMPANY'}</h6>
                                 <ul className="footer-links">
-                                    <li><Link legacyBehavior href="/about-us"><a>About Us</a></Link></li>
-                                    <li><Link legacyBehavior href="/services"><a>Services</a></Link></li>
-                                    <li><Link legacyBehavior href="/contact"><a>Contact</a></Link></li>
+                                    <li><Link legacyBehavior href={isSpanish ? "/es/about-us" : "/about-us"}><a>{isSpanish ? 'Sobre nosotros' : 'About Us'}</a></Link></li>
+                                    <li><Link legacyBehavior href={isSpanish ? "/es/services" : "/services"}><a>{isSpanish ? 'Servicios' : 'Services'}</a></Link></li>
+                                    <li><Link legacyBehavior href={isSpanish ? "/es/contact" : "/contact"}><a>{isSpanish ? 'Contacto' : 'Contact'}</a></Link></li>
                                 </ul>
                             </div>
                         </div>
@@ -57,11 +62,11 @@ const FooterUomo = () => {
                         {/* Help Links */}
                         <div className="col-lg-2 col-md-6 col-sm-6">
                             <div className="footer-widget">
-                                <h6 className="footer-widget-title">HELP</h6>
+                                <h6 className="footer-widget-title">{isSpanish ? 'AYUDA' : 'HELP'}</h6>
                                 <ul className="footer-links">
-                                    <li><Link legacyBehavior href="/my-account"><a>My Account</a></Link></li>
+                                    <li><Link legacyBehavior href={isSpanish ? "/my-account" : "/my-account"}><a>{isSpanish ? 'Mi cuenta' : 'My Account'}</a></Link></li>
                                     
-                                    <li><Link legacyBehavior href="/privacy-policy"><a>Legal & Privacy</a></Link></li>
+                                    <li><Link legacyBehavior href={isSpanish ? "/es/privacy-policy" : "/privacy-policy"}><a>{isSpanish ? 'Aviso legal y privacidad' : 'Legal & Privacy'}</a></Link></li>
                                 </ul>
                             </div>
                         </div>
@@ -69,16 +74,18 @@ const FooterUomo = () => {
                         {/* Newsletter */}
                         <div className="col-lg-3 col-md-6">
                             <div className="footer-widget">
-                                <h6 className="footer-widget-title">SUBSCRIBE</h6>
+                                <h6 className="footer-widget-title">{isSpanish ? 'SUSCRÍBETE' : 'SUBSCRIBE'}</h6>
                                 <p className="newsletter-text">
-                                    Be the first to get the latest news about trends, promotions, and much more!
+                                    {isSpanish
+                                      ? 'Sé el primero en recibir noticias sobre tendencias, promociones y más.'
+                                      : 'Be the first to get the latest news about trends, promotions, and much more!'}
                                 </p>
                                 <form onSubmit={handleSubmit} className="newsletter-form">
                                     <div className="input-group">
                                         <input 
                                             type="email" 
                                             className="form-control" 
-                                            placeholder="Your email address"
+                                            placeholder={isSpanish ? "Tu correo electrónico" : "Your email address"}
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
                                             required

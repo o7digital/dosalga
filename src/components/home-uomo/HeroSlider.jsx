@@ -1,38 +1,70 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-
-const slides = [
-    {
-        id: 1,
-        badge: "NEW ARRIVALS",
-        title: "Activewear Designed for Real Life",
-        subtitle: "Comfort, simplicity, and movement for everyday routines.",
-        cta: "Shop Essentials",
-        image: "/slider/gemini1.png",
-        alt: "Lifestyle activewear designed for real life"
-    },
-    {
-        id: 2,
-        badge: "NEW ARRIVALS",
-        title: "Move Through Your Day With Ease",
-        subtitle: "Versatile activewear made to fit your lifestyle, not the gym.",
-        cta: "Discover the Collection",
-        image: "/slider/gemini2.png",
-        alt: "Everyday activewear for modern lifestyles"
-    },
-    {
-        id: 3,
-        badge: "NEW ARRIVALS",
-        title: "Comfort That Goes Wherever You Do",
-        subtitle: "Light layers and everyday essentials for real movement.",
-        cta: "Explore Dosalga",
-        image: "/slider/gemini3.png",
-        alt: "Comfortable activewear in real environments"
-    }
-];
+import { useRouter } from 'next/router';
 
 const HeroSlider = () => {
+    const router = useRouter();
+    const isSpanish = router.pathname.startsWith('/es');
+    const slides = isSpanish
+        ? [
+            {
+                id: 1,
+                badge: "NUEVAS LLEGADAS",
+                title: "Activewear diseñado para la vida real",
+                subtitle: "Comodidad, sencillez y movimiento para tus rutinas diarias.",
+                cta: "Comprar esenciales",
+                image: "/slider/gemini1.png",
+                alt: "Ropa activa para la vida cotidiana"
+            },
+            {
+                id: 2,
+                badge: "NUEVAS LLEGADAS",
+                title: "Muévete por tu día con facilidad",
+                subtitle: "Activewear versátil pensado para tu estilo de vida, no solo el gimnasio.",
+                cta: "Descubrir la colección",
+                image: "/slider/gemini2.png",
+                alt: "Activewear versátil para tu día"
+            },
+            {
+                id: 3,
+                badge: "NUEVAS LLEGADAS",
+                title: "Comodidad dondequiera que vayas",
+                subtitle: "Capas ligeras y esenciales diarios para moverte de verdad.",
+                cta: "Explora Dosalga",
+                image: "/slider/gemini3.png",
+                alt: "Activewear cómodo en entornos reales"
+            }
+          ]
+        : [
+            {
+                id: 1,
+                badge: "NEW ARRIVALS",
+                title: "Activewear Designed for Real Life",
+                subtitle: "Comfort, simplicity, and movement for everyday routines.",
+                cta: "Shop Essentials",
+                image: "/slider/gemini1.png",
+                alt: "Lifestyle activewear designed for real life"
+            },
+            {
+                id: 2,
+                badge: "NEW ARRIVALS",
+                title: "Move Through Your Day With Ease",
+                subtitle: "Versatile activewear made to fit your lifestyle, not the gym.",
+                cta: "Discover the Collection",
+                image: "/slider/gemini2.png",
+                alt: "Everyday activewear for modern lifestyles"
+            },
+            {
+                id: 3,
+                badge: "NEW ARRIVALS",
+                title: "Comfort That Goes Wherever You Do",
+                subtitle: "Light layers and everyday essentials for real movement.",
+                cta: "Explore Dosalga",
+                image: "/slider/gemini3.png",
+                alt: "Comfortable activewear in real environments"
+            }
+          ];
     const [currentSlide, setCurrentSlide] = useState(0);
 
     useEffect(() => {
