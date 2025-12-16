@@ -21,7 +21,7 @@ const PrivacyPolicy = () => {
                   </p>
                   <ul>
                     <li><strong>Phone:</strong> 2-965-871-8617</li>
-                    <li><strong>Email:</strong> info@dosalga.com</li>
+                    <li><strong>Email:</strong> info@dosalga.store</li>
                   </ul>
                 </div>
 
@@ -246,11 +246,11 @@ const PrivacyPolicy = () => {
                   <div className="contact-info mt-3">
                     <p><strong>DOSALGA SA DE CV</strong></p>
                     <p><strong>Phone:</strong> 2-965-871-8617</p>
-                    <p><strong>Email:</strong> privacy@dosalga.com</p>
+                    <p><strong>Email:</strong> info@dosalga.store</p>
                   </div>
                   <p className="mt-3">
                     <strong>Data Protection Officer:</strong> For GDPR-related inquiries, you may contact our Data Protection Officer 
-                    at dpo@dosalga.com
+                    at info@dosalga.store
                   </p>
                   <p>
                     <strong>Supervisory Authority:</strong> EU residents have the right to lodge a complaint with their local 
