@@ -128,7 +128,7 @@ const HeroSlider = () => {
                 .media-overlay {
                     position: absolute;
                     inset: 0;
-                    background: linear-gradient(120deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.35) 35%, rgba(0,0,0,0.2) 65%, rgba(0,0,0,0.08) 100%);
+                    background: linear-gradient(120deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.4) 35%, rgba(0,0,0,0.22) 65%, rgba(0,0,0,0.1) 100%);
                 }
 
                 .slide-content {
@@ -143,7 +143,7 @@ const HeroSlider = () => {
 
                 .content-inner {
                     max-width: 520px;
-                    color: #f8f8f8;
+                    color: #fff;
                     display: flex;
                     flex-direction: column;
                     gap: 18px;
@@ -152,8 +152,8 @@ const HeroSlider = () => {
                 .badge {
                     display: inline-block;
                     padding: 8px 20px;
-                    background: rgba(255,255,255,0.12);
-                    color: #f8f8f8;
+                    background: rgba(255,255,255,0.14);
+                    color: #fff;
                     font-size: 12px;
                     font-weight: 700;
                     letter-spacing: 1px;
@@ -168,22 +168,23 @@ const HeroSlider = () => {
                     font-weight: 500;
                     line-height: 1.05;
                     margin: 0;
+                    color: #fff;
                 }
 
                 .subtitle {
                     font-size: clamp(16px, 2.6vw, 20px);
-                    color: rgba(248,248,248,0.9);
+                    color: rgba(255,255,255,0.9);
                     margin: 6px 0 12px;
                     line-height: 1.5;
                 }
 
                 .shop-link {
                     display: inline-block;
-                    color: #f8f8f8;
+                    color: #fff;
                     font-size: 16px;
                     font-weight: 500;
                     text-decoration: none;
-                    border-bottom: 2px solid rgba(248,248,248,0.9);
+                    border-bottom: 2px solid rgba(255,255,255,0.9);
                     padding-bottom: 3px;
                     transition: all 0.3s ease;
                     width: fit-content;
