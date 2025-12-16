@@ -1,98 +1,55 @@
-import React, { useState } from "react";
-import BestBrand from "../components/Home/BestBrand";
-import BeautyArticle from "../components/Home/BeautyArticle";
-import MakeupSection from "../components/Home/MakeupSection";
-import Testimonial from "../components/Home/Testimonial";
-import Newsletter from "../components/Home/Newsletter";
-import InstagramSection from "../components/Home/InstagramSection";
-import 'node_modules/react-modal-video/css/modal-video.css';
-import ModalVideo from 'react-modal-video';
-
+import React from "react";
 
 const AboutPage = () => {
-  const [isOpen, setOpen] = useState(false);
   return (
-    <>
-      <div className="about-us-banner mt-110  mb-110">
-        <div className="container">
-          <div className="row">
-            <div className="col-12">
-              <div className="about-us-thumb hover-img mb-60">
-                <img
-                  src="https://beautico-nextjs.vercel.app/assets/img/inner-page/about-us-banner-img.png"
-                  alt=""
-                />
-              </div>
+    <div className="about-page pt-100 pb-100">
+      <div className="container">
+        <div className="row justify-content-center mb-60">
+          <div className="col-lg-8 text-center">
+            <h1 className="mb-3">About Dosalga</h1>
+            <p className="text-muted">
+              Dosalga is a modern activewear lifestyle brand built around comfortable sportswear that moves with you every day.
+            </p>
+          </div>
+        </div>
+
+        <div className="row justify-content-center">
+          <div className="col-lg-10">
+            <div className="about-card bg-light p-4 p-lg-5 mb-40 rounded-3">
+              <span className="text-uppercase small text-muted d-block mb-2">Who We Are</span>
+              <h2 className="h4 mb-3">A Modern Activewear & Lifestyle Brand</h2>
+              <p>
+                Dosalga is a modern activewear and lifestyle brand shaped around comfort, versatility, and everyday movement. We create pieces that feel premium yet easy, keeping you ready for school runs, coffee stops, and everything between—real life over extreme performance.
+              </p>
+            </div>
+
+            <div className="about-card bg-white border p-4 p-lg-5 mb-40 rounded-3">
+              <span className="text-uppercase small text-muted d-block mb-2">Our Philosophy</span>
+              <h2 className="h4 mb-3">Designed for Everyday Movement</h2>
+              <p>
+                Comfort comes first so you can move without pressure. Our everyday activewear works for light workouts, walks, or stretching at home, and transitions smoothly from studio to street with a clean, minimal look.
+              </p>
+            </div>
+
+            <div className="about-card bg-light p-4 p-lg-5 mb-40 rounded-3">
+              <span className="text-uppercase small text-muted d-block mb-2">What We Create</span>
+              <h2 className="h4 mb-3">Versatile Activewear Essentials</h2>
+              <p>
+                We design comfortable sportswear for men, women, and kids—everyday joggers, breathable tops, and light layers made for mild and transitional climates. Every piece is built to mix, match, and keep up with your day-to-day routine.
+              </p>
+            </div>
+
+            <div className="about-card bg-white border p-4 p-lg-5 rounded-3">
+              <span className="text-uppercase small text-muted d-block mb-2">Our Commitment</span>
+              <h2 className="h4 mb-3">Quality, Simplicity & Confidence</h2>
+              <p>
+                We focus on quality materials, clean design, and long-lasting comfort so you feel confident in every wear. Dosalga champions an inclusive, modern lifestyle with dependable, everyday activewear essentials.
+              </p>
             </div>
           </div>
         </div>
-        {/* Start About Us Content Section section */}
-        <div className="about-us-content">
-          <div className="container">
-            <div className="row justify-content-center">
-              <div className="col-lg-8">
-                <div className="about-us-wrapper">
-                  <h1>Ensure Superlative Support with Technology.</h1>
-                  <p>
-                    Donec accumsan justo eget porta pellentesque. Etiam vitae
-                    malesuada lorem, sed lobortis arcu. Aenean onegn vulputate
-                    ligula eu elit porttitor tempus. Suspendisse ultrices augue
-                    ac tempus hendrerit. Integer id cursusourc ligula, quis
-                    faucibus enim. Donec sit amet aliquam leo. Donec eget risus
-                    elementum, finibus elit vel, goutava condimentum sapien. In
-                    hac habitasse platea dictumst. Cras faucibus lacus
-                    scelerisque elementum aliquam. Ut porta efficitur metus sed
-                    varius.
-                  </p>
-                  <p>
-                    Donec accumsan justo eget porta pellentesque. Etiam vitae
-                    malesuada lorem, sed lobortis arcu. Aenean onegn vulputate
-                    ligula eu elit porttitor tempus. Suspendisse ultrices augue
-                    ac tempus hendrerit. Integer id cursusourc ligula, quis
-                    faucibus enim. Donec sit amet aliquam leo. Donec eget risus
-                    elementum, finibus elit vel, goutava{" "}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* End About Us Content Section section */}
       </div>
-      <div className="about-us-video">
-        <div className="container">
-          <div className="row">
-            <div className="col-12">
-              <div className="about-video-thumb">
-                <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/about-video-bg.png" alt="" />
-                <a
-                  data-fancybox="popup-video"
-                  onClick={() => setOpen(true)}
-                >
-                  <i className="bi bi-play-fill" />
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <React.Fragment>
-          <ModalVideo
-          allowFullScreen={true}
-            channel="youtube"
-            youtube={{ mute: 0, autoplay: 0 }}
-            isOpen={isOpen}
-            videoId="lnTWVAyMHg0"
-            onClose={() => setOpen(false)} 
-          />
-        </React.Fragment>
-      </div>
-      <BestBrand />
-      <MakeupSection />
-      <Testimonial />
-      <BeautyArticle />
-      <Newsletter />
-      <InstagramSection />
-    </>
+    </div>
   );
 };
 
