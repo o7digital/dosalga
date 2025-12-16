@@ -12,22 +12,12 @@ const HeroSlider = () => {
             title: "Modern Jogger",
             price: "399,50 TL",
             cta: "Shop Now",
-            image: "/slider/shoe.png",
-            alt: "Lifestyle activewear designed for everyday movement",
-            bgColor: "#f7f7f7"
-        },
-        {
-            id: 2,
-            badge: "NEW ARRIVALS",
-            title: "Modern Jogger",
-            price: "399,50 TL",
-            cta: "Shop Now",
             image: "/slider/gemini1.png",
             alt: "Comfortable activewear for real life",
             bgColor: "#f7f7f7"
         },
         {
-            id: 3,
+            id: 2,
             badge: "NEW ARRIVALS",
             title: "Modern Jogger",
             price: "399,50 TL",
@@ -37,7 +27,7 @@ const HeroSlider = () => {
             bgColor: "#f7f7f7"
         },
         {
-            id: 4,
+            id: 3,
             badge: "NEW ARRIVALS",
             title: "Modern Jogger",
             price: "399,50 TL",
@@ -250,8 +240,8 @@ const HeroSlider = () => {
                 .slide-image-inner {
                     position: relative;
                     width: 100%;
-                    max-width: 820px;
-                    height: 600px;
+                    height: 100%;
+                    max-height: 650px;
                 }
 
                 .slide-image :global(img) {
@@ -340,7 +330,8 @@ const HeroSlider = () => {
                     }
 
                     .slide-image-inner {
-                        height: 400px;
+                        height: 100%;
+                        max-height: 450px;
                     }
 
                     .slide::after {
@@ -375,7 +366,8 @@ const HeroSlider = () => {
                     }
 
                     .slide-image-inner {
-                        height: 300px;
+                        height: 100%;
+                        max-height: 350px;
                     }
 
                     .slide::after {
