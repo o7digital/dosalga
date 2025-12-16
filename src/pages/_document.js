@@ -16,7 +16,7 @@ export default function Document() {
           data-cbid="0f81dffe-04f0-4f78-8b0e-5383f69567df"
           data-blockingmode="auto"
           type="text/javascript"
-        />
+        ></script>
         <script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-NXYGGSH0NR"
