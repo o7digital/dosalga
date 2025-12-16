@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import Script from "next/script";
 import MainLayoutUomo from "../layout/MainLayoutUomo";
 import Head from "next/head";
 import { CartProvider } from "../contexts/CartContext";
@@ -29,6 +30,13 @@ export default function App({ Component, pageProps }) {
         ></meta>
         <meta name="description" content="DOSALGA - Premium sportswear and active lifestyle products" />
       </Head>
+      <Script
+        id="Cookiebot"
+        src="https://consent.cookiebot.com/uc.js"
+        data-cbid="0f81dffe-04f0-4f78-8b0e-5383f69567df"
+        data-blockingmode="auto"
+        strategy="beforeInteractive"
+      />
       <CartProvider>
         <MainLayoutUomo>
           <Component {...pageProps} />
