@@ -11,10 +11,11 @@ export default function HomeEs() {
   return (
     <>
       <Head>
-        <title>Dosalga - Activewear y estilo de vida</title>
-        <meta name="description" content="Activewear cómodo y versátil para el día a día. Calidad y estilo para todos." />
+        <title>Dosalga - Ropa Deportiva Premium y Estilo de Vida Activo | Activewear</title>
+        <meta name="description" content="Compra ropa deportiva premium en Dosalga. Descubre activewear de alto rendimiento, ropa de gimnasio y prendas lifestyle diseñadas para comodidad, estilo y durabilidad. Envío gratis disponible." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/assets/img/sm-logo.svg" />
+        <link rel="canonical" href={`${siteUrl}/es`} />
         <link rel="alternate" hrefLang="en" href={`${siteUrl}/`} />
         <link rel="alternate" hrefLang="es" href={`${siteUrl}/es`} />
         <link rel="alternate" hrefLang="x-default" href={`${siteUrl}/`} />

@@ -1,8 +1,29 @@
 import React from 'react';
+import Head from 'next/head';
 
 const ContactPageEs = () => {
+  const siteUrl = "https://dosalga.com";
+  
   return (
     <>
+      <Head>
+        <title>Contacto Dosalga - Atención al Cliente | Contáctanos</title>
+        <meta name="description" content="Contacta con el servicio de atención al cliente de Dosalga para consultas sobre nuestros productos de activewear, pedidos, envíos o devoluciones. Estamos aquí para ayudarte 24/7. Contáctanos por email o teléfono." />
+        <link rel="canonical" href={`${siteUrl}/es/contact`} />
+        
+        {/* Hreflang tags */}
+        <link rel="alternate" hrefLang="en" href={`${siteUrl}/contact`} />
+        <link rel="alternate" hrefLang="es" href={`${siteUrl}/es/contact`} />
+        <link rel="alternate" hrefLang="x-default" href={`${siteUrl}/contact`} />
+        
+        {/* Open Graph */}
+        <meta property="og:locale" content="es_ES" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`${siteUrl}/es/contact`} />
+        <meta property="og:title" content="Contacto Dosalga - Contáctanos" />
+        <meta property="og:description" content="Contacta con Dosalga para consultas sobre nuestros productos de activewear premium. Estamos para ayudarte." />
+        <meta property="og:site_name" content="Dosalga" />
+      </Head>
       <div className="contact-page pt-100 mb-100">
         <div className="container">
           <div className="row justify-content-center">

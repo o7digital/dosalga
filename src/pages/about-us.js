@@ -7,8 +7,11 @@ const AboutPage = () => {
   return (
     <>
       <Head>
-        <title>About Dosalga - Premium Activewear Brand</title>
-        <meta name="description" content="Learn about Dosalga, a modern activewear lifestyle brand built for everyday movement. Comfortable sportswear for real life." />
+        <title>About Dosalga - Premium Activewear Brand | Our Story & Mission</title>
+        <meta name="description" content="Discover the Dosalga story. We're a modern activewear lifestyle brand dedicated to creating comfortable, high-quality sportswear for everyday movement. Learn about our commitment to quality, sustainability, and performance." />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/assets/img/sm-logo.svg" />
+        <link rel="canonical" href={`${siteUrl}/about-us`} />
         
         {/* Hreflang tags */}
         <link rel="alternate" hrefLang="en" href={`${siteUrl}/about-us`} />

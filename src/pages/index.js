@@ -12,10 +12,11 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Dosalga - Premium Sportswear & Active Lifestyle</title>
-        <meta name="description" content="Discover premium sportswear and active lifestyle products for everyone. Quality meets performance." />
+        <title>Dosalga - Premium Sportswear & Active Lifestyle | Quality Athletic Wear</title>
+        <meta name="description" content="Shop premium sportswear and activewear at Dosalga. Discover high-performance athletic clothing, gym wear, and lifestyle apparel designed for comfort, style, and durability. Free shipping available." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/assets/img/sm-logo.svg" />
+        <link rel="canonical" href={`${siteUrl}/`} />
         
         {/* Hreflang tags */}
         <link rel="alternate" hrefLang="en" href={`${siteUrl}/`} />

@@ -1,7 +1,31 @@
 import React from "react";
+import Head from "next/head";
 
 const AboutPageEs = () => {
+  const siteUrl = "https://dosalga.com";
+  
   return (
+    <>
+      <Head>
+        <title>Sobre Dosalga - Marca de Ropa Deportiva Premium | Nuestra Historia</title>
+        <meta name="description" content="Descubre la historia de Dosalga. Somos una marca moderna de activewear dedicada a crear ropa deportiva cómoda y de alta calidad para el movimiento diario. Conoce nuestro compromiso con la calidad, sostenibilidad y rendimiento." />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/assets/img/sm-logo.svg" />
+        <link rel="canonical" href={`${siteUrl}/es/about-us`} />
+        
+        {/* Hreflang tags */}
+        <link rel="alternate" hrefLang="en" href={`${siteUrl}/about-us`} />
+        <link rel="alternate" hrefLang="es" href={`${siteUrl}/es/about-us`} />
+        <link rel="alternate" hrefLang="x-default" href={`${siteUrl}/about-us`} />
+        
+        {/* Open Graph */}
+        <meta property="og:locale" content="es_ES" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`${siteUrl}/es/about-us`} />
+        <meta property="og:title" content="Sobre Dosalga - Marca de Activewear Premium" />
+        <meta property="og:description" content="Descubre Dosalga. Marca moderna de activewear dedicada a ropa deportiva de calidad para el movimiento diario." />
+        <meta property="og:site_name" content="Dosalga" />
+      </Head>
     <div className="about-page pt-100 pb-100">
       <div className="container">
         <div className="row justify-content-center mb-60">
@@ -70,6 +94,7 @@ const AboutPageEs = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

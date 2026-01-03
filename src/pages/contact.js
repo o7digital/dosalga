@@ -7,8 +7,9 @@ const ContactPage = () => {
   return (
     <>
       <Head>
-        <title>Contact Dosalga - Get in Touch</title>
-        <meta name="description" content="Contact Dosalga for any inquiries about our premium activewear products. Reach us anytime." />
+        <title>Contact Dosalga - Customer Support & Inquiries | Get in Touch</title>
+        <meta name="description" content="Contact Dosalga customer support for inquiries about our premium activewear, sportswear products, orders, shipping, or returns. We're here to help you 24/7. Reach us by email or phone." />
+        <link rel="canonical" href={`${siteUrl}/contact`} />
         
         {/* Hreflang tags */}
         <link rel="alternate" hrefLang="en" href={`${siteUrl}/contact`} />
