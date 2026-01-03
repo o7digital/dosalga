@@ -13,7 +13,7 @@ const PrivacyPolicy = () => {
                 <div className="policy-section mt-5">
                   <h2>1. Company Information</h2>
                   <p>
-                    This Privacy Policy is issued by <strong>DOSALGA SA DE CV</strong> (hereinafter "DOSALGA", "we", "us", or "our"), 
+                    This Privacy Policy is issued by <strong>DOSALGA</strong> (hereinafter "DOSALGA", "we", "us", or "our"), 
                     a company incorporated under the laws of Mexico, committed to protecting your personal data and privacy rights.
                   </p>
                   <p>

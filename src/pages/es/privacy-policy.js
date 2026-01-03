@@ -13,7 +13,7 @@ const PrivacyPolicyEs = () => {
               <div className="policy-section mt-5">
                 <h2>1. Información de la compañía</h2>
                 <p>
-                  Esta Política de Privacidad es emitida por <strong>DOSALGA SA DE CV</strong> (“DOSALGA”, “nosotros”), comprometida con la protección de tus datos personales y tus derechos de privacidad.
+                  Esta Política de Privacidad es emitida por <strong>DOSALGA</strong> ("DOSALGA", "nosotros"), comprometida con la protección de tus datos personales y tus derechos de privacidad.
                 </p>
                 <p>Para cualquier duda sobre esta política, contáctanos en:</p>
                 <ul>
