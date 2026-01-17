@@ -65,8 +65,11 @@ const FooterUomo = () => {
                                 <h6 className="footer-widget-title">{isSpanish ? 'AYUDA' : 'HELP'}</h6>
                                 <ul className="footer-links">
                                     <li><Link legacyBehavior href={isSpanish ? "/my-account" : "/my-account"}><a>{isSpanish ? 'Mi cuenta' : 'My Account'}</a></Link></li>
-                                    <li><Link legacyBehavior href={isSpanish ? "/es/privacy-policy" : "/privacy-policy"}><a>{isSpanish ? 'Aviso legal y privacidad' : 'Legal & Privacy'}</a></Link></li>
-                                    <li><Link legacyBehavior href={isSpanish ? "/es/impuestos-y-aranceles" : "/taxes-and-duties"}><a>{isSpanish ? 'Impuestos y aranceles' : 'Taxes & Duties'}</a></Link></li>
+                                    <li><Link legacyBehavior href="/terms-and-conditions"><a>Terms &amp; Conditions</a></Link></li>
+                                    <li><Link legacyBehavior href="/shipping-policy"><a>Shipping Policy</a></Link></li>
+                                    <li><Link legacyBehavior href="/returns-and-refunds"><a>Returns &amp; Refunds</a></Link></li>
+                                    <li><Link legacyBehavior href="/taxes-and-duties"><a>Taxes &amp; Duties</a></Link></li>
+                                    <li><Link legacyBehavior href="/privacy-policy"><a>Privacy Policy</a></Link></li>
                                 </ul>
                             </div>
                         </div>

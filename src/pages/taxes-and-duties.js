@@ -7,10 +7,10 @@ const TaxesAndDutiesPage = () => {
   return (
     <>
       <Head>
-        <title>Taxes & Import Duties | Dosalga</title>
+        <title>Taxes &amp; Duties | Dosalga</title>
         <meta
           name="description"
-          content="Taxes & Import Duties policy for Dosalga orders. Understand import duties, customs fees, local taxes, and responsibilities for United States and Mexico deliveries."
+          content="Taxes & Import Duties policy for Dosalga orders, including potential customs fees, VAT, and details for United States and Mexico deliveries."
         />
         <link rel="canonical" href={`${siteUrl}/taxes-and-duties`} />
 
@@ -34,46 +34,35 @@ const TaxesAndDutiesPage = () => {
           <div className="row">
             <div className="col-lg-12">
               <div className="privacy-content">
-                <h1 className="mb-4">Taxes &amp; Import Duties</h1>
-                <p>
-                  Dosalga operates as an international online retailer. All products are shipped directly from our international
-                  fulfillment partners.
-                </p>
+                <h1 className="mb-4">Taxes &amp; Duties</h1>
 
                 <div className="policy-section mt-5">
-                  <h2>Import Duties &amp; Taxes</h2>
-                  <p>Depending on the destination country, your order may be subject to:</p>
-                  <ul>
-                    <li>Import duties</li>
-                    <li>Customs fees</li>
-                    <li>Local taxes (including VAT or similar taxes)</li>
-                  </ul>
+                  <h2>Taxes &amp; Import Duties</h2>
                   <p>
-                    These charges are not included in the product price unless explicitly stated and are the sole responsibility of
-                    the customer. Dosalga has no control over these charges and cannot predict their amount.
+                    Dosalga operates as an international online retailer. All products are shipped directly from international
+                    fulfillment partners.
                   </p>
+                  <p>
+                    Depending on the destination country, orders may be subject to import duties, customs fees, or local taxes such
+                    as VAT. These charges are not included in the product price unless explicitly stated and are the sole
+                    responsibility of the customer.
+                  </p>
+                  <p>Dosalga has no control over these charges and cannot predict their amount.</p>
                 </div>
 
                 <div className="policy-section mt-5">
                   <h2>United States Orders</h2>
                   <p>
-                    Orders shipped to the United States are not subject to U.S. sales tax unless otherwise required by applicable
-                    law. Dosalga does not currently operate physical offices, warehouses, or inventory within the United States.
+                    Orders shipped to the United States are not subject to U.S. sales tax unless otherwise required by law. Dosalga
+                    does not operate offices, warehouses, or inventory within the United States.
                   </p>
                 </div>
 
                 <div className="policy-section mt-5">
                   <h2>Mexico Orders</h2>
                   <p>
-                    For orders delivered to Mexico, import taxes or VAT may be assessed by customs authorities or carriers upon
-                    delivery. These charges are determined by local regulations and are payable by the customer.
-                  </p>
-                </div>
-
-                <div className="policy-section mt-5">
-                  <p>
-                    By placing an order, you agree to comply with your local customs regulations and to pay any applicable duties or
-                    taxes required by your country.
+                    Orders delivered to Mexico may be subject to import taxes or VAT assessed by customs authorities or carriers upon
+                    delivery. These charges are payable by the customer.
                   </p>
                 </div>
               </div>
