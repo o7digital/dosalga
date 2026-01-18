@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useProduct } from '@/src/hooks/useProducts';
 import QuantityCounter from '@/src/uitils/QuantityCounter';
+import { useCart } from '@/src/contexts/CartContext';
 
 const ProductDetailPage = () => {
   const router = useRouter();
   const { id } = router.query;
   
   const { product, loading, error } = useProduct(id);
+  const { addToCart } = useCart();
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectColor, setSelectColor] = useState(0);
-  const [selectedVariation, setSelectedVariation] = useState(null);
+  const [selectedOptions, setSelectedOptions] = useState({});
+  const [quantity, setQuantity] = useState(1);
+  const [actionStatus, setActionStatus] = useState(null);
 
   if (loading) {
     return (
@@ -43,6 +46,8 @@ const ProductDetailPage = () => {
     sale_price,
     description,
     short_description,
+    attributes = [],
+    default_attributes = [],
     images = [],
     categories = [],
     average_rating = 0,
@@ -50,14 +55,79 @@ const ProductDetailPage = () => {
     stock_status,
     on_sale,
     sku,
-    variations = []
+    variations = [],
+    type = 'simple'
   } = product;
 
   const mainImages = images.length > 0 ? images : [{ src: '/assets/img/placeholder.png' }];
   const categoryName = categories[0]?.name || 'Produit';
-  const discountPercentage = on_sale && regular_price && sale_price
-    ? Math.round(((regular_price - sale_price) / regular_price) * 100)
-    : 0;
+  const variationAttributes = attributes.filter((attr) => attr.variation);
+
+  const normalizeKey = (value) => (value || '').toLowerCase();
+
+  useEffect(() => {
+    if (variationAttributes.length === 0) {
+      setSelectedOptions({});
+      return;
+    }
+
+    const defaults = {};
+    const firstVariation = variations?.[0];
+
+    variationAttributes.forEach((attr) => {
+      const key = normalizeKey(attr.slug || attr.name);
+      const defaultAttr = default_attributes.find(
+        (def) => normalizeKey(def.name) === key || normalizeKey(def.slug) === key
+      );
+      const variationAttr = firstVariation?.attributes?.find(
+        (item) => normalizeKey(item.slug || item.name) === key
+      );
+
+      const option = defaultAttr?.option || variationAttr?.option || attr.options?.[0];
+      if (option) {
+        defaults[key] = option;
+      }
+    });
+
+    setSelectedOptions(defaults);
+    setActionStatus(null);
+    setQuantity(1);
+  }, [product?.id, variations]);
+
+  const activeVariation = useMemo(() => {
+    if (!variations || variations.length === 0 || variationAttributes.length === 0) {
+      return null;
+    }
+
+    return (
+      variations.find((variation) =>
+        variationAttributes.every((attr) => {
+          const key = normalizeKey(attr.slug || attr.name);
+          const selectedValue = selectedOptions[key];
+          if (!selectedValue) return false;
+
+          const variationAttr = variation.attributes.find((item) => {
+            const variationKey = normalizeKey(item.slug || item.name);
+            return variationKey === key;
+          });
+
+          return variationAttr?.option === selectedValue;
+        })
+      ) || null
+    );
+  }, [variations, variationAttributes, selectedOptions]);
+
+  const formatPrice = (value) => {
+    const priceNumber = parseFloat(value);
+    if (Number.isNaN(priceNumber)) return null;
+    return `${priceNumber.toFixed(2)}€`;
+  };
+
+  const resolvedPrice = activeVariation?.price || sale_price || price || regular_price;
+  const resolvedRegularPrice = activeVariation?.regular_price || regular_price;
+  const showSale = resolvedRegularPrice &&
+    resolvedPrice &&
+    parseFloat(resolvedPrice) < parseFloat(resolvedRegularPrice);
 
   // Générer les étoiles
   const renderStars = () => {
@@ -69,6 +139,54 @@ const ProductDetailPage = () => {
       );
     }
     return stars;
+  };
+
+  const handleOptionSelect = (attrKey, option) => {
+    setSelectedOptions((prev) => ({
+      ...prev,
+      [normalizeKey(attrKey)]: option
+    }));
+    setActionStatus(null);
+  };
+
+  const handleAddToCart = () => {
+    if (stock_status !== 'instock') return;
+
+    if (type === 'variable') {
+      if (!activeVariation) {
+        alert('Sélectionnez une combinaison avant de continuer.');
+        return;
+      }
+
+      if (activeVariation.stock_status === 'outofstock') {
+        alert('Cette variation est en rupture de stock.');
+        return;
+      }
+
+      addToCart(
+        {
+          ...product,
+          price: parseFloat(activeVariation.price || resolvedPrice || 0),
+          stock_status: activeVariation.stock_status
+        },
+        quantity,
+        {
+          id: activeVariation.id,
+          price: parseFloat(activeVariation.price || resolvedPrice || 0),
+          attributes: activeVariation.attributes
+        }
+      );
+    } else {
+      addToCart(
+        {
+          ...product,
+          price: parseFloat(resolvedPrice || price || 0)
+        },
+        quantity
+      );
+    }
+
+    setActionStatus('added');
   };
 
   return (
@@ -142,13 +260,14 @@ const ProductDetailPage = () => {
                 {/* Prix */}
                 <div className="price-area">
                   <p className="price">
-                    {on_sale && sale_price ? (
+                    {showSale ? (
                       <>
-                        {parseFloat(sale_price).toFixed(2)}€{' '}
-                        <del>{parseFloat(regular_price).toFixed(2)}€</del>
+                        {formatPrice(resolvedPrice)}
+                        {' '}
+                        <del>{formatPrice(resolvedRegularPrice)}</del>
                       </>
-                    ) : (
-                      `${parseFloat(price).toFixed(2)}€`
+                    ) : formatPrice(resolvedPrice) || (
+                      <span className="text-muted">Prix indisponible</span>
                     )}
                   </p>
                 </div>
@@ -160,13 +279,38 @@ const ProductDetailPage = () => {
                   </div>
                 )}
 
-                {/* Quantité et couleur */}
+                {/* Quantité et variations */}
                 <div className="quantity-color-area">
                   <div className="quantity-color">
                     <h6 className="widget-title">Quantité</h6>
-                    <QuantityCounter />
+                    <QuantityCounter value={quantity} onChange={setQuantity} />
                   </div>
                 </div>
+
+                {variationAttributes.length > 0 && (
+                  <div className="variation-area mt-3">
+                    {variationAttributes.map((attr) => {
+                      const key = normalizeKey(attr.slug || attr.name);
+                      return (
+                        <div key={key} className="variation-group mb-3">
+                          <h6 className="widget-title">{attr.name}</h6>
+                          <div className="variation-options d-flex flex-wrap gap-2">
+                            {attr.options?.map((option) => (
+                              <button
+                                key={option}
+                                type="button"
+                                className={`btn btn-outline-dark btn-sm ${selectedOptions[key] === option ? 'active' : ''}`}
+                                onClick={() => handleOptionSelect(key, option)}
+                              >
+                                {option}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
 
                 {/* Boutons d'action */}
                 {stock_status === 'instock' && (
@@ -176,8 +320,7 @@ const ProductDetailPage = () => {
                       className="primary-btn1 hover-btn3"
                       onClick={(e) => {
                         e.preventDefault();
-                        // TODO: Acheter maintenant
-                        console.log('Buy now:', id);
+                        handleAddToCart();
                       }}
                     >
                       *Acheter maintenant*
@@ -187,12 +330,16 @@ const ProductDetailPage = () => {
                       className="primary-btn1 style-3 hover-btn4"
                       onClick={(e) => {
                         e.preventDefault();
-                        // TODO: Ajouter au panier
-                        console.log('Add to cart:', id);
+                        handleAddToCart();
                       }}
                     >
                       *Ajouter au panier*
                     </a>
+                  </div>
+                )}
+                {actionStatus === 'added' && (
+                  <div className="mt-2 text-success">
+                    Article ajouté au panier.
                   </div>
                 )}
 
