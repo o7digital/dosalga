@@ -1,9 +1,7 @@
 import Head from "next/head";
 import HeroSlider from "../components/home-uomo/HeroSlider";
-import CategoryBanners from "../components/home-uomo/CategoryBanners";
 import TrendingNow from "../components/home-uomo/TrendingNow";
 import UomoStudioCollection from "../components/home-uomo/UomoStudioCollection";
-import BrandsSlider from "../components/home-uomo/BrandsSlider";
 
 export default function HomeUomo() {
   return (
@@ -16,8 +14,6 @@ export default function HomeUomo() {
       </Head>
 
       <HeroSlider />
-      <CategoryBanners />
-      <BrandsSlider />
       <TrendingNow />
       <UomoStudioCollection />
       <TrendingNow />
