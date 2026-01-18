@@ -12,6 +12,7 @@ const CartUomo = () => {
     removeFromCart,
     updateQuantity,
   } = useCart();
+  const storeUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL || "https://oliviers44.sg-host.com";
   const cartButtonRef = useRef(null);
   const cartMenuRef = useRef(null);
 
@@ -118,12 +119,12 @@ const CartUomo = () => {
           </div>
           
           <div className="cart-actions">
-            <Link legacyBehavior href="/shop">
-              <a className="btn-secondary">Continue Shopping</a>
-            </Link>
-            <Link legacyBehavior href="/shop/checkout">
-              <a className="btn-primary">Product Checkout</a>
-            </Link>
+            <a className="btn-secondary" href={storeUrl} target="_blank" rel="noopener noreferrer">
+              Continue Shopping
+            </a>
+            <a className="btn-primary" href={`${storeUrl}/checkout`} target="_blank" rel="noopener noreferrer">
+              Product Checkout
+            </a>
           </div>
         </div>
       </div>
