@@ -3,19 +3,13 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import CartUomo from '../components/common/CartUomo';
 import LanguageSwitcher from '../components/common/LanguageSwitcher';
-import { useProductSearch } from "../hooks/useProducts";
-import { useCart } from "../contexts/CartContext";
 
 const HeaderUomo = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [hasTyped, setHasTyped] = useState(false);
     const router = useRouter();
-    const { results, loading, search } = useProductSearch();
-    const { addToCart } = useCart();
     const isSpanish = router.pathname.startsWith('/es');
 
     useEffect(() => {
@@ -37,36 +31,6 @@ const HeaderUomo = () => {
 
     const toggleSearch = () => {
         setIsSearchOpen(!isSearchOpen);
-    };
-
-    // Déclenche une recherche produit dès que l'utilisateur tape
-    useEffect(() => {
-        if (!isSearchOpen) {
-            setSearchQuery('');
-            search('');
-            setHasTyped(false);
-            return;
-        }
-
-        const handler = setTimeout(() => {
-            const term = searchQuery.trim();
-            if (term.length > 1) {
-                setHasTyped(true);
-                search(term, { per_page: 8 });
-            } else {
-                search('');
-                setHasTyped(false);
-            }
-        }, 250);
-
-        return () => clearTimeout(handler);
-    }, [searchQuery, isSearchOpen, search]);
-
-    const formatPrice = (price) => {
-        if (!price) return '';
-        const numeric = Number(price);
-        if (Number.isNaN(numeric)) return price;
-        return `$${numeric.toFixed(2)}`;
     };
 
     return (
@@ -176,57 +140,16 @@ const HeaderUomo = () => {
                             <form className="search-form">
                                 <input 
                                     type="search" 
-                                    placeholder={isSpanish ? "Buscar un producto..." : "Search a product..."} 
+                                    placeholder="Search products..." 
                                     autoFocus
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    aria-label={isSpanish ? "Buscar un producto" : "Search a product"}
                                 />
-                                <button type="submit" onClick={(e) => e.preventDefault()} aria-label="Submit search">
+                                <button type="submit">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                         <path d="M9.16667 15.8333C12.8486 15.8333 15.8333 12.8486 15.8333 9.16667C15.8333 5.48477 12.8486 2.5 9.16667 2.5C5.48477 2.5 2.5 5.48477 2.5 9.16667C2.5 12.8486 5.48477 15.8333 9.16667 15.8333Z" stroke="currentColor" strokeWidth="1.5"/>
                                         <path d="M17.5 17.5L13.875 13.875" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
                                     </svg>
                                 </button>
                             </form>
-                            <div className="search-results">
-                                {loading && (
-                                    <div className="search-state muted">{isSpanish ? 'Buscando...' : 'Searching...'}</div>
-                                )}
-                                {!loading && hasTyped && results.length === 0 && (
-                                    <div className="search-state muted">{isSpanish ? 'Ningún producto encontrado' : 'No products found'}</div>
-                                )}
-                                {results && results.map((product) => (
-                                    <div key={product.id} className="search-result-card">
-                                        <div className="thumb">
-                                            <img src={product.images?.[0]?.src || '/assets/img/placeholder.png'} alt={product.name} />
-                                        </div>
-                                        <div className="meta">
-                                            <Link legacyBehavior href={`/shop/product/${product.id}`}>
-                                                <a className="title">{product.name}</a>
-                                            </Link>
-                                            <div className="price-stock">
-                                                <span className="price">{formatPrice(product.price)}</span>
-                                                <span className={`stock ${product.stock_status === 'instock' ? 'in' : 'out'}`}>
-                                                    {product.stock_status === 'instock' ? (isSpanish ? 'Disponible' : 'In stock') : (isSpanish ? 'No disponible' : 'Out of stock')}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div className="actions">
-                                            <Link legacyBehavior href={`/shop/product/${product.id}`}>
-                                                <a className="view-link">{isSpanish ? 'Ver' : 'View'}</a>
-                                            </Link>
-                                            <button
-                                                className="add-btn"
-                                                onClick={() => addToCart(product, 1)}
-                                                disabled={product.stock_status !== 'instock'}
-                                            >
-                                                {isSpanish ? 'Comprar' : 'Buy'}
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
                         </div>
                     </div>
                 )}
@@ -450,118 +373,6 @@ const HeaderUomo = () => {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                }
-
-                .search-results {
-                    margin-top: 20px;
-                    background: #0b0c10;
-                    border-radius: 18px;
-                    padding: 12px;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 10px;
-                    max-height: 420px;
-                    overflow-y: auto;
-                }
-
-                .search-result-card {
-                    display: grid;
-                    grid-template-columns: 64px 1fr auto;
-                    gap: 12px;
-                    align-items: center;
-                    background: rgba(255,255,255,0.03);
-                    border: 1px solid rgba(255,255,255,0.06);
-                    border-radius: 14px;
-                    padding: 10px 12px;
-                }
-
-                .thumb img {
-                    width: 64px;
-                    height: 64px;
-                    object-fit: cover;
-                    border-radius: 10px;
-                    background: #fff;
-                }
-
-                .meta {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 4px;
-                }
-
-                .meta .title {
-                    color: #fff;
-                    font-weight: 700;
-                    font-size: 14px;
-                    text-decoration: none;
-                }
-
-                .price-stock {
-                    display: flex;
-                    gap: 10px;
-                    align-items: center;
-                    font-size: 13px;
-                }
-
-                .price {
-                    color: #fff;
-                    font-weight: 700;
-                }
-
-                .stock {
-                    padding: 4px 8px;
-                    border-radius: 999px;
-                    font-weight: 600;
-                }
-
-                .stock.in {
-                    background: rgba(52, 211, 153, 0.15);
-                    color: #34d399;
-                }
-
-                .stock.out {
-                    background: rgba(248, 113, 113, 0.15);
-                    color: #f87171;
-                }
-
-                .actions {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                }
-
-                .view-link {
-                    color: #9ca3af;
-                    font-weight: 600;
-                    text-decoration: none;
-                    font-size: 12px;
-                }
-
-                .add-btn {
-                    border: none;
-                    background: linear-gradient(135deg, #1f2937, #111827);
-                    color: #fff;
-                    font-weight: 700;
-                    border-radius: 999px;
-                    padding: 8px 12px;
-                    font-size: 12px;
-                    cursor: pointer;
-                    transition: opacity 0.2s ease, transform 0.2s ease;
-                }
-
-                .add-btn:disabled {
-                    opacity: 0.4;
-                    cursor: not-allowed;
-                }
-
-                .add-btn:not(:disabled):hover {
-                    transform: translateY(-1px);
-                }
-
-                .search-state {
-                    color: #d1d5db;
-                    font-size: 13px;
-                    padding: 8px 10px;
                 }
 
                 .mobile-menu {

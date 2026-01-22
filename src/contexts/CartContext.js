@@ -69,12 +69,6 @@ export const CartProvider = ({ children }) => {
         ];
       }
     });
-
-    if (typeof window !== 'undefined') {
-      window.alert(
-        'Su compra se agregó. ¿Desea comprar más productos o finalizar?\nYour purchase has been added. Would you like to buy more products or finalize?'
-      );
-    }
   };
 
   // Retirer un produit du panier

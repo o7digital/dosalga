@@ -65,23 +65,8 @@ const FooterUomo = () => {
                                 <h6 className="footer-widget-title">{isSpanish ? 'AYUDA' : 'HELP'}</h6>
                                 <ul className="footer-links">
                                     <li><Link legacyBehavior href={isSpanish ? "/my-account" : "/my-account"}><a>{isSpanish ? 'Mi cuenta' : 'My Account'}</a></Link></li>
-                                    {isSpanish ? (
-                                      <>
-                                        <li><Link legacyBehavior href="/es/terms-and-conditions"><a>Términos y Condiciones</a></Link></li>
-                                        <li><Link legacyBehavior href="/es/shipping-policy"><a>Política de Envíos</a></Link></li>
-                                        <li><Link legacyBehavior href="/es/returns-and-refunds"><a>Devoluciones y Reembolsos</a></Link></li>
-                                        <li><Link legacyBehavior href="/es/impuestos-y-aranceles"><a>Impuestos y Aranceles</a></Link></li>
-                                        <li><Link legacyBehavior href="/es/privacy-policy"><a>Política de Privacidad</a></Link></li>
-                                      </>
-                                    ) : (
-                                      <>
-                                        <li><Link legacyBehavior href="/terms-and-conditions"><a>Terms &amp; Conditions</a></Link></li>
-                                        <li><Link legacyBehavior href="/shipping-policy"><a>Shipping Policy</a></Link></li>
-                                        <li><Link legacyBehavior href="/returns-and-refunds"><a>Returns &amp; Refunds</a></Link></li>
-                                        <li><Link legacyBehavior href="/taxes-and-duties"><a>Taxes &amp; Duties</a></Link></li>
-                                        <li><Link legacyBehavior href="/privacy-policy"><a>Privacy Policy</a></Link></li>
-                                      </>
-                                    )}
+                                    
+                                    <li><Link legacyBehavior href={isSpanish ? "/es/privacy-policy" : "/privacy-policy"}><a>{isSpanish ? 'Aviso legal y privacidad' : 'Legal & Privacy'}</a></Link></li>
                                 </ul>
                             </div>
                         </div>

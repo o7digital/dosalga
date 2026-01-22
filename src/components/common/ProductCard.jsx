@@ -1,16 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
 import { useCountdownTimer } from '@/src/hooks/useCountdownTimer';
-import { useCart } from '@/src/contexts/CartContext';
-import { useRouter } from 'next/router';
 
 /**
  * Composant carte produit pour afficher un produit WooCommerce
  */
 const ProductCard = ({ product, showCountdown = false }) => {
-  const { addToCart } = useCart();
-  const { pathname } = useRouter();
-  const isSpanish = pathname.startsWith('/es');
   // Taux de change MXN vers USD
   const MXN_TO_USD_RATE = 18.5;
   
@@ -69,24 +64,6 @@ const ProductCard = ({ product, showCountdown = false }) => {
     return stars;
   };
 
-  const handleShare = (e) => {
-    e.preventDefault();
-    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://dosalga.com';
-    const url = product.permalink || `${origin}/shop/product/${id}`;
-    const shareData = {
-      title: name,
-      text: isSpanish ? 'Comparte tu compra en Dosalga' : 'Share your Dosalga purchase',
-      url,
-    };
-
-    if (typeof navigator !== 'undefined' && navigator.share) {
-      navigator.share(shareData).catch(() => {});
-    } else {
-      const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-      window.open(fbUrl, '_blank', 'noopener,noreferrer');
-    }
-  };
-
   return (
     <div className="product-card hover-btn">
       <div className="product-card-img double-img">
@@ -138,7 +115,8 @@ const ProductCard = ({ product, showCountdown = false }) => {
                   className="hover-btn3 add-cart-btn"
                   onClick={(e) => {
                     e.preventDefault();
-                    addToCart(product, 1);
+                    // TODO: Ajouter au panier
+                    console.log('Add to cart:', id);
                   }}
                 >
                   <i className="bi bi-bag-check" /> Ajouter au panier
@@ -183,21 +161,6 @@ const ProductCard = ({ product, showCountdown = false }) => {
                 </svg>
               </a>
             </li>
-            <li>
-              <a 
-                href="#"
-                onClick={handleShare}
-                aria-label={isSpanish ? 'Compartir producto' : 'Share product'}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24" fill="none">
-                  <path d="M15 8C16.6569 8 18 6.65685 18 5C18 3.34315 16.6569 2 15 2C13.3431 2 12 3.34315 12 5C12 6.65685 13.3431 8 15 8Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M9 14C10.6569 14 12 12.6569 12 11C12 9.34315 10.6569 8 9 8C7.34315 8 6 9.34315 6 11C6 12.6569 7.34315 14 9 14Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M15 22C16.6569 22 18 20.6569 18 19C18 17.3431 16.6569 16 15 16C13.3431 16 12 17.3431 12 19C12 20.6569 13.3431 22 15 22Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M13.5 6.5L10.5 9.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M10.5 12.5L13.5 15.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </a>
-            </li>
           </ul>
         </div>
 
@@ -221,11 +184,6 @@ const ProductCard = ({ product, showCountdown = false }) => {
             <a>{categoryName}</a>
           </Link>
         </p>
-
-        <div className="rating">
-          <ul>{renderStars()}</ul>
-          <span>({rating_count})</span>
-        </div>
         
         {/* Prix */}
         <p className="price">
@@ -238,6 +196,14 @@ const ProductCard = ({ product, showCountdown = false }) => {
             `$${convertMXNtoUSD(price)}`
           )}
         </p>
+
+        {/* Notation */}
+        {rating_count > 0 && (
+          <div className="rating">
+            <ul>{renderStars()}</ul>
+            <span>({rating_count})</span>
+          </div>
+        )}
       </div>
       <span className="for-border" />
     </div>

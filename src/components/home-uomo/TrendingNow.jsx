@@ -1,80 +1,24 @@
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { useProducts } from '../../hooks/useProducts';
 import { useRouter } from 'next/router';
-import { useCart } from '../../contexts/CartContext';
 
 const TrendingNow = () => {
     const { products, loading, error } = useProducts({ limit: 8 });
     const { pathname } = useRouter();
-    const { addToCart } = useCart();
     const isSpanish = pathname.startsWith('/es');
-    const [sortKey, setSortKey] = useState('recent');
-    const sortOptions = isSpanish
+
+    const categories = isSpanish
         ? [
-            { id: 'recent', label: 'Más reciente' },
-            { id: 'priceDesc', label: 'Más caro' },
-            { id: 'priceAsc', label: 'Más barato' },
-            { id: 'rating', label: 'Mejores calificaciones' },
-          ]
+            { id: 'all', name: 'Todos', active: true },
+            { id: 'sportwear', name: 'Sportwear' },
+            { id: 'running', name: 'Running' }
+        ]
         : [
-            { id: 'recent', label: 'Most Recent' },
-            { id: 'priceDesc', label: 'Highest Price' },
-            { id: 'priceAsc', label: 'Lowest Price' },
-            { id: 'rating', label: 'Top Rated' },
-          ];
-
-    const parseNumber = (value) => {
-        const n = Number(value);
-        return Number.isNaN(n) ? 0 : n;
-    };
-
-    const renderStars = (rating = 0) => {
-        const rounded = Math.round(rating);
-        return (
-            <span className="stars">
-                {[0, 1, 2, 3, 4].map((idx) => (
-                    <i key={idx} className={`bi ${idx < rounded ? 'bi-star-fill' : 'bi-star'}`} />
-                ))}
-            </span>
-        );
-    };
-
-    const handleShare = (product) => {
-        const origin = typeof window !== 'undefined' ? window.location.origin : 'https://dosalga.com';
-        const url = product?.permalink || `${origin}/shop/product/${product?.id}`;
-        const shareData = {
-            title: product?.name,
-            text: isSpanish ? 'Comparte este producto de Dosalga' : 'Share this Dosalga product',
-            url,
-        };
-
-        if (typeof navigator !== 'undefined' && navigator.share) {
-            navigator.share(shareData).catch(() => {});
-        } else {
-            const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
-            window.open(fbUrl, '_blank', 'noopener,noreferrer');
-        }
-    };
-
-    const sortedProducts = useMemo(() => {
-        const items = [...(products || [])];
-        return items
-            .sort((a, b) => {
-                switch (sortKey) {
-                    case 'priceDesc':
-                        return parseNumber(b.price) - parseNumber(a.price);
-                    case 'priceAsc':
-                        return parseNumber(a.price) - parseNumber(b.price);
-                    case 'rating':
-                        return parseNumber(b.average_rating) - parseNumber(a.average_rating);
-                    case 'recent':
-                    default:
-                        return new Date(b.date_created) - new Date(a.date_created);
-                }
-            })
-            .slice(0, 8);
-    }, [products, sortKey]);
+            { id: 'all', name: 'All', active: true },
+            { id: 'sportwear', name: 'Sportwear' },
+            { id: 'running', name: 'Running' }
+        ];
 
     if (loading) {
         return (
@@ -94,26 +38,25 @@ const TrendingNow = () => {
         <section className="trending-section py-5">
             <div className="container">
                 <div className="section-header text-center mb-5">
-                    <h2 className="section-title">{isSpanish ? 'Descubre' : 'Explore'}</h2>
+                    <h2 className="section-title">{isSpanish ? 'Tendencias' : 'Trending Now'}</h2>
                     <div className="category-filter mt-4">
-                        {sortOptions.map((option) => (
-                            <button
-                                key={option.id}
-                                className={`filter-btn ${sortKey === option.id ? 'active' : ''}`}
-                                onClick={() => setSortKey(option.id)}
+                        {categories.map((cat) => (
+                            <button 
+                                key={cat.id}
+                                className={`filter-btn ${cat.active ? 'active' : ''}`}
                             >
-                                {option.label}
+                                {cat.name}
                             </button>
                         ))}
                     </div>
                 </div>
 
                 <div className="row g-4">
-                    {sortedProducts && sortedProducts.map((product) => (
+                    {products && products.slice(0, 8).map((product) => (
                         <div key={product.id} className="col-lg-3 col-md-4 col-sm-6">
                             <div className="product-card">
                                 <div className="product-image">
-                                    <Link legacyBehavior href={`/shop/product/${product.id}`}>
+                                    <Link legacyBehavior href={`/shop/product-details/${product.id}`}>
                                         <a>
                                             <img 
                                                 src={product.images?.[0]?.src || '/assets/img/placeholder.jpg'} 
@@ -151,16 +94,10 @@ const TrendingNow = () => {
                                         <span className="product-brand">{product.categories[0].name}</span>
                                     )}
                                     <h6 className="product-title">
-                                        <Link legacyBehavior href={`/shop/product/${product.id}`}>
+                                        <Link legacyBehavior href={`/shop/product-details/${product.id}`}>
                                             <a>{product.name}</a>
                                         </Link>
                                     </h6>
-                                    <div className="product-rating">
-                                        {renderStars(parseNumber(product.average_rating))}
-                                        <span className="rating-count">
-                                            ({product.rating_count || 0})
-                                        </span>
-                                    </div>
                                     <div className="product-price">
                                         {product.on_sale ? (
                                             <>
@@ -170,39 +107,6 @@ const TrendingNow = () => {
                                         ) : (
                                             <span className="price">${product.price}</span>
                                         )}
-                                    </div>
-                                    <div className="product-cta">
-                                        <Link legacyBehavior href={`/shop/product/${product.id}`}>
-                                            <a className="cta-link">
-                                                {isSpanish ? 'Ver producto' : 'View product'}
-                                            </a>
-                                        </Link>
-                                        {product.stock_status === 'instock' ? (
-                                            <button 
-                                                className="cta-button"
-                                                onClick={() => addToCart(product, 1)}
-                                            >
-                                                {isSpanish ? 'Comprar' : 'Buy'}
-                                            </button>
-                                        ) : (
-                                            <span className="cta-badge">
-                                                {isSpanish ? 'Agotado' : 'Out of stock'}
-                                            </span>
-                                        )}
-                                        <button
-                                            className="share-btn"
-                                            onClick={() => handleShare(product)}
-                                            title={isSpanish ? 'Compartir' : 'Share'}
-                                            aria-label={isSpanish ? 'Compartir producto' : 'Share product'}
-                                        >
-                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                                                <path d="M15 8C16.6569 8 18 6.65685 18 5C18 3.34315 16.6569 2 15 2C13.3431 2 12 3.34315 12 5C12 6.65685 13.3431 8 15 8Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                                <path d="M9 14C10.6569 14 12 12.6569 12 11C12 9.34315 10.6569 8 9 8C7.34315 8 6 9.34315 6 11C6 12.6569 7.34315 14 9 14Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                                <path d="M15 22C16.6569 22 18 20.6569 18 19C18 17.3431 16.6569 16 15 16C13.3431 16 12 17.3431 12 19C12 20.6569 13.3431 22 15 22Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                                <path d="M13.5 6.5L10.5 9.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                                <path d="M10.5 12.5L13.5 15.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                            </svg>
-                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -347,9 +251,6 @@ const TrendingNow = () => {
 
                 .product-info {
                     padding: 20px;
-                    display: flex;
-                    flex-direction: column;
-                    gap: 10px;
                 }
 
                 .product-brand {
@@ -383,7 +284,6 @@ const TrendingNow = () => {
                     display: flex;
                     align-items: center;
                     gap: 10px;
-                    flex-wrap: wrap;
                 }
 
                 .price,
@@ -397,95 +297,6 @@ const TrendingNow = () => {
                     font-size: 14px;
                     color: #999;
                     text-decoration: line-through;
-                }
-
-                .product-rating {
-                    display: flex;
-                    align-items: center;
-                    gap: 6px;
-                    font-size: 12px;
-                    color: #555;
-                }
-
-                .stars i {
-                    color: #e3b341;
-                    margin-right: 2px;
-                    font-size: 12px;
-                }
-
-                .rating-count {
-                    color: #666;
-                }
-
-                .product-cta {
-                    display: flex;
-                    align-items: center;
-                    justify-content: flex-start;
-                    gap: 10px;
-                    margin-top: 6px;
-                    flex-wrap: wrap;
-                }
-
-                .cta-link {
-                    flex: 1 1 auto;
-                    text-decoration: none;
-                    color: #0d0d0d;
-                    font-weight: 600;
-                    border-bottom: 1px solid #0d0d0d;
-                    padding-bottom: 2px;
-                    transition: all 0.2s ease;
-                    font-size: 14px;
-                }
-
-                .cta-link:hover {
-                    color: #555;
-                    border-color: #555;
-                }
-
-                .cta-button {
-                    flex-shrink: 0;
-                    border: none;
-                    background: linear-gradient(135deg, #0f172a, #111827);
-                    color: #fff;
-                    padding: 10px 14px;
-                    border-radius: 999px;
-                    font-weight: 700;
-                    font-size: 13px;
-                    cursor: pointer;
-                    transition: transform 0.2s ease, box-shadow 0.2s ease;
-                }
-
-                .cta-button:hover {
-                    transform: translateY(-1px);
-                    box-shadow: 0 8px 14px rgba(0,0,0,0.12);
-                }
-
-                .share-btn {
-                    border: 1px solid #ddd;
-                    background: #fff;
-                    color: #333;
-                    border-radius: 50%;
-                    width: 36px;
-                    height: 36px;
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
-                    cursor: pointer;
-                    transition: all 0.2s ease;
-                }
-
-                .share-btn:hover {
-                    background: #f5f5f5;
-                    border-color: #ccc;
-                }
-
-                .cta-badge {
-                    background: #f4f4f4;
-                    border-radius: 999px;
-                    padding: 8px 12px;
-                    font-size: 12px;
-                    font-weight: 600;
-                    color: #555;
                 }
 
                 @media (max-width: 991px) {
