@@ -23,13 +23,45 @@ const TrendingNow = () => {
             { id: 'top-rated', label: 'Top rated' }
         ];
 
-    const productCategories = [
-        { id: 'all', label: isSpanish ? 'Todos' : 'All' },
-        { id: 'byke', label: 'Byke' },
-        { id: 'shoes', label: isSpanish ? 'Zapatos' : 'Shoes' },
-        { id: 'golf', label: 'Golf' },
-        { id: 'tenis', label: 'Tenis' }
-    ];
+    const fallbackCategories = ['shoes', 'bikes', 'bike', 'ski', 'golf', 'cardio', 'fishing', 'cremes', 'sueter'];
+
+    const formatCategoryLabel = (value) => {
+        if (!value) return '';
+        const formatted = value.replace(/[-_]/g, ' ');
+        return formatted.charAt(0).toUpperCase() + formatted.slice(1);
+    };
+
+    const productCategories = useMemo(() => {
+        const seen = new Set();
+        const dynamic = (Array.isArray(products) ? products : []).flatMap((product) =>
+            (product.categories || []).map((cat) => {
+                const slug = cat.slug || cat.name?.toLowerCase().replace(/\s+/g, '-');
+                const id = slug || 'misc';
+                return {
+                    id,
+                    label: cat.name || formatCategoryLabel(id)
+                };
+            })
+        );
+
+        const ordered = [];
+
+        // Add fallback categories first to keep the expected order (shoes, bikes, etc.)
+        fallbackCategories.forEach((slug) => {
+            if (seen.has(slug)) return;
+            seen.add(slug);
+            ordered.push({ id: slug, label: formatCategoryLabel(slug) });
+        });
+
+        // Add dynamic categories from WooCommerce
+        dynamic.forEach((cat) => {
+            if (seen.has(cat.id)) return;
+            seen.add(cat.id);
+            ordered.push(cat);
+        });
+
+        return [{ id: 'all', label: isSpanish ? 'Todos' : 'All' }, ...ordered];
+    }, [products, isSpanish]);
 
     const parsePriceValue = (value) => {
         const raw = String(value ?? '').trim();
@@ -53,9 +85,14 @@ const TrendingNow = () => {
         const byCategory = selectedCategory === 'all'
             ? source
             : source.filter((product) =>
-                product.categories?.some((cat) =>
-                    cat.name?.toLowerCase().includes(selectedCategory)
-                )
+                product.categories?.some((cat) => {
+                    const slug = cat.slug?.toLowerCase();
+                    const name = cat.name?.toLowerCase();
+                    return slug === selectedCategory
+                        || name === selectedCategory
+                        || slug?.includes(selectedCategory)
+                        || name?.includes(selectedCategory);
+                })
             );
 
         const sorted = [...byCategory].sort((a, b) => {
