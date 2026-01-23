@@ -1,24 +1,77 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useProducts } from '../../hooks/useProducts';
 import { useRouter } from 'next/router';
 
 const TrendingNow = () => {
-    const { products, loading, error } = useProducts({ limit: 8 });
+    const { products, loading, error } = useProducts({ limit: 12 });
     const { pathname } = useRouter();
     const isSpanish = pathname.startsWith('/es');
 
-    const categories = isSpanish
+    const [sortOption, setSortOption] = useState('most-expensive');
+    const [selectedCategory, setSelectedCategory] = useState('all');
+
+    const sortOptions = isSpanish
         ? [
-            { id: 'all', name: 'Todos', active: true },
-            { id: 'sportwear', name: 'Sportwear' },
-            { id: 'running', name: 'Running' }
+            { id: 'most-expensive', label: 'Más caro' },
+            { id: 'least-expensive', label: 'Menos caro' },
+            { id: 'top-rated', label: '+ calificaciones' }
         ]
         : [
-            { id: 'all', name: 'All', active: true },
-            { id: 'sportwear', name: 'Sportwear' },
-            { id: 'running', name: 'Running' }
+            { id: 'most-expensive', label: 'Most expensive' },
+            { id: 'least-expensive', label: 'Least expensive' },
+            { id: 'top-rated', label: 'Top rated' }
         ];
+
+    const productCategories = [
+        { id: 'all', label: isSpanish ? 'Todos' : 'All' },
+        { id: 'byke', label: 'Byke' },
+        { id: 'shoes', label: isSpanish ? 'Zapatos' : 'Shoes' },
+        { id: 'golf', label: 'Golf' },
+        { id: 'tenis', label: 'Tenis' }
+    ];
+
+    const parsePriceValue = (value) => {
+        const raw = String(value ?? '').trim();
+        if (!raw) return null;
+        const normalized = raw.includes(',') && !raw.includes('.')
+            ? raw.replace(',', '.')
+            : raw.replace(/,/g, '');
+        const numeric = Number(normalized);
+        return Number.isFinite(numeric) ? numeric : null;
+    };
+
+    const formatPrice = (value) => {
+        const numeric = parsePriceValue(value);
+        if (numeric === null) return '';
+        return `$${numeric.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
+    };
+
+    const filteredProducts = useMemo(() => {
+        const source = Array.isArray(products) ? [...products] : [];
+
+        const byCategory = selectedCategory === 'all'
+            ? source
+            : source.filter((product) =>
+                product.categories?.some((cat) =>
+                    cat.name?.toLowerCase().includes(selectedCategory)
+                )
+            );
+
+        const sorted = [...byCategory].sort((a, b) => {
+            const priceA = parsePriceValue(a.sale_price ?? a.price ?? a.regular_price ?? 0) ?? 0;
+            const priceB = parsePriceValue(b.sale_price ?? b.price ?? b.regular_price ?? 0) ?? 0;
+            const ratingA = Number(a.average_rating ?? 0);
+            const ratingB = Number(b.average_rating ?? 0);
+
+            if (sortOption === 'most-expensive') return priceB - priceA;
+            if (sortOption === 'least-expensive') return priceA - priceB;
+            if (sortOption === 'top-rated') return ratingB - ratingA;
+            return 0;
+        });
+
+        return sorted.slice(0, 12);
+    }, [products, selectedCategory, sortOption]);
 
     if (loading) {
         return (
@@ -37,81 +90,124 @@ const TrendingNow = () => {
     return (
         <section className="trending-section py-5">
             <div className="container">
-                <div className="section-header text-center mb-5">
-                    <h2 className="section-title">{isSpanish ? 'Tendencias' : 'Trending Now'}</h2>
-                    <div className="category-filter mt-4">
-                        {categories.map((cat) => (
-                            <button 
-                                key={cat.id}
-                                className={`filter-btn ${cat.active ? 'active' : ''}`}
-                            >
-                                {cat.name}
-                            </button>
-                        ))}
-                    </div>
+                <div className="section-header mb-4">
+                    <h2 className="section-title">{isSpanish ? 'Nuestros mejores productos' : 'Our Best Products'}</h2>
+                    <p className="section-subtitle">
+                        {isSpanish
+                            ? 'Explora nuestra selección ordenada por precio o calificaciones.'
+                            : 'Explore our handpicked products sorted by price or ratings.'}
+                    </p>
                 </div>
 
                 <div className="row g-4">
-                    {products && products.slice(0, 8).map((product) => (
-                        <div key={product.id} className="col-lg-3 col-md-4 col-sm-6">
-                            <div className="product-card">
-                                <div className="product-image">
-                                    <Link legacyBehavior href={`/shop/product-details/${product.id}`}>
-                                        <a>
-                                            <img 
-                                                src={product.images?.[0]?.src || '/assets/img/placeholder.jpg'} 
-                                                alt={product.name}
-                                                className="img-fluid"
+                    <div className="col-lg-3">
+                        <div className="filters-card">
+                            <h4 className="filters-title">{isSpanish ? 'Filtros' : 'Filters'}</h4>
+
+                            <div className="filter-group">
+                                <h5>{isSpanish ? 'Ordenar' : 'Sort by'}</h5>
+                                <div className="filter-options">
+                                    {sortOptions.map((option) => (
+                                        <label key={option.id} className={`filter-option ${sortOption === option.id ? 'active' : ''}`}>
+                                            <input
+                                                type="radio"
+                                                name="sort"
+                                                value={option.id}
+                                                checked={sortOption === option.id}
+                                                onChange={() => setSortOption(option.id)}
                                             />
-                                            {product.images?.[1] && (
-                                                <img 
-                                                    src={product.images[1].src} 
-                                                    alt={product.name}
-                                                    className="img-fluid hover-image"
-                                                />
-                                            )}
-                                        </a>
-                                    </Link>
-                                    <div className="product-actions">
-                                        <button className="action-btn" title="Add to wishlist">
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                <path d="M10 18.35L8.55 17.03C3.4 12.36 0 9.27 0 5.5C0 2.41 2.42 0 5.5 0C7.24 0 8.91 0.81 10 2.08C11.09 0.81 12.76 0 14.5 0C17.58 0 20 2.41 20 5.5C20 9.27 16.6 12.36 11.45 17.03L10 18.35Z" fill="currentColor"/>
-                                            </svg>
-                                        </button>
-                                        <button className="action-btn" title="Quick view">
-                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                                <path d="M10 4C4 4 1 10 1 10C1 10 4 16 10 16C16 16 19 10 19 10C19 10 16 4 10 4Z" stroke="currentColor" strokeWidth="1.5"/>
-                                                <circle cx="10" cy="10" r="3" stroke="currentColor" strokeWidth="1.5"/>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    {product.on_sale && (
-                                        <span className="badge-sale">SALE</span>
-                                    )}
+                                            <span>{option.label}</span>
+                                        </label>
+                                    ))}
                                 </div>
-                                <div className="product-info">
-                                    {product.categories?.[0] && (
-                                        <span className="product-brand">{product.categories[0].name}</span>
-                                    )}
-                                    <h6 className="product-title">
-                                        <Link legacyBehavior href={`/shop/product-details/${product.id}`}>
-                                            <a>{product.name}</a>
-                                        </Link>
-                                    </h6>
-                                    <div className="product-price">
-                                        {product.on_sale ? (
-                                            <>
-                                                <span className="regular-price">${product.regular_price}</span>
-                                                <span className="sale-price">${product.sale_price}</span>
-                                            </>
-                                        ) : (
-                                            <span className="price">${product.price}</span>
-                                        )}
-                                    </div>
+                            </div>
+
+                            <div className="filter-group">
+                                <h5>{isSpanish ? 'Categorías' : 'Categories'}</h5>
+                                <div className="category-chips">
+                                    {productCategories.map((cat) => (
+                                        <button
+                                            key={cat.id}
+                                            className={`chip ${selectedCategory === cat.id ? 'active' : ''}`}
+                                            onClick={() => setSelectedCategory(cat.id)}
+                                        >
+                                            {cat.label}
+                                        </button>
+                                    ))}
                                 </div>
                             </div>
                         </div>
-                    ))}
+                    </div>
+
+                    <div className="col-lg-9">
+                        {error && (
+                            <div className="alert alert-danger mb-3" role="alert">
+                                {error}
+                            </div>
+                        )}
+                        <div className="row g-4">
+                            {filteredProducts.map((product) => (
+                                <div key={product.id} className="col-lg-4 col-md-6">
+                                    <div className="product-card">
+                                        <div className="product-image">
+                                            <Link legacyBehavior href={`/shop/product-details/${product.id}`}>
+                                                <a>
+                                                    <img 
+                                                        src={product.images?.[0]?.src || '/assets/img/placeholder.jpg'} 
+                                                        alt={product.name}
+                                                        className="img-fluid"
+                                                    />
+                                                    {product.images?.[1] && (
+                                                        <img 
+                                                            src={product.images[1].src} 
+                                                            alt={product.name}
+                                                            className="img-fluid hover-image"
+                                                        />
+                                                    )}
+                                                </a>
+                                            </Link>
+                                            <div className="product-actions">
+                                                <button className="action-btn" title={isSpanish ? 'Añadir a la lista de deseos' : 'Add to wishlist'}>
+                                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                                        <path d="M10 18.35L8.55 17.03C3.4 12.36 0 9.27 0 5.5C0 2.41 2.42 0 5.5 0C7.24 0 8.91 0.81 10 2.08C11.09 0.81 12.76 0 14.5 0C17.58 0 20 2.41 20 5.5C20 9.27 16.6 12.36 11.45 17.03L10 18.35Z" fill="currentColor"/>
+                                                    </svg>
+                                                </button>
+                                                <button className="action-btn" title={isSpanish ? 'Vista rápida' : 'Quick view'}>
+                                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                                        <path d="M10 4C4 4 1 10 1 10C1 10 4 16 10 16C16 16 19 10 19 10C19 10 16 4 10 4Z" stroke="currentColor" strokeWidth="1.5"/>
+                                                        <circle cx="10" cy="10" r="3" stroke="currentColor" strokeWidth="1.5"/>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            {product.on_sale && (
+                                                <span className="badge-sale">{isSpanish ? 'OFERTA' : 'SALE'}</span>
+                                            )}
+                                        </div>
+                                        <div className="product-info">
+                                            {product.categories?.[0] && (
+                                                <span className="product-brand">{product.categories[0].name}</span>
+                                            )}
+                                            <h6 className="product-title">
+                                                <Link legacyBehavior href={`/shop/product-details/${product.id}`}>
+                                                    <a>{product.name}</a>
+                                                </Link>
+                                            </h6>
+                                            <div className="product-price">
+                                                {product.on_sale ? (
+                                                    <>
+                                                        <span className="regular-price">{formatPrice(product.regular_price)}</span>
+                                                        <span className="sale-price">{formatPrice(product.sale_price)}</span>
+                                                    </>
+                                                ) : (
+                                                    <span className="price">{formatPrice(product.price)}</span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -120,62 +216,112 @@ const TrendingNow = () => {
                     background: #f8f9fa;
                 }
 
+                .section-header {
+                    text-align: left;
+                }
+
                 .section-title {
-                    font-size: 36px;
+                    font-size: 34px;
                     font-weight: 700;
-                    letter-spacing: 1px;
-                    color: #000;
                     margin: 0;
+                    letter-spacing: 0.5px;
                 }
 
-                .category-filter {
-                    display: flex;
-                    gap: 20px;
-                    justify-content: center;
-                }
-
-                .filter-btn {
-                    padding: 8px 24px;
-                    border: none;
-                    background: transparent;
-                    font-size: 14px;
-                    font-weight: 600;
+                .section-subtitle {
+                    margin-top: 10px;
                     color: #666;
+                    font-size: 15px;
+                }
+
+                .filters-card {
+                    background: #fff;
+                    border-radius: 12px;
+                    padding: 24px;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+                    position: sticky;
+                    top: 20px;
+                }
+
+                .filters-title {
+                    margin: 0 0 16px 0;
+                    font-size: 18px;
+                    font-weight: 700;
+                }
+
+                .filter-group {
+                    margin-bottom: 24px;
+                }
+
+                .filter-group h5 {
+                    font-size: 14px;
+                    font-weight: 700;
+                    margin-bottom: 12px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                    color: #333;
+                }
+
+                .filter-options {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                }
+
+                .filter-option {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 10px 12px;
+                    border-radius: 8px;
+                    border: 1px solid #e5e7eb;
                     cursor: pointer;
-                    transition: all 0.3s ease;
-                    position: relative;
+                    transition: all 0.2s ease;
+                    font-size: 14px;
+                    color: #444;
                 }
 
-                .filter-btn:after {
-                    content: '';
-                    position: absolute;
-                    bottom: 0;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    width: 0;
-                    height: 2px;
+                .filter-option input {
+                    accent-color: #000;
+                }
+
+                .filter-option.active {
+                    border-color: #000;
+                    background: #f3f4f6;
+                    font-weight: 700;
+                }
+
+                .category-chips {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                }
+
+                .chip {
+                    border: 1px solid #e5e7eb;
+                    background: #fff;
+                    padding: 8px 14px;
+                    border-radius: 20px;
+                    font-size: 13px;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                }
+
+                .chip.active {
                     background: #000;
-                    transition: width 0.3s ease;
-                }
-
-                .filter-btn:hover,
-                .filter-btn.active {
-                    color: #000;
-                }
-
-                .filter-btn.active:after {
-                    width: 100%;
+                    color: #fff;
+                    border-color: #000;
                 }
 
                 .product-card {
                     background: #fff;
-                    border-radius: 8px;
+                    border-radius: 12px;
                     overflow: hidden;
                     transition: all 0.3s ease;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
                 }
 
                 .product-card:hover {
-                    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+                    box-shadow: 0 14px 40px rgba(0,0,0,0.1);
                     transform: translateY(-4px);
                 }
 
@@ -183,6 +329,7 @@ const TrendingNow = () => {
                     position: relative;
                     overflow: hidden;
                     aspect-ratio: 3/4;
+                    background: #f7f7f7;
                 }
 
                 .product-image img {
@@ -205,23 +352,23 @@ const TrendingNow = () => {
 
                 .product-actions {
                     position: absolute;
-                    bottom: 20px;
-                    left: 50%;
-                    transform: translateX(-50%) translateY(20px);
+                    bottom: 16px;
+                    right: 16px;
                     display: flex;
                     gap: 10px;
                     opacity: 0;
+                    transform: translateY(10px);
                     transition: all 0.3s ease;
                 }
 
                 .product-card:hover .product-actions {
                     opacity: 1;
-                    transform: translateX(-50%) translateY(0);
+                    transform: translateY(0);
                 }
 
                 .action-btn {
-                    width: 40px;
-                    height: 40px;
+                    width: 38px;
+                    height: 38px;
                     border-radius: 50%;
                     border: none;
                     background: #fff;
@@ -230,6 +377,7 @@ const TrendingNow = () => {
                     justify-content: center;
                     cursor: pointer;
                     transition: all 0.3s ease;
+                    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
                 }
 
                 .action-btn:hover {
@@ -245,18 +393,18 @@ const TrendingNow = () => {
                     color: #fff;
                     padding: 4px 12px;
                     font-size: 12px;
-                    font-weight: 600;
+                    font-weight: 700;
                     border-radius: 4px;
                 }
 
                 .product-info {
-                    padding: 20px;
+                    padding: 18px;
                 }
 
                 .product-brand {
                     display: block;
                     font-size: 12px;
-                    font-weight: 600;
+                    font-weight: 700;
                     color: #999;
                     text-transform: uppercase;
                     letter-spacing: 1px;
@@ -265,7 +413,7 @@ const TrendingNow = () => {
 
                 .product-title {
                     font-size: 14px;
-                    font-weight: 600;
+                    font-weight: 700;
                     margin-bottom: 12px;
                     min-height: 40px;
                 }
@@ -284,12 +432,13 @@ const TrendingNow = () => {
                     display: flex;
                     align-items: center;
                     gap: 10px;
+                    flex-wrap: wrap;
                 }
 
                 .price,
                 .sale-price {
                     font-size: 16px;
-                    font-weight: 700;
+                    font-weight: 800;
                     color: #000;
                 }
 
@@ -300,8 +449,8 @@ const TrendingNow = () => {
                 }
 
                 @media (max-width: 991px) {
-                    .section-title {
-                        font-size: 28px;
+                    .filters-card {
+                        position: static;
                     }
                 }
             `}</style>
