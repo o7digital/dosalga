@@ -150,7 +150,7 @@ const TrendingNow = () => {
                                 <div key={product.id} className="col-lg-4 col-md-6">
                                     <div className="product-card">
                                         <div className="product-image">
-                                            <Link legacyBehavior href={`/shop/product-details/${product.id}`}>
+                                            <Link legacyBehavior href={`/shop/product/${product.id}`}>
                                                 <a>
                                                     <img 
                                                         src={product.images?.[0]?.src || '/assets/img/placeholder.jpg'} 
@@ -188,7 +188,7 @@ const TrendingNow = () => {
                                                 <span className="product-brand">{product.categories[0].name}</span>
                                             )}
                                             <h6 className="product-title">
-                                                <Link legacyBehavior href={`/shop/product-details/${product.id}`}>
+                                                <Link legacyBehavior href={`/shop/product/${product.id}`}>
                                                     <a>{product.name}</a>
                                                 </Link>
                                             </h6>
