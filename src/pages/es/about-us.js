@@ -8,7 +8,7 @@ const AboutPageEs = () => {
     <>
       <Head>
         <title>Sobre Dosalga - Productos para la vida diaria | Historia, visión y valores</title>
-        <meta name="description" content="Conoce a Dosalga, empresa fundada en 2013 que facilita la compra de productos esenciales para la vida diaria con entregas en casa u oficina. Descubre su historia, visión, misión y valores." />
+        <meta name="description" content="Dosalga facilita la adquisición de productos diseñados para la vida diaria con entregas en casa u oficina. Conoce su historia desde 2013, visión, misión y valores." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/assets/img/sm-logo.svg" />
         <link rel="canonical" href={`${siteUrl}/es/about-us`} />
@@ -23,7 +23,7 @@ const AboutPageEs = () => {
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${siteUrl}/es/about-us`} />
         <meta property="og:title" content="Sobre Dosalga - Productos para la vida diaria" />
-        <meta property="og:description" content="Empresa dedicada a simplificar la compra de productos esenciales con entregas donde los necesitas. Historia, misión y valores de Dosalga." />
+        <meta property="og:description" content="Empresa dedicada a simplificar la compra de productos esenciales con entregas donde los necesitas. Historia, visión, misión y valores de Dosalga." />
         <meta property="og:site_name" content="Dosalga" />
       </Head>
     <div className="about-page pt-100 pb-100">
@@ -32,38 +32,37 @@ const AboutPageEs = () => {
           <div className="col-lg-8 text-center">
             <h1 className="mb-3">Sobre Dosalga</h1>
             <p className="text-muted">
-              Facilitamos la adquisición de productos diseñados para la vida diaria y los llevamos a tu hogar, oficina o el punto que elijas, priorizando comodidad, accesibilidad y eficiencia.
+              Dosalga es una empresa dedicada a facilitar la adquisición de productos diseñados para la vida diaria, permitiendo recibirlos directamente en el hogar, oficina o cualquier ubicación seleccionada. Nuestro modelo prioriza la comodidad, la accesibilidad y la eficiencia.
             </p>
           </div>
         </div>
 
         <div className="row justify-content-center">
           <div className="col-lg-10">
-            <div className="about-card bg-light p-4 p-lg-5 mb-40 rounded-3">
-              <h2 className="h4 mb-3">Qué es Dosalga</h2>
-              <p>
-                Somos una empresa dedicada a simplificar la compra de artículos esenciales para el día a día. Eliminamos desplazamientos innecesarios y optimizamos la experiencia para que recibas lo que necesitas con claridad y sin fricciones.
-              </p>
-            </div>
-
             <div className="about-card bg-white border p-4 p-lg-5 mb-40 rounded-3">
               <h2 className="h4 mb-3">Artículos diseñados para la vida diaria</h2>
               <p>
-                Seleccionamos productos que acompañan el ritmo cotidiano. Nos enfocamos en comodidad, simplicidad y versatilidad, eligiendo artículos que se integran de forma natural en la rutina y mantienen equilibrio entre utilidad, diseño y facilidad de uso.
+                Los productos que ofrece Dosalga están pensados para acompañar el ritmo del día a día. Nos enfocamos en comodidad, simplicidad y versatilidad, seleccionando artículos que se integran de forma natural en la rutina cotidiana y que aportan funcionalidad sin complicaciones.
+              </p>
+              <p>
+                Cada producto busca responder a necesidades reales, manteniendo un equilibrio entre utilidad, diseño y facilidad de uso.
               </p>
             </div>
 
             <div className="about-card bg-light p-4 p-lg-5 mb-40 rounded-3">
               <h2 className="h4 mb-3">Cómo inició Dosalga</h2>
               <p>
-                Empezamos en 2013 suministrando productos comerciales para distintos mercados e industrias. La experiencia nos llevó a reestructurarnos para mejorar el servicio, optimizar procesos y adaptarnos a nuevas formas de consumo con un enfoque más ágil y cercano.
+                Dosalga inició su actividad en 2013, suministrando productos comerciales a distintos mercados y atendiendo las necesidades de diversas industrias. Con el paso del tiempo y a partir de la experiencia adquirida, la empresa evolucionó y se reestructuró con el objetivo de mejorar el servicio, optimizar procesos y adaptarse a nuevas formas de consumo.
+              </p>
+              <p>
+                Hoy, Dosalga continúa desarrollándose para ofrecer soluciones más eficientes en la adquisición de productos que facilitan la vida diaria, manteniendo una visión moderna y orientada al cliente.
               </p>
             </div>
 
             <div className="about-card bg-white border p-4 p-lg-5 mb-40 rounded-3">
               <h2 className="h4 mb-3">Visión</h2>
               <p>
-                Ser la mejor opción para el suministro de productos comerciales, generando valor a nuestros clientes con artículos esenciales que acompañen un estilo de vida moderno, práctico y funcional.
+                Ser la mejor opción para el suministro de productos comerciales, generando valor para nuestros clientes y ofreciendo artículos esenciales que acompañen un estilo de vida moderno, práctico y funcional.
               </p>
             </div>
 
@@ -77,13 +76,13 @@ const AboutPageEs = () => {
             <div className="about-card bg-white border p-4 p-lg-5 mb-40 rounded-3">
               <h2 className="h4 mb-3">Nuestros valores</h2>
               <ul className="mb-0">
-                <li>Integridad</li>
-                <li>Innovación</li>
-                <li>Responsabilidad</li>
-                <li>Respeto</li>
-                <li>Trabajo en equipo</li>
-                <li>Orientación al cliente</li>
-                <li>Sostenibilidad</li>
+                <li><strong>Integridad</strong>: Actuar con honestidad, transparencia y coherencia en cada decisión.</li>
+                <li><strong>Innovación</strong>: Fomentar la creatividad y la búsqueda constante de soluciones nuevas y eficientes.</li>
+                <li><strong>Responsabilidad</strong>: Cumplir los compromisos asumidos y responder de manera consciente por nuestras acciones.</li>
+                <li><strong>Respeto</strong>: Valorar a las personas, la diversidad y las diferentes perspectivas.</li>
+                <li><strong>Trabajo en equipo</strong>: Colaborar y apoyarnos mutuamente para alcanzar objetivos comunes.</li>
+                <li><strong>Orientación al cliente</strong>: Priorizar la satisfacción, confianza y necesidades de nuestros clientes.</li>
+                <li><strong>Sostenibilidad</strong>: Mantener un compromiso responsable con el medio ambiente y la sociedad.</li>
               </ul>
             </div>
 
