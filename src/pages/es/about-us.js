@@ -7,8 +7,8 @@ const AboutPageEs = () => {
   return (
     <>
       <Head>
-        <title>Sobre Dosalga - Marca de Ropa Deportiva Premium | Nuestra Historia</title>
-        <meta name="description" content="Descubre la historia de Dosalga. Somos una marca moderna de activewear dedicada a crear ropa deportiva cómoda y de alta calidad para el movimiento diario. Conoce nuestro compromiso con la calidad, sostenibilidad y rendimiento." />
+        <title>Sobre Dosalga - Productos para la vida diaria | Historia, visión y valores</title>
+        <meta name="description" content="Conoce a Dosalga, empresa fundada en 2013 que facilita la compra de productos esenciales para la vida diaria con entregas en casa u oficina. Descubre su historia, visión, misión y valores." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/assets/img/sm-logo.svg" />
         <link rel="canonical" href={`${siteUrl}/es/about-us`} />
@@ -22,8 +22,8 @@ const AboutPageEs = () => {
         <meta property="og:locale" content="es_ES" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={`${siteUrl}/es/about-us`} />
-        <meta property="og:title" content="Sobre Dosalga - Marca de Activewear Premium" />
-        <meta property="og:description" content="Descubre Dosalga. Marca moderna de activewear dedicada a ropa deportiva de calidad para el movimiento diario." />
+        <meta property="og:title" content="Sobre Dosalga - Productos para la vida diaria" />
+        <meta property="og:description" content="Empresa dedicada a simplificar la compra de productos esenciales con entregas donde los necesitas. Historia, misión y valores de Dosalga." />
         <meta property="og:site_name" content="Dosalga" />
       </Head>
     <div className="about-page pt-100 pb-100">
@@ -32,7 +32,7 @@ const AboutPageEs = () => {
           <div className="col-lg-8 text-center">
             <h1 className="mb-3">Sobre Dosalga</h1>
             <p className="text-muted">
-              Dosalga es una marca moderna de activewear y estilo de vida creada para moverse con comodidad cada día.
+              Facilitamos la adquisición de productos diseñados para la vida diaria y los llevamos a tu hogar, oficina o el punto que elijas, priorizando comodidad, accesibilidad y eficiencia.
             </p>
           </div>
         </div>
@@ -40,54 +40,67 @@ const AboutPageEs = () => {
         <div className="row justify-content-center">
           <div className="col-lg-10">
             <div className="about-card bg-light p-4 p-lg-5 mb-40 rounded-3">
-              <h2 className="h4 mb-3">Activewear diseñado para la vida real</h2>
+              <h2 className="h4 mb-3">Qué es Dosalga</h2>
               <p>
-                Dosalga se centra en la comodidad, la versatilidad y el movimiento diario. Creamos prendas que se sienten premium pero sencillas, listas para trayectos cortos, recados y todo lo que ocurre entre medias—la vida real por encima del rendimiento extremo.
+                Somos una empresa dedicada a simplificar la compra de artículos esenciales para el día a día. Eliminamos desplazamientos innecesarios y optimizamos la experiencia para que recibas lo que necesitas con claridad y sin fricciones.
               </p>
             </div>
 
             <div className="about-card bg-white border p-4 p-lg-5 mb-40 rounded-3">
-              <h2 className="h4 mb-3">Cómo empezó Dosalga</h2>
+              <h2 className="h4 mb-3">Artículos diseñados para la vida diaria</h2>
               <p>
-                Nacimos al notar que la mayoría no vive en el gimnasio. Buscamos activewear que se adapte a la rutina diaria, priorizando la simplicidad, la comodidad y la versatilidad antes que el hype.
+                Seleccionamos productos que acompañan el ritmo cotidiano. Nos enfocamos en comodidad, simplicidad y versatilidad, eligiendo artículos que se integran de forma natural en la rutina y mantienen equilibrio entre utilidad, diseño y facilidad de uso.
               </p>
             </div>
 
             <div className="about-card bg-light p-4 p-lg-5 mb-40 rounded-3">
-              <h2 className="h4 mb-3">Nuestra misión</h2>
+              <h2 className="h4 mb-3">Cómo inició Dosalga</h2>
               <p>
-                Ofrecer esenciales de activewear que acompañen estilos de vida modernos. Cada prenda está pensada para moverse contigo durante el día—en casa, en recados o en actividad ligera—sin frenarte.
+                Empezamos en 2013 suministrando productos comerciales para distintos mercados e industrias. La experiencia nos llevó a reestructurarnos para mejorar el servicio, optimizar procesos y adaptarnos a nuevas formas de consumo con un enfoque más ágil y cercano.
               </p>
             </div>
 
             <div className="about-card bg-white border p-4 p-lg-5 mb-40 rounded-3">
-              <h2 className="h4 mb-3">Qué hace diferente a Dosalga</h2>
+              <h2 className="h4 mb-3">Visión</h2>
               <p>
-                Elegimos la comodidad diaria sobre el rendimiento extremo, con diseños versátiles y siluetas limpias. Los tejidos y fits funcionan en climas suaves y cambiantes, con un enfoque práctico para que uses cada pieza con frecuencia.
+                Ser la mejor opción para el suministro de productos comerciales, generando valor a nuestros clientes con artículos esenciales que acompañen un estilo de vida moderno, práctico y funcional.
               </p>
             </div>
 
             <div className="about-card bg-light p-4 p-lg-5 mb-40 rounded-3">
-              <h2 className="h4 mb-3">Qué creamos</h2>
+              <h2 className="h4 mb-3">Misión</h2>
               <p>
-                Fabricamos joggers, tops transpirables, capas ligeras y esenciales cotidianos para hombres, mujeres y niños. Cada prenda se mezcla fácilmente, resiste el uso frecuente y ofrece comodidad real.
+                Satisfacer las expectativas y necesidades de nuestros clientes mediante soluciones innovadoras, competitivas y rentables, garantizando una experiencia de compra confiable, clara y orientada a la calidad del servicio.
               </p>
             </div>
 
             <div className="about-card bg-white border p-4 p-lg-5 mb-40 rounded-3">
               <h2 className="h4 mb-3">Nuestros valores</h2>
               <ul className="mb-0">
-                <li>Comodidad primero</li>
-                <li>Simplicidad</li>
-                <li>Fiabilidad</li>
-                <li>Estilo de vida moderno y cotidiano</li>
+                <li>Integridad</li>
+                <li>Innovación</li>
+                <li>Responsabilidad</li>
+                <li>Respeto</li>
+                <li>Trabajo en equipo</li>
+                <li>Orientación al cliente</li>
+                <li>Sostenibilidad</li>
               </ul>
             </div>
 
-            <div className="about-card bg-light p-4 p-lg-5 rounded-3">
+            <div className="about-card bg-light p-4 p-lg-5 rounded-3 mb-40">
+              <h2 className="h4 mb-3">Qué aporta Dosalga</h2>
+              <ul className="mb-0">
+                <li>Comodidad en el proceso de compra</li>
+                <li>Simplicidad en la selección y adquisición de productos</li>
+                <li>Fiabilidad en el servicio</li>
+                <li>Productos pensados para el estilo de vida cotidiano</li>
+              </ul>
+            </div>
+
+            <div className="about-card bg-white border p-4 p-lg-5 rounded-3">
               <h2 className="h4 mb-3">Por qué Dosalga</h2>
               <p>
-                Dosalga es para quienes valoran la comodidad y la facilidad. Mantenemos el foco en el movimiento y las rutinas reales—sin tendencias pasajeras, sin sobre-ingeniería, solo activewear diario en el que puedes confiar.
+                Somos la opción para quienes valoran la comodidad, la practicidad y la facilidad para acceder a productos esenciales, integrándolos de forma simple y eficiente en su día a día.
               </p>
             </div>
           </div>
