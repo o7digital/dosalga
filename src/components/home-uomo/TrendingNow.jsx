@@ -73,10 +73,12 @@ const TrendingNow = () => {
         return Number.isFinite(numeric) ? numeric : null;
     };
 
+    const MXN_TO_USD_RATE = 18.5;
     const formatPrice = (value) => {
         const numeric = parsePriceValue(value);
         if (numeric === null) return '';
-        return `$${numeric.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
+        const usd = numeric / MXN_TO_USD_RATE;
+        return `$${usd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
     };
 
     const filteredProducts = useMemo(() => {

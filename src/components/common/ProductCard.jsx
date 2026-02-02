@@ -6,12 +6,16 @@ import { useCountdownTimer } from '@/src/hooks/useCountdownTimer';
  * Composant carte produit pour afficher un produit WooCommerce
  */
 const ProductCard = ({ product, showCountdown = false }) => {
-  // Taux de change MXN vers USD
+  // Fixed MXN -> USD conversion for display
   const MXN_TO_USD_RATE = 18.5;
-  
-  // Fonction pour convertir MXN en USD
-  const convertMXNtoUSD = (priceMXN) => {
-    return (parseFloat(priceMXN) / MXN_TO_USD_RATE).toFixed(2);
+  const formatPrice = (value) => {
+    const numeric = Number.parseFloat(value);
+    if (!Number.isFinite(numeric)) return '';
+    const usd = numeric / MXN_TO_USD_RATE;
+    return `$${usd.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })} USD`;
   };
 
   // Extraire les données du produit WooCommerce
@@ -189,11 +193,11 @@ const ProductCard = ({ product, showCountdown = false }) => {
         <p className="price">
           {on_sale && sale_price ? (
             <>
-              ${convertMXNtoUSD(sale_price)} 
-              <del>${convertMXNtoUSD(regular_price)}</del>
+              {formatPrice(sale_price)} 
+              <del>{formatPrice(regular_price)}</del>
             </>
           ) : (
-            `$${convertMXNtoUSD(price)}`
+            formatPrice(price)
           )}
         </p>
 
