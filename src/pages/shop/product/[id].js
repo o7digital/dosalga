@@ -28,45 +28,58 @@ const ProductDetailPage = () => {
     );
   }
 
-  if (error || !product) {
-    return (
-      <div className="container py-5">
-        <div className="alert alert-danger">
-          Produit introuvable ou erreur de chargement
-        </div>
+  // Guard hard: if product is falsy or not an object, render error
+  const renderError = (message) => (
+    <div className="container py-5">
+      <div className="alert alert-danger mb-3">
+        {message || 'Produit introuvable ou erreur de chargement.'}
       </div>
-    );
+      <Link legacyBehavior href="/shop">
+        <a className="primary-btn1">Retour à la boutique</a>
+      </Link>
+    </div>
+  );
+
+  if (error) {
+    return renderError(error);
+  }
+
+  if (!product || typeof product !== 'object') {
+    return renderError('Produit introuvable ou non chargé.');
   }
 
   const {
-    name,
-    price,
-    regular_price,
-    sale_price,
-    description,
-    short_description,
+    name = 'Produit',
+    price = 0,
+    regular_price = 0,
+    sale_price = 0,
+    description = '',
+    short_description = '',
     images = [],
     categories = [],
     average_rating = 0,
     rating_count = 0,
-    stock_status,
-    on_sale,
+    stock_status = 'instock',
+    on_sale = false,
     sku,
     variations = []
-  } = product;
+  } = product || {};
 
   const sizeOptions = useMemo(() => {
     const attrs = product?.attributes || [];
     const sizeAttr = attrs.find(
       (attr) =>
         attr?.name?.toLowerCase().includes('size') ||
-        attr?.slug === 'pa_size'
+        attr?.slug === 'pa_size' ||
+        attr?.slug === 'size'
     );
     if (sizeAttr?.options?.length) return sizeAttr.options;
     return ['XS', 'S', 'M', 'L', 'XL'];
   }, [product]);
 
-  const mainImages = images.length > 0 ? images : [{ src: '/assets/img/placeholder.png' }];
+  const mainImages = Array.isArray(images) && images.length > 0
+    ? images
+    : [{ src: '/assets/img/placeholder.png' }];
   const categoryName = categories[0]?.name || 'Produit';
   const discountPercentage = on_sale && regular_price && sale_price
     ? Math.round(((regular_price - sale_price) / regular_price) * 100)
@@ -83,25 +96,6 @@ const ProductDetailPage = () => {
     }
     return stars;
   };
-
-  const renderError = (message) => (
-    <div className="container py-5">
-      <div className="alert alert-danger mb-3">
-        {message || 'Produit introuvable ou erreur de chargement.'}
-      </div>
-      <Link legacyBehavior href="/shop">
-        <a className="primary-btn1">Retour à la boutique</a>
-      </Link>
-    </div>
-  );
-
-  if (error) {
-    return renderError(error);
-  }
-
-  if (!product) {
-    return renderError('Produit introuvable ou non chargé.');
-  }
 
   return (
     <>
