@@ -1,25 +1,42 @@
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const CategoryBanners = () => {
+    const { pathname } = useRouter();
+    const lang = (() => {
+        const code = pathname.split('/')[1];
+        const supported = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+        return supported.includes(code) ? code : 'en';
+    })();
+
+    const labels = {
+        en: { clothes: 'Clothes', fitness: 'Fitness', bikes: 'Bikes' },
+        es: { clothes: 'Ropa', fitness: 'Fitness', bikes: 'Bicicletas' },
+        de: { clothes: 'Bekleidung', fitness: 'Fitness', bikes: 'Fahrräder' },
+        fr: { clothes: 'Vêtements', fitness: 'Fitness', bikes: 'Vélos' },
+        it: { clothes: 'Abbigliamento', fitness: 'Fitness', bikes: 'Bici' },
+        pt: { clothes: 'Roupas', fitness: 'Fitness', bikes: 'Bicicletas' },
+    }[lang];
+
     const categories = [
         {
             id: 'clothes',
-            title: 'Clothes',
+            title: labels.clothes,
             image: '/assets/categories/gemini-clothes.png',
-            link: '/shop?category=clothes'
+            link: `/${lang === 'en' ? '' : lang + '/'}shop?category=clothes`
         },
         {
             id: 'fitness',
-            title: 'Fitness',
+            title: labels.fitness,
             image: '/assets/categories/gemini-fitness.png',
-            link: '/shop?category=fitness'
+            link: `/${lang === 'en' ? '' : lang + '/'}shop?category=fitness`
         },
         {
             id: 'bikes',
-            title: 'Bikes',
+            title: labels.bikes,
             image: '/assets/categories/gemini-bike.png',
-            link: '/shop?category=bikes'
+            link: `/${lang === 'en' ? '' : lang + '/'}shop?category=bikes`
         }
     ];
 

@@ -6,7 +6,19 @@ const VideoSection = () => {
     const videoRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const { pathname } = useRouter();
-    const isSpanish = pathname.startsWith('/es');
+    const lang = (() => {
+        const code = pathname.split('/')[1];
+        const supported = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+        return supported.includes(code) ? code : 'en';
+    })();
+    const text = {
+        en: { title: 'Studio Collection', subtitle: 'Low impact for the high powered.', cta: 'Shop Now' },
+        es: { title: 'Colección Studio', subtitle: 'Impacto ligero para un día con energía.', cta: 'Comprar ahora' },
+        de: { title: 'Studio Kollektion', subtitle: 'Leichte Wirkung für viel Power.', cta: 'Jetzt kaufen' },
+        fr: { title: 'Collection Studio', subtitle: 'Impact léger pour une journée pleine d’énergie.', cta: 'Shopper' },
+        it: { title: 'Collezione Studio', subtitle: 'Impatto leggero per chi va al massimo.', cta: 'Acquista ora' },
+        pt: { title: 'Coleção Studio', subtitle: 'Impacto leve para um dia cheio de energia.', cta: 'Comprar agora' },
+    }[lang];
 
     useEffect(() => {
         const video = videoRef.current;
@@ -73,14 +85,10 @@ const VideoSection = () => {
                     <div className="container">
                         <div className="content-wrapper">
                             <h2 className="studio-brand">DOSALGA</h2>
-                            <h1 className="studio-title">
-                              {isSpanish ? 'Colección Studio' : 'Studio Collection'}
-                            </h1>
-                            <p className="studio-subtitle">
-                              {isSpanish ? 'Impacto ligero para un día con energía.' : 'Low impact for the high powered.'}
-                            </p>
+                            <h1 className="studio-title">{text.title}</h1>
+                            <p className="studio-subtitle">{text.subtitle}</p>
                             <Link legacyBehavior href="/shop">
-                                <a className="btn-shop-now">{isSpanish ? 'Comprar ahora' : 'Shop Now'}</a>
+                                <a className="btn-shop-now">{text.cta}</a>
                             </Link>
                         </div>
                     </div>

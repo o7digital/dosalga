@@ -6,22 +6,29 @@ import { useRouter } from 'next/router';
 const TrendingNow = () => {
     const { products, loading, error } = useProducts({ limit: 12 });
     const { pathname } = useRouter();
-    const isSpanish = pathname.startsWith('/es');
+    const lang = (() => {
+        const code = pathname.split('/')[1];
+        const supported = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+        return supported.includes(code) ? code : 'en';
+    })();
 
     const [sortOption, setSortOption] = useState('most-expensive');
     const [selectedCategory, setSelectedCategory] = useState('all');
 
-    const sortOptions = isSpanish
-        ? [
-            { id: 'most-expensive', label: 'Más caro' },
-            { id: 'least-expensive', label: 'Menos caro' },
-            { id: 'top-rated', label: '+ calificaciones' }
-        ]
-        : [
-            { id: 'most-expensive', label: 'Most expensive' },
-            { id: 'least-expensive', label: 'Least expensive' },
-            { id: 'top-rated', label: 'Top rated' }
-        ];
+    const sortLabels = {
+        en: { most: 'Most expensive', least: 'Least expensive', top: 'Top rated' },
+        es: { most: 'Más caro', least: 'Menos caro', top: '+ calificaciones' },
+        de: { most: 'Am teuersten', least: 'Am günstigsten', top: 'Beste Bewertungen' },
+        fr: { most: 'Plus cher', least: 'Moins cher', top: 'Mieux notés' },
+        it: { most: 'Più costoso', least: 'Meno costoso', top: 'Migliori valutazioni' },
+        pt: { most: 'Mais caro', least: 'Menos caro', top: 'Mais bem avaliados' },
+    }[lang];
+
+    const sortOptions = [
+        { id: 'most-expensive', label: sortLabels.most },
+        { id: 'least-expensive', label: sortLabels.least },
+        { id: 'top-rated', label: sortLabels.top },
+    ];
 
     // Priorité aux 3 familles demandées
     const fallbackCategories = ['clothes', 'fitness', 'bikes'];
@@ -61,8 +68,11 @@ const TrendingNow = () => {
             ordered.push(cat);
         });
 
-        return [{ id: 'all', label: isSpanish ? 'Todos' : 'All' }, ...ordered];
-    }, [products, isSpanish]);
+        const allLabel = {
+            en: 'All', es: 'Todos', de: 'Alle', fr: 'Tous', it: 'Tutti', pt: 'Todos',
+        }[lang];
+        return [{ id: 'all', label: allLabel }, ...ordered];
+    }, [products, lang]);
 
     const parsePriceValue = (value) => {
         const raw = String(value ?? '').trim();
@@ -132,21 +142,35 @@ const TrendingNow = () => {
         <section className="trending-section py-5">
             <div className="container">
                 <div className="section-header mb-4">
-                    <h2 className="section-title">{isSpanish ? 'Nuestros mejores productos' : 'Our Best Products'}</h2>
+                    <h2 className="section-title">{
+                        {
+                            en: 'Our Best Products',
+                            es: 'Nuestros mejores productos',
+                            de: 'Unsere Top-Produkte',
+                            fr: 'Nos meilleurs produits',
+                            it: 'I nostri prodotti migliori',
+                            pt: 'Nossos melhores produtos',
+                        }[lang]
+                    }</h2>
                     <p className="section-subtitle">
-                        {isSpanish
-                            ? 'Explora nuestra selección ordenada por precio o calificaciones.'
-                            : 'Explore our handpicked products sorted by price or ratings.'}
+                        {{
+                            en: 'Explore our handpicked products sorted by price or ratings.',
+                            es: 'Explora nuestra selección ordenada por precio o calificaciones.',
+                            de: 'Entdecke unsere Auswahl, sortiert nach Preis oder Bewertungen.',
+                            fr: 'Découvrez notre sélection triée par prix ou avis.',
+                            it: 'Scopri la nostra selezione ordinata per prezzo o valutazioni.',
+                            pt: 'Explore nossa seleção ordenada por preço ou avaliações.',
+                        }[lang]}
                     </p>
                 </div>
 
                 <div className="row g-4">
                     <div className="col-lg-3">
                         <div className="filters-card">
-                            <h4 className="filters-title">{isSpanish ? 'Filtros' : 'Filters'}</h4>
+                            <h4 className="filters-title">{{ en: 'Filters', es: 'Filtros', de: 'Filter', fr: 'Filtres', it: 'Filtri', pt: 'Filtros' }[lang]}</h4>
 
                             <div className="filter-group">
-                                <h5>{isSpanish ? 'Ordenar' : 'Sort by'}</h5>
+                                <h5>{{ en: 'Sort by', es: 'Ordenar', de: 'Sortieren', fr: 'Trier', it: 'Ordina', pt: 'Ordenar' }[lang]}</h5>
                                 <div className="filter-options">
                                     {sortOptions.map((option) => (
                                         <label key={option.id} className={`filter-option ${sortOption === option.id ? 'active' : ''}`}>
@@ -164,7 +188,7 @@ const TrendingNow = () => {
                             </div>
 
                             <div className="filter-group">
-                                <h5>{isSpanish ? 'Categorías' : 'Categories'}</h5>
+                                <h5>{{ en: 'Categories', es: 'Categorías', de: 'Kategorien', fr: 'Catégories', it: 'Categorie', pt: 'Categorias' }[lang]}</h5>
                                 <div className="category-chips">
                                     {productCategories.map((cat) => (
                                         <button
@@ -208,12 +232,26 @@ const TrendingNow = () => {
                                                 </a>
                                             </Link>
                                             <div className="product-actions">
-                                                <button className="action-btn" title={isSpanish ? 'Añadir a la lista de deseos' : 'Add to wishlist'}>
+                                                <button className="action-btn" title={{
+                                                    en: 'Add to wishlist',
+                                                    es: 'Añadir a la lista de deseos',
+                                                    de: 'Zur Wunschliste hinzufügen',
+                                                    fr: 'Ajouter à la liste de souhaits',
+                                                    it: 'Aggiungi alla wishlist',
+                                                    pt: 'Adicionar à lista de desejos',
+                                                }[lang]}>
                                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                                         <path d="M10 18.35L8.55 17.03C3.4 12.36 0 9.27 0 5.5C0 2.41 2.42 0 5.5 0C7.24 0 8.91 0.81 10 2.08C11.09 0.81 12.76 0 14.5 0C17.58 0 20 2.41 20 5.5C20 9.27 16.6 12.36 11.45 17.03L10 18.35Z" fill="currentColor"/>
                                                     </svg>
                                                 </button>
-                                                <button className="action-btn" title={isSpanish ? 'Vista rápida' : 'Quick view'}>
+                                                <button className="action-btn" title={{
+                                                    en: 'Quick view',
+                                                    es: 'Vista rápida',
+                                                    de: 'Schnellansicht',
+                                                    fr: 'Aperçu rapide',
+                                                    it: 'Vista rapida',
+                                                    pt: 'Visualização rápida',
+                                                }[lang]}>
                                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                                         <path d="M10 4C4 4 1 10 1 10C1 10 4 16 10 16C16 16 19 10 19 10C19 10 16 4 10 4Z" stroke="currentColor" strokeWidth="1.5"/>
                                                         <circle cx="10" cy="10" r="3" stroke="currentColor" strokeWidth="1.5"/>
@@ -221,7 +259,7 @@ const TrendingNow = () => {
                                                 </button>
                                             </div>
                                             {product.on_sale && (
-                                                <span className="badge-sale">{isSpanish ? 'OFERTA' : 'SALE'}</span>
+                                                <span className="badge-sale">{{ en: 'SALE', es: 'OFERTA', de: 'SALE', fr: 'PROMO', it: 'SALDI', pt: 'OFERTA' }[lang]}</span>
                                             )}
                                         </div>
                                         <div className="product-info">

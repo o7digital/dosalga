@@ -10,7 +10,19 @@ const HeaderUomo = () => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const router = useRouter();
-    const isSpanish = router.pathname.startsWith('/es');
+    const lang = (() => {
+        const code = router.pathname.split('/')[1];
+        const supported = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+        return supported.includes(code) ? code : 'en';
+    })();
+
+    const navLabels = {
+        about: { en: 'ABOUT US', es: 'SOBRE NOSOTROS', de: 'ÜBER UNS', fr: 'À PROPOS', it: 'CHI SIAMO', pt: 'SOBRE NÓS' },
+        services: { en: 'SERVICES', es: 'SERVICIOS', de: 'SERVICES', fr: 'SERVICES', it: 'SERVIZI', pt: 'SERVIÇOS' },
+        contact: { en: 'CONTACT', es: 'CONTACTO', de: 'KONTAKT', fr: 'CONTACT', it: 'CONTATTI', pt: 'CONTATO' },
+    };
+
+    const localizedPath = (slug) => (lang === 'en' ? `/${slug}` : `/${lang}/${slug}`);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -50,19 +62,19 @@ const HeaderUomo = () => {
                         {/* Desktop Navigation */}
                         <nav className="header-nav d-none d-lg-flex">
                             <ul className="nav-menu">
-                                <li className={router.pathname === (isSpanish ? '/es/about-us' : '/about-us') ? 'active' : ''}>
-                                    <Link legacyBehavior href={isSpanish ? "/es/about-us" : "/about-us"}>
-                                        <a>{isSpanish ? 'SOBRE NOSOTROS' : 'ABOUT US'}</a>
+                                <li className={router.pathname === localizedPath('about-us') ? 'active' : ''}>
+                                    <Link legacyBehavior href={localizedPath('about-us')}>
+                                        <a>{navLabels.about[lang]}</a>
                                     </Link>
                                 </li>
-                                <li className={router.pathname === (isSpanish ? '/es/services' : '/services') ? 'active' : ''}>
-                                    <Link legacyBehavior href={isSpanish ? "/es/services" : "/services"}>
-                                        <a>{isSpanish ? 'SERVICIOS' : 'SERVICES'}</a>
+                                <li className={router.pathname === localizedPath('services') ? 'active' : ''}>
+                                    <Link legacyBehavior href={localizedPath('services')}>
+                                        <a>{navLabels.services[lang]}</a>
                                     </Link>
                                 </li>
-                                <li className={router.pathname === (isSpanish ? '/es/contact' : '/contact') ? 'active' : ''}>
-                                    <Link legacyBehavior href={isSpanish ? "/es/contact" : "/contact"}>
-                                        <a>{isSpanish ? 'CONTACTO' : 'CONTACT'}</a>
+                                <li className={router.pathname === localizedPath('contact') ? 'active' : ''}>
+                                    <Link legacyBehavior href={localizedPath('contact')}>
+                                        <a>{navLabels.contact[lang]}</a>
                                     </Link>
                                 </li>
                             </ul>
@@ -172,18 +184,18 @@ const HeaderUomo = () => {
                         </div>
                         <ul className="mobile-nav-menu">
                             <li>
-                                <Link legacyBehavior href={isSpanish ? "/es/about-us" : "/about-us"}>
-                                    <a onClick={toggleMobileMenu}>{isSpanish ? 'SOBRE NOSOTROS' : 'ABOUT US'}</a>
+                                <Link legacyBehavior href={localizedPath('about-us')}>
+                                    <a onClick={toggleMobileMenu}>{navLabels.about[lang]}</a>
                                 </Link>
                             </li>
                             <li>
-                                <Link legacyBehavior href={isSpanish ? "/es/services" : "/services"}>
-                                    <a onClick={toggleMobileMenu}>{isSpanish ? 'SERVICIOS' : 'SERVICES'}</a>
+                                <Link legacyBehavior href={localizedPath('services')}>
+                                    <a onClick={toggleMobileMenu}>{navLabels.services[lang]}</a>
                                 </Link>
                             </li>
                             <li>
-                                <Link legacyBehavior href={isSpanish ? "/es/contact" : "/contact"}>
-                                    <a onClick={toggleMobileMenu}>{isSpanish ? 'CONTACTO' : 'CONTACT'}</a>
+                                <Link legacyBehavior href={localizedPath('contact')}>
+                                    <a onClick={toggleMobileMenu}>{navLabels.contact[lang]}</a>
                                 </Link>
                             </li>
                         </ul>

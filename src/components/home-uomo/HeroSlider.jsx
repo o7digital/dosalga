@@ -5,38 +5,14 @@ import { useRouter } from 'next/router';
 
 const HeroSlider = () => {
     const router = useRouter();
-    const isSpanish = router.pathname.startsWith('/es');
-    const slides = isSpanish
-        ? [
-            {
-                id: 1,
-                badge: "NUEVAS LLEGADAS",
-                title: "Activewear diseñado para la vida real",
-                subtitle: "Comodidad, sencillez y movimiento para tus rutinas diarias.",
-                cta: "Comprar esenciales",
-                image: "/slider/gemini1.png",
-                alt: "Ropa activa para la vida cotidiana"
-            },
-            {
-                id: 2,
-                badge: "NUEVAS LLEGADAS",
-                title: "Muévete por tu día con facilidad",
-                subtitle: "Activewear versátil pensado para tu estilo de vida, no solo el gimnasio.",
-                cta: "Descubrir la colección",
-                image: "/slider/gemini2.png",
-                alt: "Activewear versátil para tu día"
-            },
-            {
-                id: 3,
-                badge: "NUEVAS LLEGADAS",
-                title: "Comodidad dondequiera que vayas",
-                subtitle: "Capas ligeras y esenciales diarios para moverte de verdad.",
-                cta: "Explora Dosalga",
-                image: "/slider/gemini3.png",
-                alt: "Activewear cómodo en entornos reales"
-            }
-          ]
-        : [
+    const lang = (() => {
+        const code = router.pathname.split('/')[1];
+        const supported = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+        return supported.includes(code) ? code : 'en';
+    })();
+
+    const slidesByLang = {
+        en: [
             {
                 id: 1,
                 badge: "NEW ARRIVALS",
@@ -64,7 +40,155 @@ const HeroSlider = () => {
                 image: "/slider/gemini3.png",
                 alt: "Comfortable activewear in real environments"
             }
-          ];
+        ],
+        es: [
+            {
+                id: 1,
+                badge: "NUEVAS LLEGADAS",
+                title: "Activewear diseñado para la vida real",
+                subtitle: "Comodidad, sencillez y movimiento para tus rutinas diarias.",
+                cta: "Comprar esenciales",
+                image: "/slider/gemini1.png",
+                alt: "Ropa activa para la vida cotidiana"
+            },
+            {
+                id: 2,
+                badge: "NUEVAS LLEGADAS",
+                title: "Muévete por tu día con facilidad",
+                subtitle: "Activewear versátil pensado para tu estilo de vida, no solo el gimnasio.",
+                cta: "Descubrir la colección",
+                image: "/slider/gemini2.png",
+                alt: "Activewear versátil para tu día"
+            },
+            {
+                id: 3,
+                badge: "NUEVAS LLEGADAS",
+                title: "Comodidad dondequiera que vayas",
+                subtitle: "Capas ligeras y esenciales diarios para moverte de verdad.",
+                cta: "Explora Dosalga",
+                image: "/slider/gemini3.png",
+                alt: "Activewear cómodo en entornos reales"
+            }
+        ],
+        de: [
+            {
+                id: 1,
+                badge: "NEUHEITEN",
+                title: "Activewear für das echte Leben",
+                subtitle: "Komfort, Schlichtheit und Bewegung für deinen Alltag.",
+                cta: "Essentials shoppen",
+                image: "/slider/gemini1.png",
+                alt: "Alltags-Activewear"
+            },
+            {
+                id: 2,
+                badge: "NEUHEITEN",
+                title: "Leicht durch den Tag",
+                subtitle: "Vielseitige Activewear, die zu deinem Lifestyle passt – nicht nur ins Gym.",
+                cta: "Kollektion entdecken",
+                image: "/slider/gemini2.png",
+                alt: "Vielseitige Activewear"
+            },
+            {
+                id: 3,
+                badge: "NEUHEITEN",
+                title: "Komfort überall dabei",
+                subtitle: "Leichte Layer und Daily Essentials für echte Bewegung.",
+                cta: "Dosalga entdecken",
+                image: "/slider/gemini3.png",
+                alt: "Bequeme Activewear"
+            }
+        ],
+        fr: [
+            {
+                id: 1,
+                badge: "NOUVEAUTÉS",
+                title: "Activewear pensé pour la vraie vie",
+                subtitle: "Confort, simplicité et mouvement pour le quotidien.",
+                cta: "Shopper les essentiels",
+                image: "/slider/gemini1.png",
+                alt: "Activewear du quotidien"
+            },
+            {
+                id: 2,
+                badge: "NOUVEAUTÉS",
+                title: "Bouge librement toute la journée",
+                subtitle: "Des pièces polyvalentes qui suivent ton rythme, pas seulement la salle.",
+                cta: "Découvrir la collection",
+                image: "/slider/gemini2.png",
+                alt: "Activewear polyvalent"
+            },
+            {
+                id: 3,
+                badge: "NOUVEAUTÉS",
+                title: "Du confort partout avec toi",
+                subtitle: "Couches légères et essentiels du quotidien pour bouger vraiment.",
+                cta: "Explorer Dosalga",
+                image: "/slider/gemini3.png",
+                alt: "Activewear confortable"
+            }
+        ],
+        it: [
+            {
+                id: 1,
+                badge: "NUOVI ARRIVI",
+                title: "Activewear pensato per la vita reale",
+                subtitle: "Comfort, semplicità e movimento per le tue routine quotidiane.",
+                cta: "Acquista gli essenziali",
+                image: "/slider/gemini1.png",
+                alt: "Activewear quotidiano"
+            },
+            {
+                id: 2,
+                badge: "NUOVI ARRIVI",
+                title: "Muoviti con facilità tutto il giorno",
+                subtitle: "Activewear versatile pensato per il tuo lifestyle, non solo per la palestra.",
+                cta: "Scopri la collezione",
+                image: "/slider/gemini2.png",
+                alt: "Activewear versatile"
+            },
+            {
+                id: 3,
+                badge: "NUOVI ARRIVI",
+                title: "Comfort ovunque tu vada",
+                subtitle: "Layer leggeri ed essenziali quotidiani per un movimento reale.",
+                cta: "Esplora Dosalga",
+                image: "/slider/gemini3.png",
+                alt: "Activewear confortevole"
+            }
+        ],
+        pt: [
+            {
+                id: 1,
+                badge: "NOVIDADES",
+                title: "Activewear pensado para a vida real",
+                subtitle: "Conforto, simplicidade e movimento para o dia a dia.",
+                cta: "Comprar essenciais",
+                image: "/slider/gemini1.png",
+                alt: "Activewear para o cotidiano"
+            },
+            {
+                id: 2,
+                badge: "NOVIDADES",
+                title: "Siga o dia com leveza",
+                subtitle: "Activewear versátil feito para o seu estilo de vida, não só para a academia.",
+                cta: "Descobrir a coleção",
+                image: "/slider/gemini2.png",
+                alt: "Activewear versátil"
+            },
+            {
+                id: 3,
+                badge: "NOVIDADES",
+                title: "Conforto onde quer que você vá",
+                subtitle: "Camadas leves e essenciais diários para movimento de verdade.",
+                cta: "Explorar a Dosalga",
+                image: "/slider/gemini3.png",
+                alt: "Activewear confortável"
+            }
+        ],
+    };
+
+    const slides = slidesByLang[lang] || slidesByLang.en;
     const [currentSlide, setCurrentSlide] = useState(0);
 
     useEffect(() => {

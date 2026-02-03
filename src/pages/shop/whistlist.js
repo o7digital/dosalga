@@ -57,9 +57,9 @@ const Whistlist = () => {
                   <thead>
                     <tr>
                       <th />
-                      <th>Product</th>
-                      <th>Price</th>
-                      <th>Stock</th>
+                      <th>{t('Product', 'Producto', 'Produkt', 'Produit', 'Prodotto', 'Produto')}</th>
+                      <th>{t('Price', 'Precio', 'Preis', 'Prix', 'Prezzo', 'Preço')}</th>
+                      <th>{t('Stock', 'Stock', 'Stock', 'Stock', 'Disponibilità', 'Estoque')}</th>
                       <th />
                     </tr>
                   </thead>
@@ -81,7 +81,7 @@ const Whistlist = () => {
                           <td>
                             <button
                               className="delete-icon"
-                              aria-label="Remove from wishlist"
+                              aria-label={t('Remove from wishlist', 'Quitar de la lista', 'Entfernen', 'Retirer de la liste', 'Rimuovi', 'Remover')}
                               onClick={() => remove(item.id)}
                             >
                               <i className="bi bi-x-lg" />
@@ -105,12 +105,12 @@ const Whistlist = () => {
                             </p>
                           </td>
                           <td data-label="Stock">
-                            <span>{item.stock_status === 'instock' ? 'In Stock' : 'Out of stock'}</span>
+                            <span>{item.stock_status === 'instock' ? t('In Stock', 'En stock', 'Auf Lager', 'En stock', 'Disponibile', 'Em estoque') : t('Out of stock', 'Agotado', 'Nicht verfügbar', 'Rupture', 'Non disponibile', 'Sem estoque')}</span>
                           </td>
                           <td>
                             <Link legacyBehavior href={productUrl}>
                               <a className="add-cart-btn hover-btn2">
-                                <i className="bi bi-eye" /> View
+                                <i className="bi bi-eye" /> {t('View', 'Ver', 'Ansehen', 'Voir', 'Vedi', 'Ver')}
                               </a>
                             </Link>
                           </td>
