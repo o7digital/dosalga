@@ -35,7 +35,12 @@ export default async function handler(req, res) {
     if (featured) params.featured = featured === 'true';
 
     const products = await getProducts(params);
-    
+
+    // Guard: if upstream (SiteGround captcha) returns HTML/string, treat as error
+    if (!Array.isArray(products)) {
+      throw new Error('WooCommerce API returned unexpected payload (possibly captcha).');
+    }
+
     res.status(200).json({
       success: true,
       data: products,

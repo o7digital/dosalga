@@ -5,7 +5,19 @@ const api = new WooCommerceRestApi({
   consumerKey: process.env.WC_CONSUMER_KEY || "",
   consumerSecret: process.env.WC_CONSUMER_SECRET || "",
   version: "wc/v3",
-  queryStringAuth: true // Force Basic Authentication as query string
+  queryStringAuth: false, // Prefer HTTP Basic auth headers to avoid host captcha on query strings
+  axiosConfig: {
+    auth: {
+      username: process.env.WC_CONSUMER_KEY || "",
+      password: process.env.WC_CONSUMER_SECRET || "",
+    },
+    headers: {
+      // Mimic a browser UA to bypass SiteGround SG-Captcha bot filter
+      'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0 Safari/537.36',
+      Accept: 'application/json'
+    },
+    timeout: 10000,
+  }
 });
 
 export default api;
