@@ -6,41 +6,28 @@ import { useRouter } from 'next/router';
 const TrendingNow = () => {
     const { products, loading, error } = useProducts({ limit: 12 });
     const { pathname } = useRouter();
-    const lang = (() => {
-        const seg = pathname.split('/')[1];
-        return ['es', 'de', 'fr', 'it', 'pt'].includes(seg) ? seg : 'en';
-    })();
-
-    const t = (en, es, de, fr, it, pt) => {
-        if (lang === 'es') return es;
-        if (lang === 'de') return de;
-        if (lang === 'fr') return fr;
-        if (lang === 'it') return it;
-        if (lang === 'pt') return pt;
-        return en;
-    };
+    const isSpanish = pathname.startsWith('/es');
 
     const [sortOption, setSortOption] = useState('most-expensive');
     const [selectedCategory, setSelectedCategory] = useState('all');
 
-    const sortOptions = [
-        { id: 'most-expensive', label: t('Most expensive','Más caro','Teuerste zuerst','Le plus cher','Più costoso','Mais caro') },
-        { id: 'least-expensive', label: t('Least expensive','Menos caro','Günstigste zuerst','Le moins cher','Meno costoso','Menos caro') },
-        { id: 'top-rated', label: t('Top rated','+ calificaciones','Bestbewertet','Mieux noté','Più votato','Mais bem avaliado') }
-    ];
+    const sortOptions = isSpanish
+        ? [
+            { id: 'most-expensive', label: 'Más caro' },
+            { id: 'least-expensive', label: 'Menos caro' },
+            { id: 'top-rated', label: '+ calificaciones' }
+        ]
+        : [
+            { id: 'most-expensive', label: 'Most expensive' },
+            { id: 'least-expensive', label: 'Least expensive' },
+            { id: 'top-rated', label: 'Top rated' }
+        ];
 
     // Priorité aux 3 familles demandées
     const fallbackCategories = ['clothes', 'fitness', 'bikes'];
 
     const formatCategoryLabel = (value) => {
         if (!value) return '';
-        const map = {
-            clothes: t('Clothes','Ropa','Kleidung','Vêtements','Abbigliamento','Roupas'),
-            fitness: t('Fitness','Fitness','Fitness','Fitness','Fitness','Fitness'),
-            bikes: t('Bikes','Bicicletas','Fahrräder','Vélos','Bici','Bicicletas'),
-        };
-        const key = value.toLowerCase();
-        if (map[key]) return map[key];
         const formatted = value.replace(/[-_]/g, ' ');
         return formatted.charAt(0).toUpperCase() + formatted.slice(1);
     };
@@ -74,8 +61,8 @@ const TrendingNow = () => {
             ordered.push(cat);
         });
 
-        return [{ id: 'all', label: t('All','Todos','Alle','Tous','Tutti','Todos') }, ...ordered];
-    }, [products, lang]);
+        return [{ id: 'all', label: isSpanish ? 'Todos' : 'All' }, ...ordered];
+    }, [products, isSpanish]);
 
     const parsePriceValue = (value) => {
         const raw = String(value ?? '').trim();
@@ -145,37 +132,21 @@ const TrendingNow = () => {
         <section className="trending-section py-5">
             <div className="container">
                 <div className="section-header mb-4">
-                    <h2 className="section-title">
-                        {t(
-                            'Our Best Products',
-                            'Nuestros mejores productos',
-                            'Unsere besten Produkte',
-                            'Nos meilleurs produits',
-                            'I nostri migliori prodotti',
-                            'Nossos melhores produtos'
-                        )}
-                    </h2>
+                    <h2 className="section-title">{isSpanish ? 'Nuestros mejores productos' : 'Our Best Products'}</h2>
                     <p className="section-subtitle">
-                        {t(
-                            'Explore our handpicked products sorted by price or ratings.',
-                            'Explora nuestra selección ordenada por precio o calificaciones.',
-                            'Entdecke unsere Auswahl nach Preis oder Bewertung.',
-                            'Découvrez notre sélection classée par prix ou avis.',
-                            'Scopri i nostri prodotti selezionati per prezzo o valutazioni.',
-                            'Explore nossos produtos selecionados por preço ou avaliações.'
-                        )}
+                        {isSpanish
+                            ? 'Explora nuestra selección ordenada por precio o calificaciones.'
+                            : 'Explore our handpicked products sorted by price or ratings.'}
                     </p>
                 </div>
 
                 <div className="row g-4">
                     <div className="col-lg-3">
                         <div className="filters-card">
-                            <h4 className="filters-title">
-                                {t('Filters','Filtros','Filter','Filtres','Filtri','Filtros')}
-                            </h4>
+                            <h4 className="filters-title">{isSpanish ? 'Filtros' : 'Filters'}</h4>
 
                             <div className="filter-group">
-                                <h5>{t('Sort by','Ordenar','Sortieren nach','Trier par','Ordina per','Ordenar por')}</h5>
+                                <h5>{isSpanish ? 'Ordenar' : 'Sort by'}</h5>
                                 <div className="filter-options">
                                     {sortOptions.map((option) => (
                                         <label key={option.id} className={`filter-option ${sortOption === option.id ? 'active' : ''}`}>
@@ -193,7 +164,7 @@ const TrendingNow = () => {
                             </div>
 
                             <div className="filter-group">
-                                <h5>{t('Categories','Categorías','Kategorien','Catégories','Categorie','Categorias')}</h5>
+                                <h5>{isSpanish ? 'Categorías' : 'Categories'}</h5>
                                 <div className="category-chips">
                                     {productCategories.map((cat) => (
                                         <button
