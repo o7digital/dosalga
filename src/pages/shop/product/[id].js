@@ -28,7 +28,6 @@ const ProductDetailPage = () => {
     );
   }
 
-  // Guard hard: if product is falsy or not an object, render error
   const renderError = (message) => (
     <div className="container py-5">
       <div className="alert alert-danger mb-3">
@@ -66,7 +65,7 @@ const ProductDetailPage = () => {
   } = product || {};
 
   const sizeOptions = useMemo(() => {
-    const attrs = product?.attributes || [];
+    const attrs = Array.isArray(product?.attributes) ? product.attributes : [];
     const sizeAttr = attrs.find(
       (attr) =>
         attr?.name?.toLowerCase().includes('size') ||
@@ -75,7 +74,7 @@ const ProductDetailPage = () => {
     );
     if (sizeAttr?.options?.length) return sizeAttr.options;
     return ['XS', 'S', 'M', 'L', 'XL'];
-  }, [product]);
+  }, [product?.attributes]);
 
   const mainImages = Array.isArray(images) && images.length > 0
     ? images
