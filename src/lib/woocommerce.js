@@ -1,18 +1,17 @@
 import WooCommerceRestApi from "@woocommerce/woocommerce-rest-api";
 
+const FALLBACK_KEY = "ck_962f8b4455545de9a9a6155616535fdf8d9eb1db";
+const FALLBACK_SECRET = "cs_4242ab75e9fb88408afd2961efb76b7ce9211bc9";
+
 const api = new WooCommerceRestApi({
-  url: process.env.NEXT_PUBLIC_WORDPRESS_URL || "http://localhost:8080",
-  consumerKey: process.env.WC_CONSUMER_KEY || "",
-  consumerSecret: process.env.WC_CONSUMER_SECRET || "",
+  url: process.env.NEXT_PUBLIC_WORDPRESS_URL || "https://oliviers44.sg-host.com",
+  consumerKey: process.env.WC_CONSUMER_KEY || FALLBACK_KEY,
+  consumerSecret: process.env.WC_CONSUMER_SECRET || FALLBACK_SECRET,
   version: "wc/v3",
-  queryStringAuth: false, // Prefer HTTP Basic auth headers to avoid host captcha on query strings
+  // Query string auth tends à mieux passer le captcha SG qu'un Basic header
+  queryStringAuth: true,
   axiosConfig: {
-    auth: {
-      username: process.env.WC_CONSUMER_KEY || "",
-      password: process.env.WC_CONSUMER_SECRET || "",
-    },
     headers: {
-      // Mimic a browser UA to bypass SiteGround SG-Captcha bot filter
       'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0 Safari/537.36',
       Accept: 'application/json'
     },
