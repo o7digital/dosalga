@@ -3,6 +3,7 @@ import Script from "next/script";
 import MainLayoutUomo from "../layout/MainLayoutUomo";
 import Head from "next/head";
 import { CartProvider } from "../contexts/CartContext";
+import { WishlistProvider } from "../contexts/WishlistContext";
 import "../../public/assets/css/bootstrap.min.css";
 import "../../public/assets/css/bootstrap-icons.css";
 import "../../public/assets/css/fontawesome.min.css";
@@ -38,9 +39,11 @@ export default function App({ Component, pageProps }) {
         strategy="beforeInteractive"
       />
       <CartProvider>
-        <MainLayoutUomo>
-          <Component {...pageProps} />
-        </MainLayoutUomo>
+        <WishlistProvider>
+          <MainLayoutUomo>
+            <Component {...pageProps} />
+          </MainLayoutUomo>
+        </WishlistProvider>
       </CartProvider>
     </>
   );

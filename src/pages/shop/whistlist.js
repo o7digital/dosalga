@@ -1,142 +1,107 @@
-import React from 'react'
+import React from 'react';
 import Link from 'next/link';
+import { useWishlist } from '@/src/contexts/WishlistContext';
+
+const formatPriceUSD = (value) => {
+  const numeric = Number.parseFloat(value);
+  if (!Number.isFinite(numeric)) return '';
+  return `$${numeric.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })} USD`;
+};
+
 const Whistlist = () => {
+  const { items, remove } = useWishlist();
+
   return (
-    <>
-     <div className="whistlist-section mt-110 mb-110">
+    <div className="whistlist-section mt-110 mb-110">
       <div className="container">
         <div className="row">
           <div className="col-12">
             <div className="whistlist-table">
-              <table className="eg-table2">
-                <thead>
-                  <tr>
-                    <th />
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Stock</th>
-                    <th />
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <div className="delete-icon">
-                        <i className="bi bi-x-lg" />
-                      </div>
-                    </td>
-                    <td data-label="Product" className="table-product">
-                      <div className="product-img">
-                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/whistlist-img1.png" alt="" />
-                      </div>
-                      <div className="product-content">
-                        <h6><Link legacyBehavior href="/shop/product-default"><a>Eau De Blue Perfume</a></Link></h6>
-                      </div>
-                    </td>
-                    <td data-label="Price">
-                      <p className="price">
-                        <del>$40.00</del>
-                        $30.00
-                      </p>
-                    </td>
-                    <td data-label="Stock">
-                      <span>In Stock</span>
-                    </td>
-                    <td>
-                      <Link legacyBehavior href="/shop/cart"><a  className="add-cart-btn hover-btn2"><i className="bi bi-bag-check" />Add To Cart</a></Link>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div className="delete-icon">
-                        <i className="bi bi-x-lg" />
-                      </div>
-                    </td>
-                    <td data-label="Product" className="table-product">
-                      <div className="product-img">
-                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/whistlist-img2.png" alt="" />
-                      </div>
-                      <div className="product-content">
-                        <h6><Link legacyBehavior href="/shop/product-default"><a>Smooth Makeup Box</a></Link></h6>
-                      </div>
-                    </td>
-                    <td data-label="Price">
-                      <p className="price">
-                        <del>$40.00</del>
-                        $25.00
-                      </p>
-                    </td>
-                    <td data-label="Stock">
-                      <span>In Stock</span>
-                    </td>
-                    <td>
-                      <Link legacyBehavior href="/shop/cart"><a  className="add-cart-btn hover-btn2"><i className="bi bi-bag-check" />Add To Cart</a></Link>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div className="delete-icon">
-                        <i className="bi bi-x-lg" />
-                      </div>
-                    </td>
-                    <td data-label="Product" className="table-product">
-                      <div className="product-img">
-                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/whistlist-img3.png" alt="" />
-                      </div>
-                      <div className="product-content">
-                        <h6><Link legacyBehavior href="/shop/product-default"><a>Modern Red Lipstick</a></Link></h6>
-                      </div>
-                    </td>
-                    <td data-label="Price">
-                      <p className="price">
-                        <del>$40.00</del>
-                        $32.00
-                      </p>
-                    </td>
-                    <td data-label="Stock">
-                      <span>In Stock</span>
-                    </td>
-                    <td>
-                      <Link legacyBehavior href="/shop/cart"><a  className="add-cart-btn hover-btn2"><i className="bi bi-bag-check" />Add To Cart</a></Link>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div className="delete-icon">
-                        <i className="bi bi-x-lg" />
-                      </div>
-                    </td>
-                    <td data-label="Product" className="table-product">
-                      <div className="product-img">
-                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/whistlist-img4.png" alt="" />
-                      </div>
-                      <div className="product-content">
-                        <h6><Link legacyBehavior href="/shop/product-default"><a>New Botanical Shampoo</a></Link></h6>
-                      </div>
-                    </td>
-                    <td data-label="Price">
-                      <p className="price">
-                        <del>$40.00</del>
-                        $27.00
-                      </p>
-                    </td>
-                    <td data-label="Stock">
-                      <span>In Stock</span>
-                    </td>
-                    <td>
-                      <Link legacyBehavior href="/shop/cart"><a  className="add-cart-btn hover-btn2"><i className="bi bi-bag-check" />Add To Cart</a></Link>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              {items.length === 0 ? (
+                <div className="text-center py-5">
+                  <h4>Your wishlist is empty</h4>
+                  <p>Add products with the heart icon to see them here.</p>
+                  <Link legacyBehavior href="/shop">
+                    <a className="primary-btn1">Browse products</a>
+                  </Link>
+                </div>
+              ) : (
+                <table className="eg-table2">
+                  <thead>
+                    <tr>
+                      <th />
+                      <th>Product</th>
+                      <th>Price</th>
+                      <th>Stock</th>
+                      <th />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {items.map((item) => {
+                      const productUrl = `/shop/product/${item.id}`;
+                      const mainImage = item.images?.[0]?.src || '/assets/img/placeholder.png';
+                      const priceDisplay = item.sale_price
+                        ? (
+                          <>
+                            <del>{formatPriceUSD(item.regular_price ?? item.price)}</del>
+                            {formatPriceUSD(item.sale_price)}
+                          </>
+                        )
+                        : formatPriceUSD(item.price ?? item.regular_price);
+
+                      return (
+                        <tr key={item.id}>
+                          <td>
+                            <button
+                              className="delete-icon"
+                              aria-label="Remove from wishlist"
+                              onClick={() => remove(item.id)}
+                            >
+                              <i className="bi bi-x-lg" />
+                            </button>
+                          </td>
+                          <td data-label="Product" className="table-product">
+                            <div className="product-img">
+                              <img src={mainImage} alt={item.name} />
+                            </div>
+                            <div className="product-content">
+                              <h6>
+                                <Link legacyBehavior href={productUrl}>
+                                  <a>{item.name}</a>
+                                </Link>
+                              </h6>
+                            </div>
+                          </td>
+                          <td data-label="Price">
+                            <p className="price">
+                              {priceDisplay}
+                            </p>
+                          </td>
+                          <td data-label="Stock">
+                            <span>{item.stock_status === 'instock' ? 'In Stock' : 'Out of stock'}</span>
+                          </td>
+                          <td>
+                            <Link legacyBehavior href={productUrl}>
+                              <a className="add-cart-btn hover-btn2">
+                                <i className="bi bi-eye" /> View
+                              </a>
+                            </Link>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              )}
             </div>
           </div>
         </div>
       </div>
     </div>
- 
-    </>
-  )
-}
+  );
+};
 
-export default Whistlist
+export default Whistlist;
