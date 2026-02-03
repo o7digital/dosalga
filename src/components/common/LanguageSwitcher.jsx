@@ -4,68 +4,55 @@ import React from 'react';
 
 const LanguageSwitcher = () => {
   const router = useRouter();
-  const isSpanish = router.pathname.startsWith('/es');
+  const languages = ['en', 'es', 'de', 'fr', 'it'];
 
-  // Mapping des routes EN vers ES
-  const getEnglishPath = () => {
-    if (router.pathname === '/es' || router.pathname === '/es/index') return '/';
-    if (router.pathname.startsWith('/es/')) {
-      return router.pathname.replace('/es/', '/');
-    }
-    return router.pathname;
-  };
+  const currentLang = (() => {
+    const seg = router.pathname.split('/')[1];
+    return languages.includes(seg) ? seg : 'en';
+  })();
 
-  const getSpanishPath = () => {
-    if (router.pathname === '/') return '/es';
-    if (!router.pathname.startsWith('/es')) {
-      return `/es${router.pathname}`;
+  const buildPath = (targetLang) => {
+    const segments = router.asPath.split('/');
+    if (languages.includes(segments[1])) {
+      segments[1] = targetLang === 'en' ? '' : targetLang;
+    } else if (targetLang !== 'en') {
+      segments.splice(1, 0, targetLang);
     }
-    return router.pathname;
+    const path = segments.filter(Boolean).join('/');
+    return `/${path}`;
   };
 
   return (
     <div className="language-switcher" style={{
       display: 'flex',
-      gap: '10px',
+      gap: '8px',
       alignItems: 'center',
       marginRight: '15px'
     }}>
-      <Link href={getEnglishPath()}>
-        <button
-          className={`lang-btn ${!isSpanish ? 'active' : ''}`}
-          style={{
-            padding: '5px 12px',
-            border: !isSpanish ? '2px solid #000' : '1px solid #ccc',
-            borderRadius: '4px',
-            background: !isSpanish ? '#000' : '#fff',
-            color: !isSpanish ? '#fff' : '#000',
-            cursor: 'pointer',
-            fontSize: '14px',
-            fontWeight: !isSpanish ? 'bold' : 'normal',
-            transition: 'all 0.3s ease'
-          }}
-        >
-          EN
-        </button>
-      </Link>
-      <Link href={getSpanishPath()}>
-        <button
-          className={`lang-btn ${isSpanish ? 'active' : ''}`}
-          style={{
-            padding: '5px 12px',
-            border: isSpanish ? '2px solid #000' : '1px solid #ccc',
-            borderRadius: '4px',
-            background: isSpanish ? '#000' : '#fff',
-            color: isSpanish ? '#fff' : '#000',
-            cursor: 'pointer',
-            fontSize: '14px',
-            fontWeight: isSpanish ? 'bold' : 'normal',
-            transition: 'all 0.3s ease'
-          }}
-        >
-          ES
-        </button>
-      </Link>
+      {languages.map((lang) => {
+        const active = currentLang === lang;
+        const label = lang.toUpperCase();
+        return (
+          <Link href={buildPath(lang)} key={lang}>
+            <button
+              className={`lang-btn ${active ? 'active' : ''}`}
+              style={{
+                padding: '5px 10px',
+                border: active ? '2px solid #000' : '1px solid #ccc',
+                borderRadius: '4px',
+                background: active ? '#000' : '#fff',
+                color: active ? '#fff' : '#000',
+                cursor: 'pointer',
+                fontSize: '13px',
+                fontWeight: active ? '700' : '500',
+                transition: 'all 0.2s ease'
+              }}
+            >
+              {label}
+            </button>
+          </Link>
+        );
+      })}
     </div>
   );
 };

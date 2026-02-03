@@ -15,7 +15,14 @@ const formatPriceUSD = (value) => {
 const Whistlist = () => {
   const { items, remove } = useWishlist();
   const router = useRouter();
-  const isSpanish = router.pathname.startsWith('/es');
+  const lang = router.pathname.split('/')[1];
+  const t = (en, es, de, fr, it) => {
+    if (lang === 'es') return es;
+    if (lang === 'de') return de;
+    if (lang === 'fr') return fr;
+    if (lang === 'it') return it;
+    return en;
+  };
 
   return (
     <div className="whistlist-section mt-110 mb-110">
@@ -25,10 +32,16 @@ const Whistlist = () => {
             <div className="whistlist-table">
               {items.length === 0 ? (
                 <div className="text-center py-5">
-                  <h4>{isSpanish ? 'Tu lista de deseos está vacía' : 'Your wishlist is empty'}</h4>
-                  <p>{isSpanish ? 'Añade productos con el corazón para verlos aquí.' : 'Add products with the heart icon to see them here.'}</p>
-                  <Link legacyBehavior href={isSpanish ? '/es/shop' : '/shop'}>
-                    <a className="primary-btn1">{isSpanish ? 'Ver productos' : 'Browse products'}</a>
+                  <h4>{t('Your wishlist is empty', 'Tu lista de deseos está vacía', 'Deine Wunschliste ist leer', 'Votre liste est vide', 'La tua lista è vuota')}</h4>
+                  <p>{t(
+                    'Add products with the heart icon to see them here.',
+                    'Añade productos con el corazón para verlos aquí.',
+                    'Füge Produkte mit dem Herz hinzu, um sie hier zu ver.',
+                    'Ajoutez des produits avec le cœur pour les voir ici.',
+                    'Aggiungi prodotti col cuore per vederli qui.'
+                  )}</p>
+                  <Link legacyBehavior href={lang === 'es' ? '/es/shop' : lang === 'de' ? '/de/shop' : lang === 'fr' ? '/fr/shop' : lang === 'it' ? '/it/shop' : '/shop'}>
+                    <a className="primary-btn1">{t('Browse products', 'Ver productos', 'Produkte ansehen', 'Voir les produits', 'Vedi prodotti')}</a>
                   </Link>
                 </div>
               ) : (
