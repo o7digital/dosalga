@@ -13,6 +13,11 @@ export default async function handler(req, res) {
 
   try {
     const product = await getProduct(id);
+
+    // Guard contre les réponses HTML/captcha
+    if (!product || typeof product !== 'object' || Array.isArray(product)) {
+      throw new Error('Réponse produit invalide (captcha ou HTML).');
+    }
     
     // Si le produit a des variations, les récupérer aussi
     let variations = [];

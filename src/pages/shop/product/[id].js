@@ -84,6 +84,25 @@ const ProductDetailPage = () => {
     return stars;
   };
 
+  const renderError = (message) => (
+    <div className="container py-5">
+      <div className="alert alert-danger mb-3">
+        {message || 'Produit introuvable ou erreur de chargement.'}
+      </div>
+      <Link legacyBehavior href="/shop">
+        <a className="primary-btn1">Retour à la boutique</a>
+      </Link>
+    </div>
+  );
+
+  if (error) {
+    return renderError(error);
+  }
+
+  if (!product) {
+    return renderError('Produit introuvable ou non chargé.');
+  }
+
   return (
     <>
       <Head>
