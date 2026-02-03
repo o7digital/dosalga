@@ -3,6 +3,18 @@ import Head from "next/head";
 
 const TaxesAndDutiesItPage = () => {
   const siteUrl = "https://dosalga.com";
+  const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+  const slugByLocale = {
+    en: '/taxes-and-duties',
+    es: '/impuestos-y-aranceles',
+    de: '/taxes-and-duties',
+    fr: '/taxes-and-duties',
+    it: '/taxes-and-duties',
+    pt: '/taxes-and-duties',
+  };
+  const currentLocale = 'it';
+  const hrefFor = (locale) => `${siteUrl}${locale === 'en' ? '' : `/${locale}`}${slugByLocale[locale] || '/taxes-and-duties'}`;
+  const ogLocale = 'it_IT';
 
   return (
     <>
@@ -12,15 +24,12 @@ const TaxesAndDutiesItPage = () => {
           name="description"
           content="Informazioni su tasse e dazi di importazione per gli ordini Dosalga, incluse possibili imposte doganali, IVA e dettagli per consegne negli USA e in Messico."
         />
-        <link rel="canonical" href={`${siteUrl}/it/taxes-and-duties`} />
+        <link rel="canonical" href={hrefFor(currentLocale)} />
 
-        <link rel="alternate" hrefLang="en" href={`${siteUrl}/taxes-and-duties`} />
-        <link rel="alternate" hrefLang="es" href={`${siteUrl}/es/impuestos-y-aranceles`} />
-        <link rel="alternate" hrefLang="de" href={`${siteUrl}/de/taxes-and-duties`} />
-        <link rel="alternate" hrefLang="fr" href={`${siteUrl}/fr/taxes-and-duties`} />
-        <link rel="alternate" hrefLang="it" href={`${siteUrl}/it/taxes-and-duties`} />
-        <link rel="alternate" hrefLang="pt" href={`${siteUrl}/pt/taxes-and-duties`} />
-        <link rel="alternate" hrefLang="x-default" href={`${siteUrl}/taxes-and-duties`} />
+        {locales.map((locale) => (
+          <link key={locale} rel="alternate" hrefLang={locale} href={hrefFor(locale)} />
+        ))}
+        <link rel="alternate" hrefLang="x-default" href={hrefFor('en')} />
       </Head>
 
       <div className="privacy-policy-section pt-120 pb-120">

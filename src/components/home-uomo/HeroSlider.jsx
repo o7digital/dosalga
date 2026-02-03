@@ -227,7 +227,7 @@ const HeroSlider = () => {
                                 <span className="badge">{slide.badge}</span>
                                 <h1 className="title">{slide.title}</h1>
                                 {slide.subtitle && <p className="subtitle">{slide.subtitle}</p>}
-                                <Link legacyBehavior href="/shop">
+                                <Link legacyBehavior href={lang === 'en' ? "/shop" : `/${lang}/shop`}>
                                     <a className="shop-link">{slide.cta}</a>
                                 </Link>
                             </div>

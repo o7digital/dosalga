@@ -1,7 +1,29 @@
 import React from "react";
+import Head from "next/head";
 
 const PrivacyPolicyFr = () => {
+  const siteUrl = "https://dosalga.com";
+  const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+  const slugByLocale = { en: '/privacy-policy', es: '/privacy-policy', de: '/privacy-policy', fr: '/privacy-policy', it: '/privacy-policy', pt: '/privacy-policy' };
+  const currentLocale = 'fr';
+  const hrefFor = (locale) => `${siteUrl}${locale === 'en' ? '' : `/${locale}`}${slugByLocale[locale]}`;
+  const ogLocale = 'fr_FR';
   return (
+    <>
+    <Head>
+      <title>Politique de Confidentialité | Dosalga</title>
+      <meta name="description" content="Politique de confidentialité de Dosalga : données collectées, usages et vos droits." />
+      <link rel="canonical" href={hrefFor(currentLocale)} />
+      {locales.map((locale) => (
+        <link key={locale} rel="alternate" hrefLang={locale} href={hrefFor(locale)} />
+      ))}
+      <link rel="alternate" hrefLang="x-default" href={hrefFor('en')} />
+      <meta property="og:locale" content={ogLocale} />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content={hrefFor(currentLocale)} />
+      <meta property="og:title" content="Politique de Confidentialité | Dosalga" />
+      <meta property="og:description" content="Découvrez comment Dosalga collecte et protège vos données et vos droits en matière de vie privée." />
+    </Head>
     <div className="privacy-policy-section pt-120 pb-120">
       <div className="container">
         <div className="row">

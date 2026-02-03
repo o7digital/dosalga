@@ -3,6 +3,21 @@ import Head from "next/head";
 
 const ImpuestosYArancelesPage = () => {
   const siteUrl = "https://dosalga.com";
+  const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+  const slugByLocale = {
+    en: '/taxes-and-duties',
+    es: '/impuestos-y-aranceles',
+    de: '/taxes-and-duties',
+    fr: '/taxes-and-duties',
+    it: '/taxes-and-duties',
+    pt: '/taxes-and-duties',
+  };
+  const currentLocale = 'es';
+  const hrefFor = (locale) => {
+    const slug = slugByLocale[locale] || '/taxes-and-duties';
+    return `${siteUrl}${locale === 'en' ? '' : `/${locale}`}${slug}`;
+  };
+  const ogLocale = 'es_ES';
 
   return (
     <>
@@ -12,15 +27,16 @@ const ImpuestosYArancelesPage = () => {
           name="description"
           content="Política de Impuestos y Aranceles de Importación de Dosalga para pedidos internacionales, incluyendo entregas a Estados Unidos y México."
         />
-        <link rel="canonical" href={`${siteUrl}/es/impuestos-y-aranceles`} />
+        <link rel="canonical" href={hrefFor(currentLocale)} />
 
-        <link rel="alternate" hrefLang="en" href={`${siteUrl}/taxes-and-duties`} />
-        <link rel="alternate" hrefLang="es" href={`${siteUrl}/es/impuestos-y-aranceles`} />
-        <link rel="alternate" hrefLang="x-default" href={`${siteUrl}/taxes-and-duties`} />
+        {locales.map((locale) => (
+          <link key={locale} rel="alternate" hrefLang={locale} href={hrefFor(locale)} />
+        ))}
+        <link rel="alternate" hrefLang="x-default" href={hrefFor('en')} />
 
-        <meta property="og:locale" content="es_ES" />
+        <meta property="og:locale" content={ogLocale} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={`${siteUrl}/es/impuestos-y-aranceles`} />
+        <meta property="og:url" content={hrefFor(currentLocale)} />
         <meta property="og:title" content="Impuestos y Aranceles de Importación | Dosalga" />
         <meta
           property="og:description"

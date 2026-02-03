@@ -1,8 +1,30 @@
 import React from "react";
+import Head from "next/head";
 import Link from "next/link";
 
 const ServicesPage = () => {
+  const siteUrl = "https://dosalga.com";
+  const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+  const slugByLocale = { en: '/services', es: '/services', de: '/services', fr: '/services', it: '/services', pt: '/services' };
+  const currentLocale = 'en';
+  const hrefFor = (locale) => `${siteUrl}${locale === 'en' ? '' : `/${locale}`}${slugByLocale[locale]}`;
+  const ogLocale = 'en_US';
   return (
+    <>
+    <Head>
+      <title>Dosalga Services | Guidance, Support & Lifestyle Inspiration</title>
+      <meta name="description" content="Discover Dosalga services: product guidance, customer care, and style inspiration to support your active lifestyle." />
+      <link rel="canonical" href={hrefFor(currentLocale)} />
+      {locales.map((locale) => (
+        <link key={locale} rel="alternate" hrefLang={locale} href={hrefFor(locale)} />
+      ))}
+      <link rel="alternate" hrefLang="x-default" href={hrefFor('en')} />
+      <meta property="og:locale" content={ogLocale} />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content={hrefFor(currentLocale)} />
+      <meta property="og:title" content="Dosalga Services" />
+      <meta property="og:description" content="Product guidance, customer care, and style inspiration for your activewear shopping." />
+    </Head>
     <div className="services-page pt-100 pb-100">
       <div className="container">
         <div className="row justify-content-center mb-60">
@@ -48,6 +70,7 @@ const ServicesPage = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

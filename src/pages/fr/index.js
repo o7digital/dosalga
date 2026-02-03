@@ -6,6 +6,10 @@ import TrendingNow from "../../components/home-uomo/TrendingNow";
 
 export default function HomeFr() {
   const siteUrl = "https://dosalga.com";
+  const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+  const currentLocale = 'fr';
+  const hrefFor = (locale) => `${siteUrl}${locale === 'en' ? '' : `/${locale}`}`;
+  const ogLocale = 'fr_FR';
 
   return (
     <>
@@ -17,15 +21,12 @@ export default function HomeFr() {
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/assets/img/sm-logo.svg" />
-        <link rel="canonical" href={`${siteUrl}/fr`} />
-
-        <link rel="alternate" hrefLang="en" href={`${siteUrl}/`} />
-        <link rel="alternate" hrefLang="es" href={`${siteUrl}/es`} />
-        <link rel="alternate" hrefLang="de" href={`${siteUrl}/de`} />
-        <link rel="alternate" hrefLang="fr" href={`${siteUrl}/fr`} />
-        <link rel="alternate" hrefLang="it" href={`${siteUrl}/it`} />
-        <link rel="alternate" hrefLang="pt" href={`${siteUrl}/pt`} />
-        <link rel="alternate" hrefLang="x-default" href={`${siteUrl}/`} />
+        <link rel="canonical" href={hrefFor(currentLocale)} />
+        {locales.map((locale) => (
+          <link key={locale} rel="alternate" hrefLang={locale} href={hrefFor(locale)} />
+        ))}
+        <link rel="alternate" hrefLang="x-default" href={hrefFor('en')} />
+        <meta property="og:locale" content={ogLocale} />
       </Head>
 
       <HeroSlider />

@@ -3,6 +3,11 @@ import Head from "next/head";
 
 const TermsAndConditionsItPage = () => {
   const siteUrl = "https://dosalga.com";
+  const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+  const slugByLocale = { en: '/terms-and-conditions', es: '/terms-and-conditions', de: '/terms-and-conditions', fr: '/terms-and-conditions', it: '/terms-and-conditions', pt: '/terms-and-conditions' };
+  const currentLocale = 'it';
+  const hrefFor = (locale) => `${siteUrl}${locale === 'en' ? '' : `/${locale}`}${slugByLocale[locale]}`;
+  const ogLocale = 'it_IT';
 
   return (
     <>
@@ -12,7 +17,11 @@ const TermsAndConditionsItPage = () => {
           name="description"
           content="Termini e condizioni di vendita per gli acquisti Dosalga: informazioni azienda, ambito, prodotti, prezzi, pagamento, tasse, spedizione, resi, responsabilità e legge applicabile."
         />
-        <link rel="canonical" href={`${siteUrl}/it/terms-and-conditions`} />
+        <link rel="canonical" href={hrefFor(currentLocale)} />
+        {locales.map((locale) => (
+          <link key={locale} rel="alternate" hrefLang={locale} href={hrefFor(locale)} />
+        ))}
+        <link rel="alternate" hrefLang="x-default" href={hrefFor('en')} />
       </Head>
 
       <div className="privacy-policy-section pt-120 pb-120">

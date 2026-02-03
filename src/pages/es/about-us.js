@@ -3,6 +3,11 @@ import Head from "next/head";
 
 const AboutPageEs = () => {
   const siteUrl = "https://dosalga.com";
+  const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+  const currentLocale = 'es';
+  const slug = '/about-us';
+  const hrefFor = (locale) => `${siteUrl}${locale === 'en' ? '' : `/${locale}`}${slug}`;
+  const ogLocale = 'es_ES';
   
   return (
     <>
@@ -11,17 +16,18 @@ const AboutPageEs = () => {
         <meta name="description" content="Dosalga facilita la adquisición de productos diseñados para la vida diaria con entregas en casa u oficina. Conoce su historia desde 2013, visión, misión y valores." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/assets/img/sm-logo.svg" />
-        <link rel="canonical" href={`${siteUrl}/es/about-us`} />
+        <link rel="canonical" href={hrefFor(currentLocale)} />
         
         {/* Hreflang tags */}
-        <link rel="alternate" hrefLang="en" href={`${siteUrl}/about-us`} />
-        <link rel="alternate" hrefLang="es" href={`${siteUrl}/es/about-us`} />
-        <link rel="alternate" hrefLang="x-default" href={`${siteUrl}/about-us`} />
+        {locales.map((locale) => (
+          <link key={locale} rel="alternate" hrefLang={locale} href={hrefFor(locale)} />
+        ))}
+        <link rel="alternate" hrefLang="x-default" href={hrefFor('en')} />
         
         {/* Open Graph */}
-        <meta property="og:locale" content="es_ES" />
+        <meta property="og:locale" content={ogLocale} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={`${siteUrl}/es/about-us`} />
+        <meta property="og:url" content={hrefFor(currentLocale)} />
         <meta property="og:title" content="Sobre Dosalga - Productos para la vida diaria" />
         <meta property="og:description" content="Empresa dedicada a simplificar la compra de productos esenciales con entregas donde los necesitas. Historia, visión, misión y valores de Dosalga." />
         <meta property="og:site_name" content="Dosalga" />

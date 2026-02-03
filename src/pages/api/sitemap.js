@@ -16,6 +16,29 @@ export default async function handler(req, res) {
 
     const siteUrl = 'https://dosalga.com';
     const currentDate = new Date().toISOString().split('T')[0];
+    const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+    const pageSlugs = [
+      { slug: '', changefreq: 'daily', priority: '1.0' },
+      { slug: '/about-us', changefreq: 'weekly', priority: '0.8' },
+      { slug: '/services', changefreq: 'weekly', priority: '0.7' },
+      { slug: '/contact', changefreq: 'monthly', priority: '0.7' },
+      { slug: '/privacy-policy', changefreq: 'monthly', priority: '0.6' },
+      { slug: '/returns-and-refunds', changefreq: 'monthly', priority: '0.6' },
+      { slug: '/shipping-policy', changefreq: 'monthly', priority: '0.6' },
+      { slug: '/taxes-and-duties', changefreq: 'monthly', priority: '0.6' },
+      { slug: '/terms-and-conditions', changefreq: 'monthly', priority: '0.6' },
+    ];
+
+    const localizedSlug = (locale, slug) => {
+      if (slug === '/taxes-and-duties' && locale === 'es') return '/impuestos-y-aranceles';
+      return slug;
+    };
+
+    const urlFor = (locale, slug) => {
+      const path = localizedSlug(locale, slug);
+      const prefix = locale === 'en' ? '' : `/${locale}`;
+      return `${siteUrl}${prefix}${path}`;
+    };
 
     // Récupérer les produits depuis WooCommerce
     let products = [];
@@ -42,72 +65,27 @@ export default async function handler(req, res) {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
-  <!-- Home Page - English -->
+`;
+
+    // Pages core with hreflang
+    pageSlugs.forEach((page) => {
+      locales.forEach((locale) => {
+        xml += `
   <url>
-    <loc>${siteUrl}/</loc>
+    <loc>${urlFor(locale, page.slug)}</loc>
     <lastmod>${currentDate}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="${siteUrl}/" />
-    <xhtml:link rel="alternate" hreflang="es" href="${siteUrl}/es" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="${siteUrl}/" />
-  </url>
-  
-  <!-- Home Page - Spanish -->
-  <url>
-    <loc>${siteUrl}/es</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="${siteUrl}/" />
-    <xhtml:link rel="alternate" hreflang="es" href="${siteUrl}/es" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="${siteUrl}/" />
-  </url>
-  
-  <!-- About Us - English -->
-  <url>
-    <loc>${siteUrl}/about-us</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="${siteUrl}/about-us" />
-    <xhtml:link rel="alternate" hreflang="es" href="${siteUrl}/es/about-us" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="${siteUrl}/about-us" />
-  </url>
-  
-  <!-- About Us - Spanish -->
-  <url>
-    <loc>${siteUrl}/es/about-us</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="${siteUrl}/about-us" />
-    <xhtml:link rel="alternate" hreflang="es" href="${siteUrl}/es/about-us" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="${siteUrl}/about-us" />
-  </url>
-  
-  <!-- Contact - English -->
-  <url>
-    <loc>${siteUrl}/contact</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="${siteUrl}/contact" />
-    <xhtml:link rel="alternate" hreflang="es" href="${siteUrl}/es/contact" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="${siteUrl}/contact" />
-  </url>
-  
-  <!-- Contact - Spanish -->
-  <url>
-    <loc>${siteUrl}/es/contact</loc>
-    <lastmod>${currentDate}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="${siteUrl}/contact" />
-    <xhtml:link rel="alternate" hreflang="es" href="${siteUrl}/es/contact" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="${siteUrl}/contact" />
+    <changefreq>${page.changefreq}</changefreq>
+    <priority>${page.priority}</priority>`;
+        locales.forEach((alt) => {
+          xml += `
+    <xhtml:link rel="alternate" hreflang="${alt}" href="${urlFor(alt, page.slug)}" />`;
+        });
+        xml += `
+    <xhtml:link rel="alternate" hreflang="x-default" href="${urlFor('en', page.slug)}" />
   </url>
 `;
+      });
+    });
 
     // Ajouter les catégories de produits
     categories.forEach(category => {

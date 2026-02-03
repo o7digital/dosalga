@@ -87,7 +87,7 @@ const VideoSection = () => {
                             <h2 className="studio-brand">DOSALGA</h2>
                             <h1 className="studio-title">{text.title}</h1>
                             <p className="studio-subtitle">{text.subtitle}</p>
-                            <Link legacyBehavior href="/shop">
+                            <Link legacyBehavior href={lang === 'en' ? "/shop" : `/${lang}/shop`}>
                                 <a className="btn-shop-now">{text.cta}</a>
                             </Link>
                         </div>

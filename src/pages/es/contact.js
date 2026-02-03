@@ -3,23 +3,36 @@ import Head from 'next/head';
 
 const ContactPageEs = () => {
   const siteUrl = "https://dosalga.com";
+  const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+  const slugByLocale = {
+    en: '/contact',
+    es: '/contact',
+    de: '/contact',
+    fr: '/contact',
+    it: '/contact',
+    pt: '/contact',
+  };
+  const currentLocale = 'es';
+  const hrefFor = (locale) => `${siteUrl}${locale === 'en' ? '' : `/${locale}`}${slugByLocale[locale]}`;
+  const ogLocale = 'es_ES';
   
   return (
     <>
       <Head>
         <title>Contacto Dosalga - Atención al Cliente | Contáctanos</title>
         <meta name="description" content="Contacta con el servicio de atención al cliente de Dosalga para consultas sobre nuestros productos de activewear, pedidos, envíos o devoluciones. Estamos aquí para ayudarte 24/7. Contáctanos por email o teléfono." />
-        <link rel="canonical" href={`${siteUrl}/es/contact`} />
+        <link rel="canonical" href={hrefFor(currentLocale)} />
         
         {/* Hreflang tags */}
-        <link rel="alternate" hrefLang="en" href={`${siteUrl}/contact`} />
-        <link rel="alternate" hrefLang="es" href={`${siteUrl}/es/contact`} />
-        <link rel="alternate" hrefLang="x-default" href={`${siteUrl}/contact`} />
+        {locales.map((locale) => (
+          <link key={locale} rel="alternate" hrefLang={locale} href={hrefFor(locale)} />
+        ))}
+        <link rel="alternate" hrefLang="x-default" href={hrefFor('en')} />
         
         {/* Open Graph */}
-        <meta property="og:locale" content="es_ES" />
+        <meta property="og:locale" content={ogLocale} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={`${siteUrl}/es/contact`} />
+        <meta property="og:url" content={hrefFor(currentLocale)} />
         <meta property="og:title" content="Contacto Dosalga - Contáctanos" />
         <meta property="og:description" content="Contacta con Dosalga para consultas sobre nuestros productos de activewear premium. Estamos para ayudarte." />
         <meta property="og:site_name" content="Dosalga" />

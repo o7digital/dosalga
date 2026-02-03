@@ -3,6 +3,11 @@ import Head from "next/head";
 
 const ReturnsAndRefundsPage = () => {
   const siteUrl = "https://dosalga.com";
+  const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+  const slugByLocale = { en: '/returns-and-refunds', es: '/returns-and-refunds', de: '/returns-and-refunds', fr: '/returns-and-refunds', it: '/returns-and-refunds', pt: '/returns-and-refunds' };
+  const currentLocale = 'en';
+  const hrefFor = (locale) => `${siteUrl}${locale === 'en' ? '' : `/${locale}`}${slugByLocale[locale]}`;
+  const ogLocale = 'en_US';
 
   return (
     <>
@@ -12,7 +17,13 @@ const ReturnsAndRefundsPage = () => {
           name="description"
           content="Returns & Refunds policy for Dosalga. Learn about return conditions, eligible cases, refund processing, and limitations."
         />
-        <link rel="canonical" href={`${siteUrl}/returns-and-refunds`} />
+        <link rel="canonical" href={hrefFor(currentLocale)} />
+        {locales.map((locale) => (
+          <link key={locale} rel="alternate" hrefLang={locale} href={hrefFor(locale)} />
+        ))}
+        <link rel="alternate" hrefLang="x-default" href={hrefFor('en')} />
+        <meta property="og:locale" content={ogLocale} />
+        <meta property="og:url" content={hrefFor(currentLocale)} />
       </Head>
 
       <div className="privacy-policy-section pt-120 pb-120">

@@ -3,6 +3,21 @@ import Head from "next/head";
 
 const TaxesAndDutiesPage = () => {
   const siteUrl = "https://dosalga.com";
+  const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+  const slugByLocale = {
+    en: '/taxes-and-duties',
+    es: '/impuestos-y-aranceles',
+    de: '/taxes-and-duties',
+    fr: '/taxes-and-duties',
+    it: '/taxes-and-duties',
+    pt: '/taxes-and-duties',
+  };
+  const currentLocale = 'en';
+  const hrefFor = (locale) => {
+    const slug = slugByLocale[locale] || '/taxes-and-duties';
+    return `${siteUrl}${locale === 'en' ? '' : `/${locale}`}${slug}`;
+  };
+  const ogLocale = 'en_US';
 
   return (
     <>
@@ -12,11 +27,13 @@ const TaxesAndDutiesPage = () => {
           name="description"
           content="Taxes & Import Duties policy for Dosalga orders, including potential customs fees, VAT, and details for United States and Mexico deliveries."
         />
-        <link rel="canonical" href={`${siteUrl}/taxes-and-duties`} />
-
-        <link rel="alternate" hrefLang="en" href={`${siteUrl}/taxes-and-duties`} />
-        <link rel="alternate" hrefLang="es" href={`${siteUrl}/es/impuestos-y-aranceles`} />
-        <link rel="alternate" hrefLang="x-default" href={`${siteUrl}/taxes-and-duties`} />
+        <link rel="canonical" href={hrefFor(currentLocale)} />
+        {locales.map((locale) => (
+          <link key={locale} rel="alternate" hrefLang={locale} href={hrefFor(locale)} />
+        ))}
+        <link rel="alternate" hrefLang="x-default" href={hrefFor('en')} />
+        <meta property="og:locale" content={ogLocale} />
+        <meta property="og:url" content={hrefFor(currentLocale)} />
 
         <meta property="og:locale" content="en_US" />
         <meta property="og:type" content="website" />

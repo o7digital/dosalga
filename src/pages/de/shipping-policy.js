@@ -3,6 +3,11 @@ import Head from "next/head";
 
 const ShippingPolicyDePage = () => {
   const siteUrl = "https://dosalga.com";
+  const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+  const slugByLocale = { en: '/shipping-policy', es: '/shipping-policy', de: '/shipping-policy', fr: '/shipping-policy', it: '/shipping-policy', pt: '/shipping-policy' };
+  const currentLocale = 'de';
+  const hrefFor = (locale) => `${siteUrl}${locale === 'en' ? '' : `/${locale}`}${slugByLocale[locale]}`;
+  const ogLocale = 'de_DE';
 
   return (
     <>
@@ -12,7 +17,13 @@ const ShippingPolicyDePage = () => {
           name="description"
           content="Versandrichtlinie für internationale Bestellungen bei Dosalga, inklusive Lieferzeiten, Bearbeitung und Verantwortlichkeiten."
         />
-        <link rel="canonical" href={`${siteUrl}/de/shipping-policy`} />
+        <link rel="canonical" href={hrefFor(currentLocale)} />
+        {locales.map((locale) => (
+          <link key={locale} rel="alternate" hrefLang={locale} href={hrefFor(locale)} />
+        ))}
+        <link rel="alternate" hrefLang="x-default" href={hrefFor('en')} />
+        <meta property="og:locale" content={ogLocale} />
+        <meta property="og:url" content={hrefFor(currentLocale)} />
       </Head>
 
       <div className="privacy-policy-section pt-120 pb-120">

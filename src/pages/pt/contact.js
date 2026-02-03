@@ -3,21 +3,24 @@ import Head from 'next/head';
 
 const ContactPagePt = () => {
   const siteUrl = "https://dosalga.com";
+  const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+  const slugByLocale = { en: '/contact', es: '/contact', de: '/contact', fr: '/contact', it: '/contact', pt: '/contact' };
+  const currentLocale = 'pt';
+  const hrefFor = (locale) => `${siteUrl}${locale === 'en' ? '' : `/${locale}`}${slugByLocale[locale]}`;
+  const ogLocale = 'pt_PT';
   
   return (
     <>
       <Head>
         <title>Contato Dosalga - Suporte ao cliente | Fale conosco</title>
         <meta name="description" content="Fale com o suporte da Dosalga para dúvidas sobre activewear, pedidos, envios ou devoluções. Disponíveis 24/7 por e-mail ou telefone." />
-        <link rel="canonical" href={`${siteUrl}/pt/contact`} />
+        <link rel="canonical" href={hrefFor(currentLocale)} />
         
-        <link rel="alternate" hrefLang="en" href={`${siteUrl}/contact`} />
-        <link rel="alternate" hrefLang="es" href={`${siteUrl}/es/contact`} />
-        <link rel="alternate" hrefLang="de" href={`${siteUrl}/de/contact`} />
-        <link rel="alternate" hrefLang="fr" href={`${siteUrl}/fr/contact`} />
-        <link rel="alternate" hrefLang="it" href={`${siteUrl}/it/contact`} />
-        <link rel="alternate" hrefLang="pt" href={`${siteUrl}/pt/contact`} />
-        <link rel="alternate" hrefLang="x-default" href={`${siteUrl}/contact`} />
+        {locales.map((locale) => (
+          <link key={locale} rel="alternate" hrefLang={locale} href={hrefFor(locale)} />
+        ))}
+        <link rel="alternate" hrefLang="x-default" href={hrefFor('en')} />
+        <meta property="og:locale" content={ogLocale} />
       </Head>
       <div className="contact-page pt-100 mb-100">
         <div className="container">

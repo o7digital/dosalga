@@ -3,6 +3,11 @@ import Head from "next/head";
 
 const AboutPage = () => {
   const siteUrl = "https://dosalga.com";
+  const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+  const currentLocale = 'en';
+  const slug = '/about-us';
+  const hrefFor = (locale) => `${siteUrl}${locale === 'en' ? '' : `/${locale}`}${slug}`;
+  const ogLocale = 'en_US';
   
   return (
     <>
@@ -11,17 +16,18 @@ const AboutPage = () => {
         <meta name="description" content="Dosalga makes it easy to get products designed for everyday life, delivered to your home or office. Learn our 2013 origin, vision, mission, and values." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/assets/img/sm-logo.svg" />
-        <link rel="canonical" href={`${siteUrl}/about-us`} />
+        <link rel="canonical" href={hrefFor(currentLocale)} />
         
         {/* Hreflang tags */}
-        <link rel="alternate" hrefLang="en" href={`${siteUrl}/about-us`} />
-        <link rel="alternate" hrefLang="es" href={`${siteUrl}/es/about-us`} />
-        <link rel="alternate" hrefLang="x-default" href={`${siteUrl}/about-us`} />
+        {locales.map((locale) => (
+          <link key={locale} rel="alternate" hrefLang={locale} href={hrefFor(locale)} />
+        ))}
+        <link rel="alternate" hrefLang="x-default" href={hrefFor('en')} />
         
         {/* Open Graph */}
-        <meta property="og:locale" content="en_US" />
+        <meta property="og:locale" content={ogLocale} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={`${siteUrl}/about-us`} />
+        <meta property="og:url" content={hrefFor(currentLocale)} />
         <meta property="og:title" content="About Dosalga - Products for Everyday Life" />
         <meta property="og:description" content="Company focused on simplifying the purchase of essential products with delivery wherever you need. Story, vision, mission, and values of Dosalga." />
         <meta property="og:site_name" content="Dosalga" />
