@@ -16,11 +16,12 @@ const Whistlist = () => {
   const { items, remove } = useWishlist();
   const router = useRouter();
   const lang = router.pathname.split('/')[1];
-  const t = (en, es, de, fr, it) => {
+  const t = (en, es, de, fr, it, pt) => {
     if (lang === 'es') return es;
     if (lang === 'de') return de;
     if (lang === 'fr') return fr;
     if (lang === 'it') return it;
+    if (lang === 'pt') return pt;
     return en;
   };
 
@@ -32,16 +33,23 @@ const Whistlist = () => {
             <div className="whistlist-table">
               {items.length === 0 ? (
                 <div className="text-center py-5">
-                  <h4>{t('Your wishlist is empty', 'Tu lista de deseos está vacía', 'Deine Wunschliste ist leer', 'Votre liste est vide', 'La tua lista è vuota')}</h4>
+                  <h4>{t('Your wishlist is empty', 'Tu lista de deseos está vacía', 'Deine Wunschliste ist leer', 'Votre liste est vide', 'La tua lista è vuota', 'A sua lista está vazia')}</h4>
                   <p>{t(
                     'Add products with the heart icon to see them here.',
                     'Añade productos con el corazón para verlos aquí.',
                     'Füge Produkte mit dem Herz hinzu, um sie hier zu ver.',
                     'Ajoutez des produits avec le cœur pour les voir ici.',
-                    'Aggiungi prodotti col cuore per vederli qui.'
+                    'Aggiungi prodotti col cuore per vederli qui.',
+                    'Adicione produtos com o coração para vê-los aqui.'
                   )}</p>
-                  <Link legacyBehavior href={lang === 'es' ? '/es/shop' : lang === 'de' ? '/de/shop' : lang === 'fr' ? '/fr/shop' : lang === 'it' ? '/it/shop' : '/shop'}>
-                    <a className="primary-btn1">{t('Browse products', 'Ver productos', 'Produkte ansehen', 'Voir les produits', 'Vedi prodotti')}</a>
+                  <Link legacyBehavior href={
+                    lang === 'es' ? '/es/shop'
+                      : lang === 'de' ? '/de/shop'
+                      : lang === 'fr' ? '/fr/shop'
+                      : lang === 'it' ? '/it/shop'
+                      : lang === 'pt' ? '/pt/shop'
+                      : '/shop'}>
+                    <a className="primary-btn1">{t('Browse products', 'Ver productos', 'Produkte ansehen', 'Voir les produits', 'Vedi prodotti', 'Ver produtos')}</a>
                   </Link>
                 </div>
               ) : (

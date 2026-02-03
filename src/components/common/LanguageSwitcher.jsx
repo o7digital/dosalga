@@ -4,7 +4,7 @@ import React from 'react';
 
 const LanguageSwitcher = () => {
   const router = useRouter();
-  const languages = ['en', 'es', 'de', 'fr', 'it'];
+  const languages = ['en', 'es', 'de', 'fr', 'it', 'pt'];
 
   const currentLang = (() => {
     const seg = router.pathname.split('/')[1];
