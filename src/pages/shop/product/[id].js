@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useProduct } from '@/src/hooks/useProducts';
 import QuantityCounter from '@/src/uitils/QuantityCounter';
+import { toast } from 'react-toastify';
 
 const ProductDetailPage = () => {
   const router = useRouter();
@@ -13,6 +14,7 @@ const ProductDetailPage = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectColor, setSelectColor] = useState(0);
   const [selectedVariation, setSelectedVariation] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
 
   if (loading) {
     return (
@@ -52,6 +54,16 @@ const ProductDetailPage = () => {
     sku,
     variations = []
   } = product;
+
+  const sizeOptions = useMemo(() => {
+    const sizeAttr = product.attributes?.find(
+      (attr) =>
+        attr.name?.toLowerCase().includes('size') ||
+        attr.slug === 'pa_size'
+    );
+    if (sizeAttr?.options?.length) return sizeAttr.options;
+    return ['XS', 'S', 'M', 'L', 'XL'];
+  }, [product]);
 
   const mainImages = images.length > 0 ? images : [{ src: '/assets/img/placeholder.png' }];
   const categoryName = categories[0]?.name || 'Produit';
@@ -160,6 +172,23 @@ const ProductDetailPage = () => {
                   </div>
                 )}
 
+                {/* Taille */}
+                <div className="size-area">
+                  <h6 className="widget-title">Taille</h6>
+                  <div className="size-chips">
+                    {sizeOptions.map((size) => (
+                      <button
+                        key={size}
+                        type="button"
+                        className={`size-chip ${selectedSize === size ? 'active' : ''}`}
+                        onClick={() => setSelectedSize(size)}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 {/* Quantité et couleur */}
                 <div className="quantity-color-area">
                   <div className="quantity-color">
@@ -176,8 +205,12 @@ const ProductDetailPage = () => {
                       className="primary-btn1 hover-btn3"
                       onClick={(e) => {
                         e.preventDefault();
+                        if (!selectedSize) {
+                          toast.warn('Choisis une taille avant d’acheter');
+                          return;
+                        }
                         // TODO: Acheter maintenant
-                        console.log('Buy now:', id);
+                        console.log('Buy now:', id, 'size:', selectedSize);
                       }}
                     >
                       *Acheter maintenant*
@@ -187,8 +220,12 @@ const ProductDetailPage = () => {
                       className="primary-btn1 style-3 hover-btn4"
                       onClick={(e) => {
                         e.preventDefault();
+                        if (!selectedSize) {
+                          toast.warn('Choisis une taille avant d’ajouter au panier');
+                          return;
+                        }
                         // TODO: Ajouter au panier
-                        console.log('Add to cart:', id);
+                        console.log('Add to cart:', id, 'size:', selectedSize);
                       }}
                     >
                       *Ajouter au panier*
