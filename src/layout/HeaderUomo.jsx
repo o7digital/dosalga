@@ -10,19 +10,7 @@ const HeaderUomo = () => {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const router = useRouter();
-    const lang = (() => {
-        const seg = router.pathname.split('/')[1];
-        return ['es','de','fr','it','pt'].includes(seg) ? seg : 'en';
-    })();
-    const langPrefix = lang === 'en' ? '' : `/${lang}`;
-    const t = (en, es, de, fr, it, pt) => {
-        if (lang === 'es') return es;
-        if (lang === 'de') return de;
-        if (lang === 'fr') return fr;
-        if (lang === 'it') return it;
-        if (lang === 'pt') return pt;
-        return en;
-    };
+    const isSpanish = router.pathname.startsWith('/es');
 
     useEffect(() => {
         const handleScroll = () => {
@@ -52,7 +40,7 @@ const HeaderUomo = () => {
                     <div className="header-wrapper d-flex align-items-center justify-content-between">
                         {/* Logo */}
                         <div className="header-logo">
-                            <Link legacyBehavior href={langPrefix || "/"}>
+                            <Link legacyBehavior href="/">
                                 <a className="logo-link">
                                     <img src="/logo-dosalga.png" alt="Dosalga" className="logo-img" />
                                 </a>
@@ -62,19 +50,19 @@ const HeaderUomo = () => {
                         {/* Desktop Navigation */}
                         <nav className="header-nav d-none d-lg-flex">
                             <ul className="nav-menu">
-                                <li className={router.pathname === (langPrefix || '') + '/about-us' ? 'active' : ''}>
-                                    <Link legacyBehavior href={`${langPrefix}/about-us`}>
-                                        <a>{t('ABOUT US','SOBRE NOSOTROS','ÜBER UNS','À PROPOS','CHI SIAMO','SOBRE NÓS')}</a>
+                                <li className={router.pathname === (isSpanish ? '/es/about-us' : '/about-us') ? 'active' : ''}>
+                                    <Link legacyBehavior href={isSpanish ? "/es/about-us" : "/about-us"}>
+                                        <a>{isSpanish ? 'SOBRE NOSOTROS' : 'ABOUT US'}</a>
                                     </Link>
                                 </li>
-                                <li className={router.pathname === (langPrefix || '') + '/services' ? 'active' : ''}>
-                                    <Link legacyBehavior href={`${langPrefix}/services`}>
-                                        <a>{t('SERVICES','SERVICIOS','LEISTUNGEN','SERVICES','SERVIZI','SERVIÇOS')}</a>
+                                <li className={router.pathname === (isSpanish ? '/es/services' : '/services') ? 'active' : ''}>
+                                    <Link legacyBehavior href={isSpanish ? "/es/services" : "/services"}>
+                                        <a>{isSpanish ? 'SERVICIOS' : 'SERVICES'}</a>
                                     </Link>
                                 </li>
-                                <li className={router.pathname === (langPrefix || '') + '/contact' ? 'active' : ''}>
-                                    <Link legacyBehavior href={`${langPrefix}/contact`}>
-                                        <a>{t('CONTACT','CONTACTO','KONTAKT','CONTACT','CONTATTI','CONTATO')}</a>
+                                <li className={router.pathname === (isSpanish ? '/es/contact' : '/contact') ? 'active' : ''}>
+                                    <Link legacyBehavior href={isSpanish ? "/es/contact" : "/contact"}>
+                                        <a>{isSpanish ? 'CONTACTO' : 'CONTACT'}</a>
                                     </Link>
                                 </li>
                             </ul>
@@ -108,7 +96,7 @@ const HeaderUomo = () => {
                             </button>
 
                             {/* Wishlist */}
-                            <Link legacyBehavior href={`${langPrefix}/shop/whistlist`}>
+                            <Link legacyBehavior href="/shop/whistlist">
                                 <a className="header-action-btn wishlist-btn" aria-label="Wishlist">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M10 18.35L8.55 17.03C3.4 12.36 0 9.27 0 5.5C0 2.41 2.42 0 5.5 0C7.24 0 8.91 0.81 10 2.08C11.09 0.81 12.76 0 14.5 0C17.58 0 20 2.41 20 5.5C20 9.27 16.6 12.36 11.45 17.03L10 18.35Z" fill="currentColor"/>
@@ -171,7 +159,7 @@ const HeaderUomo = () => {
                     <div className="mobile-menu-overlay" onClick={toggleMobileMenu}></div>
                     <div className="mobile-menu-content">
                         <div className="mobile-menu-header">
-                            <Link legacyBehavior href={langPrefix || "/"}>
+                            <Link legacyBehavior href="/">
                                 <a className="mobile-logo">
                                     <img src="/logo-dosalga.png" alt="Dosalga" />
                                 </a>
@@ -184,18 +172,18 @@ const HeaderUomo = () => {
                         </div>
                         <ul className="mobile-nav-menu">
                             <li>
-                                <Link legacyBehavior href={`${langPrefix}/about-us`}>
-                                    <a onClick={toggleMobileMenu}>{t('ABOUT US','SOBRE NOSOTROS','ÜBER UNS','À PROPOS','CHI SIAMO','SOBRE NÓS')}</a>
+                                <Link legacyBehavior href={isSpanish ? "/es/about-us" : "/about-us"}>
+                                    <a onClick={toggleMobileMenu}>{isSpanish ? 'SOBRE NOSOTROS' : 'ABOUT US'}</a>
                                 </Link>
                             </li>
                             <li>
-                                <Link legacyBehavior href={`${langPrefix}/services`}>
-                                    <a onClick={toggleMobileMenu}>{t('SERVICES','SERVICIOS','LEISTUNGEN','SERVICES','SERVIZI','SERVIÇOS')}</a>
+                                <Link legacyBehavior href={isSpanish ? "/es/services" : "/services"}>
+                                    <a onClick={toggleMobileMenu}>{isSpanish ? 'SERVICIOS' : 'SERVICES'}</a>
                                 </Link>
                             </li>
                             <li>
-                                <Link legacyBehavior href={`${langPrefix}/contact`}>
-                                    <a onClick={toggleMobileMenu}>{t('CONTACT','CONTACTO','KONTAKT','CONTACT','CONTATTI','CONTATO')}</a>
+                                <Link legacyBehavior href={isSpanish ? "/es/contact" : "/contact"}>
+                                    <a onClick={toggleMobileMenu}>{isSpanish ? 'CONTACTO' : 'CONTACT'}</a>
                                 </Link>
                             </li>
                         </ul>
