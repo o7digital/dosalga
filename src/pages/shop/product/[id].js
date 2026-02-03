@@ -5,10 +5,13 @@ import Link from 'next/link';
 import { useProduct } from '@/src/hooks/useProducts';
 import QuantityCounter from '@/src/uitils/QuantityCounter';
 import { toast } from 'react-toastify';
+import { useWishlist } from '@/src/contexts/WishlistContext';
 
 const ProductDetailPage = () => {
   const router = useRouter();
   const { id } = router.query;
+  const isSpanish = router.pathname.startsWith('/es');
+  const { toggle, isInWishlist } = useWishlist();
   
   const { product, loading, error } = useProduct(id);
   const [selectedImage, setSelectedImage] = useState(0);
@@ -222,13 +225,13 @@ const ProductDetailPage = () => {
                       onClick={(e) => {
                         e.preventDefault();
                         if (!selectedSize) {
-                          toast.warn('Choisis une taille avant d’acheter');
+                          toast.warn(isSpanish ? 'Elige una talla antes de comprar' : 'Choose a size before buying');
                           return;
                         }
                         console.log('Buy now:', id, 'size:', selectedSize);
                       }}
                     >
-                      *Acheter maintenant*
+                      {isSpanish ? 'Comprar ahora' : 'Buy now'}
                     </a>
                     <a
                       href="#"
@@ -236,13 +239,13 @@ const ProductDetailPage = () => {
                       onClick={(e) => {
                         e.preventDefault();
                         if (!selectedSize) {
-                          toast.warn('Choisis une taille avant d’ajouter au panier');
+                          toast.warn(isSpanish ? 'Elige una talla antes de añadir al carrito' : 'Choose a size before adding to cart');
                           return;
                         }
                         console.log('Add to cart:', id, 'size:', selectedSize);
                       }}
                     >
-                      *Ajouter au panier*
+                      {isSpanish ? 'Añadir al carrito' : 'Add to cart'}
                     </a>
                   </div>
                 )}
@@ -282,18 +285,31 @@ const ProductDetailPage = () => {
                 <div className="compare-wishlist-area">
                   <ul>
                     <li>
-                      <Link legacyBehavior href="/shop/whistlist">
-                        <a>
-                          <span>
-                            <svg width={11} height={11} viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-                              <g clipPath="url(#clip0_168_378)">
-                                <path d="M16.528 2.20919C16.0674 1.71411 15.5099 1.31906 14.8902 1.04859C14.2704 0.778112 13.6017 0.637996 12.9255 0.636946C12.2487 0.637725 11.5794 0.777639 10.959 1.048C10.3386 1.31835 9.78042 1.71338 9.31911 2.20854L9.00132 2.54436L8.68352 2.20854C6.83326 0.217151 3.71893 0.102789 1.72758 1.95306C1.63932 2.03507 1.5541 2.12029 1.47209 2.20854C-0.490696 4.32565 -0.490696 7.59753 1.47209 9.71463L8.5343 17.1622C8.77862 17.4201 9.18579 17.4312 9.44373 17.1868C9.45217 17.1788 9.46039 17.1706 9.46838 17.1622L16.528 9.71463C18.4907 7.59776 18.4907 4.32606 16.528 2.20919ZM15.5971 8.82879H15.5965L9.00132 15.7849L2.40553 8.82879C0.90608 7.21113 0.90608 4.7114 2.40553 3.09374C3.76722 1.61789 6.06755 1.52535 7.5434 2.88703C7.61505 2.95314 7.68401 3.0221 7.75012 3.09374L8.5343 3.92104C8.79272 4.17781 9.20995 4.17781 9.46838 3.92104L10.2526 3.09438C11.6142 1.61853 13.9146 1.52599 15.3904 2.88767C15.4621 2.95378 15.531 3.02274 15.5971 3.09438C17.1096 4.71461 17.1207 7.2189 15.5971 8.82879Z" />
-                              </g>
-                            </svg>
-                          </span>
-                          Ajouter à la wishlist
-                        </a>
-                      </Link>
+                      <button
+                        className="wishlist-inline-btn"
+                        onClick={() =>
+                          toggle({
+                            id,
+                            name,
+                            price,
+                            regular_price,
+                            sale_price,
+                            stock_status,
+                            images,
+                          })
+                        }
+                      >
+                        <span className={isInWishlist(id) ? 'active' : ''}>
+                          <svg width={11} height={11} viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
+                            <g clipPath="url(#clip0_168_378)">
+                              <path d="M16.528 2.20919C16.0674 1.71411 15.5099 1.31906 14.8902 1.04859C14.2704 0.778112 13.6017 0.637996 12.9255 0.636946C12.2487 0.637725 11.5794 0.777639 10.959 1.048C10.3386 1.31835 9.78042 1.71338 9.31911 2.20854L9.00132 2.54436L8.68352 2.20854C6.83326 0.217151 3.71893 0.102789 1.72758 1.95306C1.63932 2.03507 1.5541 2.12029 1.47209 2.20854C-0.490696 4.32565 -0.490696 7.59753 1.47209 9.71463L8.5343 17.1622C8.77862 17.4201 9.18579 17.4312 9.44373 17.1868C9.45217 17.1788 9.46039 17.1706 9.46838 17.1622L16.528 9.71463C18.4907 7.59776 18.4907 4.32606 16.528 2.20919ZM15.5971 8.82879H15.5965L9.00132 15.7849L2.40553 8.82879C0.90608 7.21113 0.90608 4.7114 2.40553 3.09374C3.76722 1.61789 6.06755 1.52535 7.5434 2.88703C7.61505 2.95314 7.68401 3.0221 7.75012 3.09374L8.5343 3.92104C8.79272 4.17781 9.20995 4.17781 9.46838 3.92104L10.2526 3.09438C11.6142 1.61853 13.9146 1.52599 15.3904 2.88767C15.4621 2.95378 15.531 3.02274 15.5971 3.09438C17.1096 4.71461 17.1207 7.2189 15.5971 8.82879Z" />
+                            </g>
+                          </svg>
+                        </span>
+                        {isInWishlist(id)
+                          ? isSpanish ? 'En favoritos' : 'In wishlist'
+                          : isSpanish ? 'Añadir a favoritos' : 'Add to wishlist'}
+                      </button>
                     </li>
                   </ul>
                 </div>

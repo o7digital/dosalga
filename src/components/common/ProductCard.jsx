@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useCountdownTimer } from '@/src/hooks/useCountdownTimer';
 import { useWishlist } from '@/src/contexts/WishlistContext';
 
@@ -8,7 +9,9 @@ import { useWishlist } from '@/src/contexts/WishlistContext';
  */
 const ProductCard = ({ product, showCountdown = false }) => {
   const { toggle, isInWishlist } = useWishlist();
+  const router = useRouter();
   const [rating, setRating] = useState(0);
+  const isSpanish = router.pathname.startsWith('/es');
   // Fixed MXN -> USD conversion for display
   const MXN_TO_USD_RATE = 18.5;
   const formatPrice = (value) => {
@@ -182,23 +185,23 @@ const ProductCard = ({ product, showCountdown = false }) => {
             <li>
               <button
                 className={`wishlist-toggle ${isInWishlist(id) ? 'active' : ''}`}
-                aria-label={isInWishlist(id) ? 'Remove from wishlist' : 'Add to wishlist'}
+                aria-label={
+                  isInWishlist(id)
+                    ? isSpanish ? 'Quitar de favoritos' : 'Remove from wishlist'
+                    : isSpanish ? 'Añadir a favoritos' : 'Add to wishlist'
+                }
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
-                  try {
-                    toggle({
-                      id,
-                      name,
-                      price,
-                      regular_price,
-                      sale_price,
-                      stock_status,
-                      images,
-                    });
-                  } catch (err) {
-                    console.error('Wishlist toggle failed', err);
-                  }
+                  toggle({
+                    id,
+                    name,
+                    price,
+                    regular_price,
+                    sale_price,
+                    stock_status,
+                    images,
+                  });
                 }}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width={18} height={18} viewBox="0 0 18 18">
@@ -273,7 +276,7 @@ const ProductCard = ({ product, showCountdown = false }) => {
 
         {/* Partage */}
         <div className="share-row">
-          <span>Share:</span>
+          <span>{isSpanish ? 'Compartir:' : 'Share:'}</span>
           <a href={shareLinks.twitter} target="_blank" rel="noreferrer" aria-label="Share on Twitter/X">X</a>
           <a href={shareLinks.facebook} target="_blank" rel="noreferrer" aria-label="Share on Facebook">Fb</a>
           <a href={shareLinks.whatsapp} target="_blank" rel="noreferrer" aria-label="Share on WhatsApp">Wa</a>

@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useWishlist } from '@/src/contexts/WishlistContext';
 
 const formatPriceUSD = (value) => {
@@ -13,6 +14,8 @@ const formatPriceUSD = (value) => {
 
 const Whistlist = () => {
   const { items, remove } = useWishlist();
+  const router = useRouter();
+  const isSpanish = router.pathname.startsWith('/es');
 
   return (
     <div className="whistlist-section mt-110 mb-110">
@@ -22,10 +25,10 @@ const Whistlist = () => {
             <div className="whistlist-table">
               {items.length === 0 ? (
                 <div className="text-center py-5">
-                  <h4>Your wishlist is empty</h4>
-                  <p>Add products with the heart icon to see them here.</p>
-                  <Link legacyBehavior href="/shop">
-                    <a className="primary-btn1">Browse products</a>
+                  <h4>{isSpanish ? 'Tu lista de deseos está vacía' : 'Your wishlist is empty'}</h4>
+                  <p>{isSpanish ? 'Añade productos con el corazón para verlos aquí.' : 'Add products with the heart icon to see them here.'}</p>
+                  <Link legacyBehavior href={isSpanish ? '/es/shop' : '/shop'}>
+                    <a className="primary-btn1">{isSpanish ? 'Ver productos' : 'Browse products'}</a>
                   </Link>
                 </div>
               ) : (
