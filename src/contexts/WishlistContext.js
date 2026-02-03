@@ -9,15 +9,20 @@ const WishlistContext = createContext({
 });
 
 const STORAGE_KEY = 'dosalga_wishlist';
+const STORAGE_KEY_ES = 'dosalga_wishlist_es';
 
 export const WishlistProvider = ({ children }) => {
   const [items, setItems] = useState([]);
+  const [localeKey, setLocaleKey] = useState(STORAGE_KEY);
 
   // Load wishlist from localStorage on client
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    const isEs = window.location.pathname.startsWith('/es');
+    const key = isEs ? STORAGE_KEY_ES : STORAGE_KEY;
+    setLocaleKey(key);
     try {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
+      const stored = window.localStorage.getItem(key);
       if (stored) {
         setItems(JSON.parse(stored));
       }
@@ -28,13 +33,13 @@ export const WishlistProvider = ({ children }) => {
 
   // Persist wishlist whenever it changes
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || !localeKey) return;
     try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      window.localStorage.setItem(localeKey, JSON.stringify(items));
     } catch (err) {
       console.warn('Unable to save wishlist to storage', err);
     }
-  }, [items]);
+  }, [items, localeKey]);
 
   const isInWishlist = (id) => items.some((item) => item.id === id);
 
