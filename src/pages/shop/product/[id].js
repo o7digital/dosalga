@@ -56,10 +56,11 @@ const ProductDetailPage = () => {
   } = product;
 
   const sizeOptions = useMemo(() => {
-    const sizeAttr = product.attributes?.find(
+    const attrs = product?.attributes || [];
+    const sizeAttr = attrs.find(
       (attr) =>
-        attr.name?.toLowerCase().includes('size') ||
-        attr.slug === 'pa_size'
+        attr?.name?.toLowerCase().includes('size') ||
+        attr?.slug === 'pa_size'
     );
     if (sizeAttr?.options?.length) return sizeAttr.options;
     return ['XS', 'S', 'M', 'L', 'XL'];

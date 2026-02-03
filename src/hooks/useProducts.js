@@ -70,10 +70,15 @@ export const useProduct = (productId) => {
         setError(null);
         
         const response = await fetch(`/api/products/${productId}`);
-        const result = await response.json();
+        let result;
+        try {
+          result = await response.json();
+        } catch (parseErr) {
+          throw new Error('Réponse produit invalide (captcha ou HTML).');
+        }
         
-        if (!response.ok) {
-          throw new Error(result.message || 'Erreur lors de la récupération du produit');
+        if (!response.ok || !result?.data) {
+          throw new Error(result?.message || 'Erreur lors de la récupération du produit');
         }
         
         setProduct(result.data);
