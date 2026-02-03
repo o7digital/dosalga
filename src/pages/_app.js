@@ -14,6 +14,8 @@ import "../../public/assets/css/nice-select.css";
 import "../../public/assets/css/animate.min.css";
 import "../../public/assets/css/style.css";
 import "../../public/assets/css/uomo-style.css";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 export default function App({ Component, pageProps }) {
   useEffect(() => {
@@ -45,6 +47,7 @@ export default function App({ Component, pageProps }) {
           </MainLayoutUomo>
         </WishlistProvider>
       </CartProvider>
+      <ToastContainer position="bottom-center" autoClose={1800} hideProgressBar />
     </>
   );
 }

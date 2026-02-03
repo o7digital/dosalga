@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useCountdownTimer } from '@/src/hooks/useCountdownTimer';
 import { useWishlist } from '@/src/contexts/WishlistContext';
@@ -8,6 +8,7 @@ import { useWishlist } from '@/src/contexts/WishlistContext';
  */
 const ProductCard = ({ product, showCountdown = false }) => {
   const { toggle, isInWishlist } = useWishlist();
+  const [rating, setRating] = useState(0);
   // Fixed MXN -> USD conversion for display
   const MXN_TO_USD_RATE = 18.5;
   const formatPrice = (value) => {
@@ -55,20 +56,57 @@ const ProductCard = ({ product, showCountdown = false }) => {
     ? useCountdownTimer(endTime) 
     : { days: 0, hours: 0, minutes: 0, seconds: 0 };
 
-  // Générer les étoiles de notation
+  // Charger la note locale
+  useEffect(() => {
+    if (typeof window === 'undefined' || !id) return;
+    const stored = window.localStorage.getItem(`dosalga_rating_${id}`);
+    if (stored) setRating(Number(stored));
+  }, [id]);
+
+  const handleRate = (value) => {
+    setRating(value);
+    if (typeof window !== 'undefined' && id) {
+      window.localStorage.setItem(`dosalga_rating_${id}`, String(value));
+    }
+  };
+
+  // Générer les étoiles cliquables
   const renderStars = () => {
+    const display = rating || average_rating;
     const stars = [];
-    const fullStars = Math.floor(average_rating);
+    const fullStars = Math.floor(display);
     
     for (let i = 0; i < 5; i++) {
-      if (i < fullStars) {
-        stars.push(<i key={i} className="bi bi-star-fill" />);
-      } else {
-        stars.push(<i key={i} className="bi bi-star" />);
-      }
+      const active = i < fullStars;
+      stars.push(
+        <button
+          key={i}
+          type="button"
+          className={`star-btn ${active ? 'active' : ''}`}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleRate(i + 1);
+          }}
+          aria-label={`Rate ${i + 1} star${i === 0 ? '' : 's'}`}
+        >
+          <i className={`bi ${active ? 'bi-star-fill' : 'bi-star'}`} />
+        </button>
+      );
     }
     return stars;
   };
+
+  // Liens de partage
+  const shareLinks = useMemo(() => {
+    const url = encodeURIComponent(`https://www.dosalga.store/shop/product/${id}`);
+    const text = encodeURIComponent(name);
+    return {
+      twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+      whatsapp: `https://api.whatsapp.com/send?text=${text}%20${url}`,
+    };
+  }, [id, name]);
 
   return (
     <div className="product-card hover-btn">
@@ -218,12 +256,24 @@ const ProductCard = ({ product, showCountdown = false }) => {
         </p>
 
         {/* Notation */}
-        {rating_count > 0 && (
-          <div className="rating">
-            <ul>{renderStars()}</ul>
-            <span>({rating_count})</span>
-          </div>
-        )}
+        <div className="rating">
+          <ul>{renderStars()}</ul>
+          <span>
+            {rating
+              ? `Your rating: ${rating}/5`
+              : rating_count > 0
+                ? `(${rating_count})`
+                : ''}
+          </span>
+        </div>
+
+        {/* Partage */}
+        <div className="share-row">
+          <span>Share:</span>
+          <a href={shareLinks.twitter} target="_blank" rel="noreferrer" aria-label="Share on Twitter/X">X</a>
+          <a href={shareLinks.facebook} target="_blank" rel="noreferrer" aria-label="Share on Facebook">Fb</a>
+          <a href={shareLinks.whatsapp} target="_blank" rel="noreferrer" aria-label="Share on WhatsApp">Wa</a>
+        </div>
       </div>
       <span className="for-border" />
     </div>
@@ -241,6 +291,53 @@ const ProductCard = ({ product, showCountdown = false }) => {
         }
         .wishlist-toggle.active svg path {
           fill: #ff4d4f;
+        }
+        .rating {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+        .rating ul {
+          display: inline-flex;
+          gap: 4px;
+          padding: 0;
+          margin: 0;
+          list-style: none;
+        }
+        .rating .star-btn {
+          background: none;
+          border: none;
+          padding: 0;
+          cursor: pointer;
+          color: #f5a524;
+          line-height: 1;
+        }
+        .rating .star-btn .bi {
+          font-size: 16px;
+        }
+        .rating .star-btn:hover .bi {
+          transform: scale(1.08);
+        }
+        .share-row {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-top: 8px;
+          font-size: 12px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        .share-row a {
+          padding: 2px 8px;
+          border: 1px solid #ddd;
+          border-radius: 10px;
+          text-decoration: none;
+          color: #333;
+          font-weight: 700;
+        }
+        .share-row a:hover {
+          background: #000;
+          color: #fff;
         }
       `}</style>
   );
