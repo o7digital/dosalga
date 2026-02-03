@@ -16,18 +16,6 @@ const ProductDetailPage = () => {
   const [selectedVariation, setSelectedVariation] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
 
-  if (loading) {
-    return (
-      <div className="container py-5">
-        <div className="text-center">
-          <div className="spinner-border" role="status">
-            <span className="visually-hidden">Chargement...</span>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   const renderError = (message) => (
     <div className="container py-5">
       <div className="alert alert-danger mb-3">
@@ -39,13 +27,8 @@ const ProductDetailPage = () => {
     </div>
   );
 
-  if (error) {
-    return renderError(error);
-  }
-
-  if (!product || typeof product !== 'object') {
-    return renderError('Produit introuvable ou non chargé.');
-  }
+  // Sanitize product
+  const safeProduct = product && typeof product === 'object' ? product : null;
 
   const {
     name = 'Produit',
@@ -62,10 +45,10 @@ const ProductDetailPage = () => {
     on_sale = false,
     sku,
     variations = []
-  } = product || {};
+  } = safeProduct || {};
 
   const sizeOptions = useMemo(() => {
-    const attrs = Array.isArray(product?.attributes) ? product.attributes : [];
+    const attrs = Array.isArray(safeProduct?.attributes) ? safeProduct.attributes : [];
     const sizeAttr = attrs.find(
       (attr) =>
         attr?.name?.toLowerCase().includes('size') ||
@@ -74,7 +57,7 @@ const ProductDetailPage = () => {
     );
     if (sizeAttr?.options?.length) return sizeAttr.options;
     return ['XS', 'S', 'M', 'L', 'XL'];
-  }, [product?.attributes]);
+  }, [safeProduct?.attributes]);
 
   const mainImages = Array.isArray(images) && images.length > 0
     ? images
@@ -84,7 +67,6 @@ const ProductDetailPage = () => {
     ? Math.round(((regular_price - sale_price) / regular_price) * 100)
     : 0;
 
-  // Générer les étoiles
   const renderStars = () => {
     const stars = [];
     const fullStars = Math.floor(average_rating);
@@ -95,6 +77,27 @@ const ProductDetailPage = () => {
     }
     return stars;
   };
+
+  // Decide what to render (no conditional hooks)
+  if (loading) {
+    return (
+      <div className="container py-5">
+        <div className="text-center">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Chargement...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return renderError(error);
+  }
+
+  if (!safeProduct) {
+    return renderError('Produit introuvable ou non chargé.');
+  }
 
   return (
     <>
@@ -222,7 +225,6 @@ const ProductDetailPage = () => {
                           toast.warn('Choisis une taille avant d’acheter');
                           return;
                         }
-                        // TODO: Acheter maintenant
                         console.log('Buy now:', id, 'size:', selectedSize);
                       }}
                     >
@@ -237,7 +239,6 @@ const ProductDetailPage = () => {
                           toast.warn('Choisis une taille avant d’ajouter au panier');
                           return;
                         }
-                        // TODO: Ajouter au panier
                         console.log('Add to cart:', id, 'size:', selectedSize);
                       }}
                     >
@@ -254,7 +255,7 @@ const ProductDetailPage = () => {
                       <li>
                         <span>Catégorie:</span>{' '}
                         {categories.map((cat, index) => (
-                          <React.Fragment key={cat.id}>
+                          <React.Fragment key={cat.id || cat.slug || index}>
                             <Link legacyBehavior href={`/category/${cat.slug}`}>
                               <a>{cat.name}</a>
                             </Link>
