@@ -23,7 +23,8 @@ const TrendingNow = () => {
             { id: 'top-rated', label: 'Top rated' }
         ];
 
-    const fallbackCategories = ['shoes', 'bikes', 'bike', 'ski', 'golf', 'cardio', 'fishing', 'cremes', 'sueter'];
+    // Priorité aux 3 familles demandées
+    const fallbackCategories = ['clothes', 'fitness', 'bikes'];
 
     const formatCategoryLabel = (value) => {
         if (!value) return '';
@@ -46,14 +47,14 @@ const TrendingNow = () => {
 
         const ordered = [];
 
-        // Add fallback categories first to keep the expected order (shoes, bikes, etc.)
+        // Add fallback categories first to keep requested order (Clothes, Fitness, Bikes)
         fallbackCategories.forEach((slug) => {
             if (seen.has(slug)) return;
             seen.add(slug);
             ordered.push({ id: slug, label: formatCategoryLabel(slug) });
         });
 
-        // Add dynamic categories from WooCommerce
+        // Add dynamic categories from WooCommerce afterwards
         dynamic.forEach((cat) => {
             if (seen.has(cat.id)) return;
             seen.add(cat.id);
@@ -90,10 +91,11 @@ const TrendingNow = () => {
                 product.categories?.some((cat) => {
                     const slug = cat.slug?.toLowerCase();
                     const name = cat.name?.toLowerCase();
-                    return slug === selectedCategory
-                        || name === selectedCategory
-                        || slug?.includes(selectedCategory)
-                        || name?.includes(selectedCategory);
+                    const sel = selectedCategory.toLowerCase();
+                    return slug === sel
+                        || name === sel
+                        || slug?.includes(sel)
+                        || name?.includes(sel);
                 })
             );
 

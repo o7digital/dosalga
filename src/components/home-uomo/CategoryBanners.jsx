@@ -4,22 +4,22 @@ import Link from 'next/link';
 const CategoryBanners = () => {
     const categories = [
         {
-            id: 1,
-            title: 'Shop Women',
-            image: 'https://uomo-nextjs-ecommerce.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fhome%2Fdemo10%2Fgrid_banner_4.jpg&w=1080&q=75',
-            link: '/shop?category=women'
+            id: 'clothes',
+            title: 'Clothes',
+            image: '/assets/categories/gemini-clothes.png',
+            link: '/shop?category=clothes'
         },
         {
-            id: 2,
-            title: 'Shop Men',
-            image: 'https://uomo-nextjs-ecommerce.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fhome%2Fdemo10%2Fgrid_banner_5.jpg&w=1080&q=75',
-            link: '/shop?category=men'
+            id: 'fitness',
+            title: 'Fitness',
+            image: '/assets/categories/gemini-fitness.png',
+            link: '/shop?category=fitness'
         },
         {
-            id: 3,
-            title: 'Shop Kids',
-            image: 'https://uomo-nextjs-ecommerce.vercel.app/_next/image?url=%2Fassets%2Fimages%2Fhome%2Fdemo10%2Fgrid_banner_6.jpg&w=1080&q=75',
-            link: '/shop?category=kids'
+            id: 'bikes',
+            title: 'Bikes',
+            image: '/assets/categories/gemini-bike.png',
+            link: '/shop?category=bikes'
         }
     ];
 
