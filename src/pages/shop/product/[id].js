@@ -70,6 +70,12 @@ const ProductDetailPage = () => {
     ? Math.round(((regular_price - sale_price) / regular_price) * 100)
     : 0;
 
+  const formatUSD = (val) =>
+    `$${Number.parseFloat(val || 0).toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+
   const renderStars = () => {
     const stars = [];
     const fullStars = Math.floor(average_rating);
@@ -175,13 +181,14 @@ const ProductDetailPage = () => {
                   <p className="price">
                     {on_sale && sale_price ? (
                       <>
-                        {parseFloat(sale_price).toFixed(2)}€{' '}
-                        <del>{parseFloat(regular_price).toFixed(2)}€</del>
+                        {formatUSD(sale_price)}{' '}
+                        <del>{formatUSD(regular_price)}</del>
                       </>
                     ) : (
-                      `${parseFloat(price).toFixed(2)}€`
+                      formatUSD(price)
                     )}
                   </p>
+                  <small className="text-muted">Prices in USD</small>
                 </div>
 
                 {/* Stock status */}
