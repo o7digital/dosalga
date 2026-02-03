@@ -42,11 +42,19 @@ export const WishlistProvider = ({ children }) => {
     setItems((prev) => {
       if (!product?.id) return prev;
       const exists = prev.some((p) => p.id === product.id);
-      const next = exists ? prev.filter((p) => p.id !== product.id) : [...prev, product];
-      if (typeof window !== 'undefined') {
-        toast[exists ? 'info' : 'success'](
-          exists ? 'Removed from wishlist' : 'Product added to wishlist'
-        );
+      let next = prev;
+      try {
+        next = exists ? prev.filter((p) => p.id !== product.id) : [...prev, product];
+        if (typeof window !== 'undefined') {
+          toast[exists ? 'info' : 'success'](
+            exists ? 'Removed from wishlist' : 'Product added to wishlist'
+          );
+        }
+      } catch (err) {
+        console.warn('Wishlist toggle error', err);
+        if (typeof window !== 'undefined') {
+          alert(exists ? 'Removed from wishlist' : 'Product added to wishlist');
+        }
       }
       return next;
     });
