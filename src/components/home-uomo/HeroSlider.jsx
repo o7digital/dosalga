@@ -5,66 +5,46 @@ import { useRouter } from 'next/router';
 
 const HeroSlider = () => {
     const router = useRouter();
-    const isSpanish = router.pathname.startsWith('/es');
-    const slides = isSpanish
-        ? [
-            {
-                id: 1,
-                badge: "NUEVAS LLEGADAS",
-                title: "Activewear diseñado para la vida real",
-                subtitle: "Comodidad, sencillez y movimiento para tus rutinas diarias.",
-                cta: "Comprar esenciales",
-                image: "/slider/gemini1.png",
-                alt: "Ropa activa para la vida cotidiana"
-            },
-            {
-                id: 2,
-                badge: "NUEVAS LLEGADAS",
-                title: "Muévete por tu día con facilidad",
-                subtitle: "Activewear versátil pensado para tu estilo de vida, no solo el gimnasio.",
-                cta: "Descubrir la colección",
-                image: "/slider/gemini2.png",
-                alt: "Activewear versátil para tu día"
-            },
-            {
-                id: 3,
-                badge: "NUEVAS LLEGADAS",
-                title: "Comodidad dondequiera que vayas",
-                subtitle: "Capas ligeras y esenciales diarios para moverte de verdad.",
-                cta: "Explora Dosalga",
-                image: "/slider/gemini3.png",
-                alt: "Activewear cómodo en entornos reales"
-            }
-          ]
-        : [
-            {
-                id: 1,
-                badge: "NEW ARRIVALS",
-                title: "Activewear Designed for Real Life",
-                subtitle: "Comfort, simplicity, and movement for everyday routines.",
-                cta: "Shop Essentials",
-                image: "/slider/gemini1.png",
-                alt: "Lifestyle activewear designed for real life"
-            },
-            {
-                id: 2,
-                badge: "NEW ARRIVALS",
-                title: "Move Through Your Day With Ease",
-                subtitle: "Versatile activewear made to fit your lifestyle, not the gym.",
-                cta: "Discover the Collection",
-                image: "/slider/gemini2.png",
-                alt: "Everyday activewear for modern lifestyles"
-            },
-            {
-                id: 3,
-                badge: "NEW ARRIVALS",
-                title: "Comfort That Goes Wherever You Do",
-                subtitle: "Light layers and everyday essentials for real movement.",
-                cta: "Explore Dosalga",
-                image: "/slider/gemini3.png",
-                alt: "Comfortable activewear in real environments"
-            }
-          ];
+    const lang = (() => {
+        const seg = router.pathname.split('/')[1];
+        return ['es','de','fr','it','pt'].includes(seg) ? seg : 'en';
+    })();
+
+    const slidesByLang = {
+        en: [
+            { id: 1, badge: "NEW ARRIVALS", title: "Activewear Designed for Real Life", subtitle: "Comfort, simplicity, and movement for everyday routines.", cta: "Shop Essentials", image: "/slider/gemini1.png", alt: "Lifestyle activewear designed for real life" },
+            { id: 2, badge: "NEW ARRIVALS", title: "Move Through Your Day With Ease", subtitle: "Versatile activewear made to fit your lifestyle, not the gym.", cta: "Discover the Collection", image: "/slider/gemini2.png", alt: "Everyday activewear for modern lifestyles" },
+            { id: 3, badge: "NEW ARRIVALS", title: "Comfort That Goes Wherever You Do", subtitle: "Light layers and everyday essentials for real movement.", cta: "Explore Dosalga", image: "/slider/gemini3.png", alt: "Comfortable activewear in real environments" }
+        ],
+        es: [
+            { id: 1, badge: "NUEVAS LLEGADAS", title: "Activewear diseñado para la vida real", subtitle: "Comodidad, sencillez y movimiento para tus rutinas diarias.", cta: "Comprar esenciales", image: "/slider/gemini1.png", alt: "Ropa activa para la vida cotidiana" },
+            { id: 2, badge: "NUEVAS LLEGADAS", title: "Muévete por tu día con facilidad", subtitle: "Activewear versátil pensado para tu estilo de vida, no solo el gimnasio.", cta: "Descubrir la colección", image: "/slider/gemini2.png", alt: "Activewear versátil para tu día" },
+            { id: 3, badge: "NUEVAS LLEGADAS", title: "Comodidad dondequiera que vayas", subtitle: "Capas ligeras y esenciales diarios para moverte de verdad.", cta: "Explora Dosalga", image: "/slider/gemini3.png", alt: "Activewear cómodo en entornos reales" }
+        ],
+        de: [
+            { id: 1, badge: "NEU EINGETROFFEN", title: "Activewear für das echte Leben", subtitle: "Komfort, Schlichtheit und Bewegungsfreiheit für den Alltag.", cta: "Essentials shoppen", image: "/slider/gemini1.png", alt: "Activewear für den Alltag" },
+            { id: 2, badge: "NEU EINGETROFFEN", title: "Leicht durch den Tag bewegen", subtitle: "Vielseitige Activewear, die zu deinem Lifestyle passt – nicht nur ins Gym.", cta: "Kollektion entdecken", image: "/slider/gemini2.png", alt: "Vielseitige Activewear" },
+            { id: 3, badge: "NEU EINGETROFFEN", title: "Komfort, der dich überallhin begleitet", subtitle: "Leichte Layer und Daily Essentials für echte Bewegung.", cta: "Dosalga entdecken", image: "/slider/gemini3.png", alt: "Bequeme Activewear unterwegs" }
+        ],
+        fr: [
+            { id: 1, badge: "NOUVEAUTÉS", title: "Activewear pensé pour la vraie vie", subtitle: "Confort, simplicité et mouvement au quotidien.", cta: "Découvrir les essentiels", image: "/slider/gemini1.png", alt: "Activewear pour la vie de tous les jours" },
+            { id: 2, badge: "NOUVEAUTÉS", title: "Traverse ta journée en douceur", subtitle: "Activewear polyvalente pour ton style de vie, pas seulement la salle.", cta: "Découvrir la collection", image: "/slider/gemini2.png", alt: "Activewear polyvalente" },
+            { id: 3, badge: "NOUVEAUTÉS", title: "Le confort partout où tu vas", subtitle: "Couches légères et essentiels quotidiens pour bouger vraiment.", cta: "Explorer Dosalga", image: "/slider/gemini3.png", alt: "Activewear confortable en situation réelle" }
+        ],
+        it: [
+            { id: 1, badge: "NUOVI ARRIVI", title: "Activewear pensato per la vita reale", subtitle: "Comfort, semplicità e movimento per la routine di ogni giorno.", cta: "Acquista i must-have", image: "/slider/gemini1.png", alt: "Activewear per la vita di tutti i giorni" },
+            { id: 2, badge: "NUOVI ARRIVI", title: "Muoviti con facilità tutto il giorno", subtitle: "Activewear versatile che segue il tuo lifestyle, non solo la palestra.", cta: "Scopri la collezione", image: "/slider/gemini2.png", alt: "Activewear versatile" },
+            { id: 3, badge: "NUOVI ARRIVI", title: "Comfort ovunque tu vada", subtitle: "Strati leggeri ed essenziali quotidiani per muoverti davvero.", cta: "Esplora Dosalga", image: "/slider/gemini3.png", alt: "Activewear confortevole" }
+        ],
+        pt: [
+            { id: 1, badge: "NOVIDADES", title: "Activewear feito para a vida real", subtitle: "Conforto, simplicidade e movimento para o dia a dia.", cta: "Comprar essenciais", image: "/slider/gemini1.png", alt: "Activewear para o cotidiano" },
+            { id: 2, badge: "NOVIDADES", title: "Passe o dia com leveza", subtitle: "Activewear versátil que cabe no seu estilo de vida, não só na academia.", cta: "Ver a coleção", image: "/slider/gemini2.png", alt: "Activewear versátil" },
+            { id: 3, badge: "NOVIDADES", title: "Conforto onde quer que você vá", subtitle: "Camadas leves e essenciais diários para se mover de verdade.", cta: "Explorar a Dosalga", image: "/slider/gemini3.png", alt: "Activewear confortável" }
+        ]
+    };
+
+    const slides = slidesByLang[lang] || slidesByLang.en;
+    const localePrefix = lang === 'en' ? '' : `/${lang}`;
     const [currentSlide, setCurrentSlide] = useState(0);
 
     useEffect(() => {
@@ -103,7 +83,7 @@ const HeroSlider = () => {
                                 <span className="badge">{slide.badge}</span>
                                 <h1 className="title">{slide.title}</h1>
                                 {slide.subtitle && <p className="subtitle">{slide.subtitle}</p>}
-                                <Link legacyBehavior href="/shop">
+                                <Link legacyBehavior href={`${localePrefix}/shop`}>
                                     <a className="shop-link">{slide.cta}</a>
                                 </Link>
                             </div>
