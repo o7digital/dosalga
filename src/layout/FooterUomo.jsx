@@ -103,6 +103,22 @@ const FooterUomo = () => {
                                     <li><Link legacyBehavior href={path('taxes-and-duties')}><a>{{ en: 'Taxes & Duties', es: 'Impuestos y Aranceles', de: 'Steuern & Abgaben', fr: 'Taxes et droits', it: 'Tasse e dazi', pt: 'Impostos e taxas' }[lang]}</a></Link></li>
                                     <li><Link legacyBehavior href={path('shipping-policy')}><a>{{ en: 'Shipping Policy', es: 'Política de Envíos', de: 'Versandrichtlinie', fr: 'Politique d’expédition', it: 'Politica di spedizione', pt: 'Política de envio' }[lang]}</a></Link></li>
                                     <li><Link legacyBehavior href={path('privacy-policy')}><a>{{ en: 'Legal & Privacy', es: 'Aviso legal y privacidad', de: 'Rechtliches & Datenschutz', fr: 'Mentions & vie privée', it: 'Note legali e privacy', pt: 'Legal e Privacidade' }[lang]}</a></Link></li>
+                                    {lang === 'es' && (
+                                        <>
+                                            <li><Link legacyBehavior href={path('impuestos-locales')}><a>Impuestos Locales</a></Link></li>
+                                            <li><Link legacyBehavior href={path('proveedores-de-envio')}><a>Proveedores de Envío</a></Link></li>
+                                            <li><Link legacyBehavior href={path('condiciones-de-uso')}><a>Condiciones de Uso</a></Link></li>
+                                            <li><Link legacyBehavior href={path('condiciones-de-devoluciones')}><a>Condiciones de Devoluciones</a></Link></li>
+                                        </>
+                                    )}
+                                    {lang === 'en' && (
+                                        <>
+                                            <li><Link legacyBehavior href={path('local-taxes')}><a>Local Taxes</a></Link></li>
+                                            <li><Link legacyBehavior href={path('shipping-providers')}><a>Shipping Providers</a></Link></li>
+                                            <li><Link legacyBehavior href={path('terms-of-use')}><a>Terms of Use</a></Link></li>
+                                            <li><Link legacyBehavior href={path('returns-policy')}><a>Returns Policy</a></Link></li>
+                                        </>
+                                    )}
                                 </ul>
                             </div>
                         </div>
