@@ -8,9 +8,9 @@ const PrivacyPolicyPt = () => {
   const currentLocale = 'pt';
   const hrefFor = (locale) => `${siteUrl}${locale === 'en' ? '' : `/${locale}`}${slugByLocale[locale]}`;
   const ogLocale = 'pt_PT';
-  return (
-    <>
-    <Head>
+	  return (
+	    <>
+	    <Head>
       <title>Política de Privacidade | Dosalga</title>
       <meta name="description" content="Política de privacidade da Dosalga: dados coletados, uso e seus direitos." />
       <link rel="canonical" href={hrefFor(currentLocale)} />
@@ -99,10 +99,11 @@ const PrivacyPolicyPt = () => {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+	        </div>
+	      </div>
+	    </div>
+	    </>
+	  );
+	};
 
 export default PrivacyPolicyPt;
