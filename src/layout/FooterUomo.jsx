@@ -148,7 +148,6 @@ const FooterUomo = () => {
                                 <img src="/assets/img/home1/icon/visa.png" alt="Visa" />
                                 <img src="/assets/img/home1/icon/mastercard.png" alt="Mastercard" />
                                 <img src="/assets/img/home1/icon/american-express.png" alt="American Express" />
-                                <img src="/assets/img/home1/icon/maestro.png" alt="Maestro" />
                             </div>
                         </div>
                     </div>
