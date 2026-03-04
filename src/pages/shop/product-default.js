@@ -28,7 +28,6 @@ const ProductDefaultPage = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState(null);
-  const [activeTab, setActiveTab] = useState('description');
 
   useEffect(() => {
     setSelectedImage(0);
@@ -218,59 +217,6 @@ const ProductDefaultPage = () => {
                     )}
                   </ul>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="shop-details-description mb-110">
-        <div className="container-xl container-lg-fluid container">
-          <div className="row">
-            <div className="col-12">
-              <div className="shop-details-description-nav mb-50">
-                <nav>
-                  <div className="nav nav-tabs">
-                    <button className={`nav-link ${activeTab === 'description' ? 'active' : ''}`} type="button" onClick={() => setActiveTab('description')}>Description</button>
-                    <button className={`nav-link ${activeTab === 'add-info' ? 'active' : ''}`} type="button" onClick={() => setActiveTab('add-info')}>Additional Information</button>
-                    <button className={`nav-link ${activeTab === 'reviews' ? 'active' : ''}`} type="button" onClick={() => setActiveTab('reviews')}>Reviews ({ratingCount})</button>
-                  </div>
-                </nav>
-              </div>
-
-              <div className="shop-details-description-tab">
-                {activeTab === 'description' && (
-                  <div className="tab-pane fade show active">
-                    <div dangerouslySetInnerHTML={{ __html: product.description || 'No description available.' }} />
-                  </div>
-                )}
-
-                {activeTab === 'add-info' && (
-                  <div className="addithonal-information">
-                    <table className="table total-table2">
-                      <tbody>
-                        <tr>
-                          <td>SKU</td>
-                          <td>{product.sku || '-'}</td>
-                        </tr>
-                        <tr>
-                          <td>Stock</td>
-                          <td>{product.stock_status || '-'}</td>
-                        </tr>
-                        <tr>
-                          <td>Type</td>
-                          <td>{product.type || '-'}</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-
-                {activeTab === 'reviews' && (
-                  <div className="review-area">
-                    <p>This product has {ratingCount} review{ratingCount > 1 ? 's' : ''}.</p>
-                  </div>
-                )}
               </div>
             </div>
           </div>
