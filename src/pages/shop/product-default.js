@@ -46,6 +46,22 @@ const ProductDefaultPage = () => {
     setSelectedSize(null);
   }, [resolvedId]);
 
+  useEffect(() => {
+    // Ensure page scroll remains enabled even if a previous modal left the body locked
+    if (typeof document === 'undefined') return;
+
+    const html = document.documentElement;
+    const body = document.body;
+
+    body.classList.remove('modal-open');
+    body.style.overflow = '';
+    body.style.overflowY = 'auto';
+    body.style.paddingRight = '';
+
+    html.style.overflow = '';
+    html.style.overflowY = 'auto';
+  }, []);
+
   const sizeOptions = useMemo(() => {
     const attrs = Array.isArray(product?.attributes) ? product.attributes : [];
     const sizeAttr = attrs.find(
@@ -243,10 +259,14 @@ const ProductDefaultPage = () => {
 
       <style jsx>{`
         .product-thumbs {
+          position: relative;
+          left: auto;
+          top: auto;
+          flex-direction: column;
           display: flex;
           gap: 10px;
           margin-top: 16px;
-          flex-wrap: wrap;
+          flex-wrap: nowrap;
         }
 
         .product-thumbs .nav-link {
@@ -265,6 +285,13 @@ const ProductDefaultPage = () => {
           width: 60px;
           height: 60px;
           object-fit: cover;
+        }
+
+        @media (max-width: 576px) {
+          .product-thumbs {
+            flex-direction: row;
+            flex-wrap: wrap;
+          }
         }
 
         .qty-wrap {
@@ -311,6 +338,12 @@ const ProductDefaultPage = () => {
         .shop-details-btn button {
           border: none;
           cursor: pointer;
+        }
+      `}</style>
+      <style jsx global>{`
+        html,
+        body {
+          overflow-y: auto !important;
         }
       `}</style>
     </>
