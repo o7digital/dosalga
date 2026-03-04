@@ -5,7 +5,6 @@ import { useCart } from '@/src/contexts/CartContext';
 
 const Cart = () => {
   const { cart, removeFromCart, updateQuantity, getCartTotal } = useCart();
-  const storeUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL || 'https://dosalga.store';
 
   const subtotal = getCartTotal();
   const shipping = 0;
@@ -150,14 +149,9 @@ const Cart = () => {
                 </tbody>
               </table>
 
-              <a
-                className="primary-btn1 hover-btn3"
-                href={`${storeUrl}/checkout`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Product Checkout
-              </a>
+              <Link legacyBehavior href="/shop/checkout">
+                <a className="primary-btn1 hover-btn3">Product Checkout</a>
+              </Link>
             </div>
           </div>
         </div>

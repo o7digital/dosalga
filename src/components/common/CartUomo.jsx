@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useCart } from "../../contexts/CartContext";
 
 const CartUomo = () => {
@@ -11,7 +12,6 @@ const CartUomo = () => {
     removeFromCart,
     updateQuantity,
   } = useCart();
-  const storeUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL || "https://dosalga.store";
   const cartButtonRef = useRef(null);
   const cartMenuRef = useRef(null);
 
@@ -116,12 +116,12 @@ const CartUomo = () => {
           </div>
           
           <div className="cart-actions">
-            <a className="btn-secondary" href={storeUrl} target="_blank" rel="noopener noreferrer">
-              Continue Shopping
-            </a>
-            <a className="btn-primary" href={`${storeUrl}/checkout`} target="_blank" rel="noopener noreferrer">
-              Product Checkout
-            </a>
+            <Link legacyBehavior href="/shop">
+              <a className="btn-secondary">Continue Shopping</a>
+            </Link>
+            <Link legacyBehavior href="/shop/checkout">
+              <a className="btn-primary">Product Checkout</a>
+            </Link>
           </div>
         </div>
       </div>
