@@ -1,8 +1,16 @@
-import React from 'react'
-import GiftSection from '@/src/components/common/GiftSection'
-import ProductViewModal from '@/src/components/common/ProductViewModal'
-import QuantityCounter from '@/src/uitils/QuantityCounter';
+import React from 'react';
+import Link from 'next/link';
+import GiftSection from '@/src/components/common/GiftSection';
+import { useCart } from '@/src/contexts/CartContext';
+
 const Cart = () => {
+  const { cart, removeFromCart, updateQuantity, getCartTotal } = useCart();
+  const storeUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL || 'https://dosalga.store';
+
+  const subtotal = getCartTotal();
+  const shipping = 0;
+  const total = subtotal + shipping;
+
   return (
     <>
       <div className="whistlist-section cart mt-110 mb-110">
@@ -21,98 +29,83 @@ const Cart = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>
-                        <div className="delete-icon">
-                          <i className="bi bi-x-lg" />
-                        </div>
-                      </td>
-                      <td data-label="Product" className="table-product">
-                        <div className="product-img">
-                          <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/whistlist-img1.png" alt="" />
-                        </div>
-                        <div className="product-content">
-                          <h6><a href="#">Eau De Blue Perfume</a></h6>
-                        </div>
-                      </td>
-                      <td data-label="Price">
-                        <p className="price">
-                          <del>$40.00</del>
-                          $30.00
-                        </p>
-                      </td>
-                      <td data-label="Quantity">
-                        <QuantityCounter/>
-                      </td>
-                      <td data-label="Total">
-                        $30.00
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div className="delete-icon">
-                          <i className="bi bi-x-lg" />
-                        </div>
-                      </td>
-                      <td data-label="Product" className="table-product">
-                        <div className="product-img">
-                          <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/whistlist-img2.png" alt="" />
-                        </div>
-                        <div className="product-content">
-                          <h6><a href="#">Smooth Makeup Box</a></h6>
-                        </div>
-                      </td>
-                      <td data-label="Price">
-                        <p className="price">
-                          <del>$40.00</del>
-                          $25.00
-                        </p>
-                      </td>
-                      <td data-label="Quantity">
-                      <QuantityCounter/>
-                      </td>
-                      <td data-label="Total">
-                        $50.00
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div className="delete-icon">
-                          <i className="bi bi-x-lg" />
-                        </div>
-                      </td>
-                      <td data-label="Product" className="table-product">
-                        <div className="product-img">
-                          <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/whistlist-img3.png" alt="" />
-                        </div>
-                        <div className="product-content">
-                          <h6><a href="#">Modern Red Lipstick</a></h6>
-                        </div>
-                      </td>
-                      <td data-label="Price">
-                        <p className="price">
-                          <del>$40.00</del>
-                          $32.00
-                        </p>
-                      </td>
-                      <td data-label="Quantity">
-                      <QuantityCounter/>
-                      </td>
-                      <td data-label="Total">
-                        $30.00
-                      </td>
-                    </tr>
+                    {cart.length === 0 && (
+                      <tr>
+                        <td colSpan={5} className="text-center py-5">
+                          Your cart is empty.{' '}
+                          <Link legacyBehavior href="/shop">
+                            <a className="hover-underline">Continue shopping</a>
+                          </Link>
+                        </td>
+                      </tr>
+                    )}
+
+                    {cart.map((item) => {
+                      const key = `${item.id}-${item.variation?.id || 'base'}`;
+                      const itemPrice = Number.parseFloat(item.price || 0);
+                      const lineTotal = itemPrice * item.quantity;
+
+                      return (
+                        <tr key={key}>
+                          <td>
+                            <button
+                              type="button"
+                              className="delete-icon"
+                              onClick={() => removeFromCart(item.id, item.variation)}
+                            >
+                              <i className="bi bi-x-lg" />
+                            </button>
+                          </td>
+
+                          <td data-label="Product" className="table-product">
+                            <div className="product-img">
+                              <img src={item.image} alt={item.name} />
+                            </div>
+                            <div className="product-content">
+                              <h6>{item.name}</h6>
+                            </div>
+                          </td>
+
+                          <td data-label="Price">
+                            <p className="price">${itemPrice.toFixed(2)}</p>
+                          </td>
+
+                          <td data-label="Quantity">
+                            <div className="cart-qty-wrap">
+                              <button
+                                type="button"
+                                className="qty-btn"
+                                onClick={() => updateQuantity(item.id, item.quantity - 1, item.variation)}
+                              >
+                                -
+                              </button>
+                              <span>{item.quantity}</span>
+                              <button
+                                type="button"
+                                className="qty-btn"
+                                onClick={() => updateQuantity(item.id, item.quantity + 1, item.variation)}
+                              >
+                                +
+                              </button>
+                            </div>
+                          </td>
+
+                          <td data-label="Total">${lineTotal.toFixed(2)}</td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
+
           <div className="row g-4">
             <div className="col-lg-4">
               <div className="coupon-area">
                 <div className="cart-coupon-input">
                   <h5>Coupon Code</h5>
-                  <form>
+                  <form onSubmit={(e) => e.preventDefault()}>
                     <div className="form-inner">
                       <input type="text" placeholder="Coupon Code" />
                       <button type="submit" className="primary-btn1 hover-btn3">Apply Code</button>
@@ -121,13 +114,14 @@ const Cart = () => {
                 </div>
               </div>
             </div>
+
             <div className="col-lg-8">
               <table className="cart-table">
                 <thead>
                   <tr>
                     <th>Cart Totals</th>
                     <th />
-                    <th>$128.70</th>
+                    <th>${total.toFixed(2)}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -136,41 +130,66 @@ const Cart = () => {
                     <td>
                       <ul className="cost-list text-start">
                         <li>Shipping Fee</li>
-                        <li>Total ( tax excl.)</li>
-                        <li>Total ( tax incl.)</li>
-                        <li>Taxes</li>
-                        <li>Shipping Enter your address to view shipping options. <br /> <a href="#">Calculate
-                            shipping</a>
-                        </li>
+                        <li>Total (tax excl.)</li>
+                        <li>Total (tax incl.)</li>
                       </ul>
                     </td>
                     <td>
                       <ul className="single-cost text-center">
-                        <li>Fee</li>
-                        <li>$15</li>
-                        <li />
-                        <li>$15</li>
-                        <li>$15</li>
-                        <li>$5</li>
+                        <li>${shipping.toFixed(2)}</li>
+                        <li>${subtotal.toFixed(2)}</li>
+                        <li>${total.toFixed(2)}</li>
                       </ul>
                     </td>
                   </tr>
                   <tr>
                     <td>Subtotal</td>
                     <td />
-                    <td>$162.70</td>
+                    <td>${subtotal.toFixed(2)}</td>
                   </tr>
                 </tbody>
               </table>
-              <button type="submit" className="primary-btn1 hover-btn3">Product Checkout</button>
+
+              <a
+                className="primary-btn1 hover-btn3"
+                href={`${storeUrl}/checkout`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Product Checkout
+              </a>
             </div>
           </div>
         </div>
-    </div>
-    <ProductViewModal/>
-    <GiftSection /> 
-    </>
-  )
-}
+      </div>
 
-export default Cart
+      <GiftSection />
+
+      <style jsx>{`
+        .delete-icon {
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          color: inherit;
+        }
+
+        .cart-qty-wrap {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .qty-btn {
+          width: 28px;
+          height: 28px;
+          border: 1px solid #ddd;
+          background: #fff;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+      `}</style>
+    </>
+  );
+};
+
+export default Cart;

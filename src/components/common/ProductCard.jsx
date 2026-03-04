@@ -3,12 +3,15 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCountdownTimer } from '@/src/hooks/useCountdownTimer';
 import { useWishlist } from '@/src/contexts/WishlistContext';
+import { useCart } from '@/src/contexts/CartContext';
+import { toast } from 'react-toastify';
 
 /**
  * Composant carte produit pour afficher un produit WooCommerce
  */
-const ProductCard = ({ product, showCountdown = false }) => {
+const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
   const { toggle, isInWishlist } = useWishlist();
+  const { addToCart } = useCart();
   const router = useRouter();
   const [rating, setRating] = useState(0);
   const isSpanish = router.pathname.startsWith('/es');
@@ -40,6 +43,7 @@ const ProductCard = ({ product, showCountdown = false }) => {
     type = 'simple',
     date_created
   } = product;
+  const productLink = detailHref || `/shop/product/${id}`;
 
   // Utiliser la première image ou une image par défaut
   const mainImage = images[0]?.src || '/assets/img/placeholder.png';
@@ -111,10 +115,18 @@ const ProductCard = ({ product, showCountdown = false }) => {
     };
   }, [id, name]);
 
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart(product, 1);
+    toast.success(isSpanish ? 'Producto anadido al carrito' : 'Product added to cart');
+  };
+
   return (
+    <>
     <div className="product-card hover-btn">
       <div className="product-card-img double-img">
-        <Link legacyBehavior href={`/shop/product/${id}`}>
+        <Link legacyBehavior href={productLink}>
           <a>
             <img src={mainImage} alt={name} className="img1" />
             {images.length > 1 && (
@@ -151,7 +163,7 @@ const ProductCard = ({ product, showCountdown = false }) => {
           <div className="cart-area">
             {stock_status === 'instock' ? (
               type === 'variable' ? (
-                <Link legacyBehavior href={`/shop/product/${id}`}>
+                <Link legacyBehavior href={productLink}>
                   <a className="hover-btn3 add-cart-btn">
                     Voir les options
                   </a>
@@ -160,17 +172,13 @@ const ProductCard = ({ product, showCountdown = false }) => {
                 <a 
                   href="#" 
                   className="hover-btn3 add-cart-btn"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    // TODO: Ajouter au panier
-                    console.log('Add to cart:', id);
-                  }}
+                  onClick={handleAddToCart}
                 >
                   <i className="bi bi-bag-check" /> Ajouter au panier
                 </a>
               )
             ) : (
-              <Link legacyBehavior href={`/shop/product/${id}`}>
+              <Link legacyBehavior href={productLink}>
                 <a className="hover-btn3 add-cart-btn">
                   Me notifier
                 </a>
@@ -240,7 +248,7 @@ const ProductCard = ({ product, showCountdown = false }) => {
       {/* Contenu de la carte */}
       <div className="product-card-content">
         <h6>
-          <Link legacyBehavior href={`/shop/product/${id}`}>
+          <Link legacyBehavior href={productLink}>
             <a className="hover-underline">{name}</a>
           </Link>
         </h6>
@@ -347,6 +355,7 @@ const ProductCard = ({ product, showCountdown = false }) => {
           color: #fff;
         }
       `}</style>
+    </>
   );
 };
 
