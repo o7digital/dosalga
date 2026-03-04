@@ -15,6 +15,17 @@ const formatUSD = (value) => {
   })}`;
 };
 
+const htmlToPlainText = (html = '') => {
+  return html
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<img[^>]*>/gi, ' ')
+    .replace(/<table[\s\S]*?<\/table>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+};
+
 const ProductDefaultPage = () => {
   const router = useRouter();
   const { addToCart } = useCart();
@@ -58,6 +69,11 @@ const ProductDefaultPage = () => {
   const currentImage = images[selectedImage] || images[0];
   const ratingCount = Number.parseInt(product?.rating_count || 0, 10);
   const ratingValue = Number.parseFloat(product?.average_rating || 0);
+  const productSummary = useMemo(() => {
+    const text = htmlToPlainText(product?.short_description || product?.description || '');
+    if (!text) return '';
+    return text.length > 260 ? `${text.slice(0, 260).trim()}...` : text;
+  }, [product?.description, product?.short_description]);
 
   const renderStars = () => {
     const stars = [];
@@ -149,8 +165,8 @@ const ProductDefaultPage = () => {
                   </div>
                 </div>
 
-                {product.short_description && (
-                  <div dangerouslySetInnerHTML={{ __html: product.short_description }} />
+                {productSummary && (
+                  <p className="product-summary">{productSummary}</p>
                 )}
 
                 <div className="price-area">
@@ -255,6 +271,12 @@ const ProductDefaultPage = () => {
           display: inline-flex;
           align-items: center;
           gap: 12px;
+        }
+
+        .product-summary {
+          margin: 10px 0 18px;
+          color: #666;
+          line-height: 1.7;
         }
 
         .qty-btn {
