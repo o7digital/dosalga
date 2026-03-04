@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import GiftSection from '@/src/components/common/GiftSection';
 import { useCart } from '@/src/contexts/CartContext';
 
 const Cart = () => {
@@ -156,8 +155,6 @@ const Cart = () => {
           </div>
         </div>
       </div>
-
-      <GiftSection />
 
       <style jsx>{`
         .delete-icon {
