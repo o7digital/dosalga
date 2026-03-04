@@ -3,14 +3,10 @@ import Head from "next/head";
 
 const ImpuestosYArancelesPage = () => {
   const siteUrl = "https://dosalga.com";
-  const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+  const locales = ['en', 'es'];
   const slugByLocale = {
     en: '/taxes-and-duties',
     es: '/impuestos-y-aranceles',
-    de: '/taxes-and-duties',
-    fr: '/taxes-and-duties',
-    it: '/taxes-and-duties',
-    pt: '/taxes-and-duties',
   };
   const currentLocale = 'es';
   const hrefFor = (locale) => {
@@ -18,6 +14,7 @@ const ImpuestosYArancelesPage = () => {
     return `${siteUrl}${locale === 'en' ? '' : `/${locale}`}${slug}`;
   };
   const ogLocale = 'es_ES';
+  const ogImage = `${siteUrl}/assets/img/sm-logo.svg`;
 
   return (
     <>
@@ -43,6 +40,8 @@ const ImpuestosYArancelesPage = () => {
           content="Consulta la política de Impuestos y Aranceles de Importación de Dosalga para pedidos internacionales."
         />
         <meta property="og:site_name" content="Dosalga" />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:alt" content="Dosalga" />
       </Head>
 
       <div className="privacy-policy-section pt-120 pb-120">
