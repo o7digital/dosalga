@@ -117,7 +117,7 @@ const ProductDefaultPage = () => {
   const handleBuyNow = () => {
     const added = handleAddToCart();
     if (added) {
-      router.push('/shop/cart');
+      router.push('/shop/checkout');
     }
   };
 
