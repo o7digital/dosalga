@@ -3,18 +3,15 @@ import Head from 'next/head';
 
 const ContactPage = () => {
   const siteUrl = "https://dosalga.com";
-  const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+  const locales = ['en', 'es'];
   const slugByLocale = {
     en: '/contact',
     es: '/contact',
-    de: '/contact',
-    fr: '/contact',
-    it: '/contact',
-    pt: '/contact',
   };
   const currentLocale = 'en';
   const hrefFor = (locale) => `${siteUrl}${locale === 'en' ? '' : `/${locale}`}${slugByLocale[locale]}`;
   const ogLocale = 'en_US';
+  const ogImage = `${siteUrl}/assets/img/sm-logo.svg`;
   
   return (
     <>
@@ -36,6 +33,8 @@ const ContactPage = () => {
         <meta property="og:title" content="Contact Dosalga - Get in Touch" />
         <meta property="og:description" content="Contact Dosalga for any inquiries about our premium activewear products. Reach us anytime." />
         <meta property="og:site_name" content="Dosalga" />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:alt" content="Dosalga" />
       </Head>
       
       <div className="contact-page pt-100 mb-100">
