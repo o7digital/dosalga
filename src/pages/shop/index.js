@@ -4,6 +4,7 @@ import ProductViewModal from '@/src/components/common/ProductViewModal';
 import ProductCard from '@/src/components/common/ProductCard';
 import { useProducts } from '@/src/hooks/useProducts';
 import { useCategories } from '@/src/hooks/useCategories';
+import { formatUSDPrice } from '@/src/lib/pricing';
 
 const SORT_PRESETS = {
   newest: { orderby: 'date', order: 'desc' },
@@ -122,7 +123,7 @@ const ShopPage = () => {
                         <a>{product.name}</a>
                       </Link>
                     </h6>
-                    <span>${Number.parseFloat(product.price || 0).toFixed(2)}</span>
+                    <span>{formatUSDPrice(product.price)}</span>
                   </div>
                 </div>
               );

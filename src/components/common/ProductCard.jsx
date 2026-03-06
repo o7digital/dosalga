@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useCountdownTimer } from '@/src/hooks/useCountdownTimer';
 import { useWishlist } from '@/src/contexts/WishlistContext';
 import { useCart } from '@/src/contexts/CartContext';
+import { formatUSDPrice } from '@/src/lib/pricing';
 import { toast } from 'react-toastify';
 
 /**
@@ -15,17 +16,6 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
   const router = useRouter();
   const [rating, setRating] = useState(0);
   const isSpanish = router.pathname.startsWith('/es');
-  // Fixed MXN -> USD conversion for display
-  const MXN_TO_USD_RATE = 18.5;
-  const formatPrice = (value) => {
-    const numeric = Number.parseFloat(value);
-    if (!Number.isFinite(numeric)) return '';
-    const usd = numeric / MXN_TO_USD_RATE;
-    return `$${usd.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })} USD`;
-  };
 
   // Extraire les données du produit WooCommerce
   const {
@@ -262,11 +252,11 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
         <p className="price">
           {on_sale && sale_price ? (
             <>
-              {formatPrice(sale_price)} 
-              <del>{formatPrice(regular_price)}</del>
+              {formatUSDPrice(sale_price)}
+              <del>{formatUSDPrice(regular_price)}</del>
             </>
           ) : (
-            formatPrice(price)
+            formatUSDPrice(price)
           )}
         </p>
 

@@ -2,16 +2,8 @@ import React from 'react';
 import Link from 'next/link';
 import SelectComponent from '@/src/components/common/SelectComponent';
 import { useCart } from '@/src/contexts/CartContext';
+import { formatUSDPrice } from '@/src/lib/pricing';
 import { toast } from 'react-toastify';
-
-const formatUSD = (value) => {
-  const numeric = Number.parseFloat(value || 0);
-  if (!Number.isFinite(numeric)) return '$0.00';
-  return `$${numeric.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
-};
 
 const Checkout = () => {
   const { cart, removeFromCart, updateQuantity, getCartTotal } = useCart();
@@ -180,7 +172,7 @@ const Checkout = () => {
                               </div>
                               <strong>
                                 <i className="bi bi-x-lg px-2" />
-                                <span className="product-price">{formatUSD(itemPrice)}</span>
+                                <span className="product-price">{formatUSDPrice(itemPrice)}</span>
                               </strong>
                             </div>
                           </div>
@@ -204,21 +196,21 @@ const Checkout = () => {
                   <thead>
                     <tr>
                       <th>Subtotal</th>
-                      <th>{formatUSD(subtotal)}</th>
+                      <th>{formatUSDPrice(subtotal)}</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
                       <td className="tax">Tax</td>
-                      <td>{formatUSD(tax)}</td>
+                      <td>{formatUSDPrice(tax)}</td>
                     </tr>
                     <tr>
                       <td>Total (tax excl.)</td>
-                      <td>{formatUSD(subtotal + shipping)}</td>
+                      <td>{formatUSDPrice(subtotal + shipping)}</td>
                     </tr>
                     <tr>
                       <td>Total (tax incl.)</td>
-                      <td>{formatUSD(total)}</td>
+                      <td>{formatUSDPrice(total)}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -229,7 +221,7 @@ const Checkout = () => {
                   <thead>
                     <tr>
                       <th>Total</th>
-                      <th>{formatUSD(total)}</th>
+                      <th>{formatUSDPrice(total)}</th>
                     </tr>
                   </thead>
                 </table>

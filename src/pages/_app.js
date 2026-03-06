@@ -48,6 +48,11 @@ export default function App({ Component, pageProps }) {
         </WishlistProvider>
       </CartProvider>
       <ToastContainer position="bottom-center" autoClose={1800} hideProgressBar />
+      <style jsx global>{`
+        .countdown-timer {
+          display: none !important;
+        }
+      `}</style>
     </>
   );
 }

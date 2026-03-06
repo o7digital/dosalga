@@ -1,19 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import GiftSection from '@/src/components/common/GiftSection';
 import { useProduct, useProducts } from '@/src/hooks/useProducts';
 import { useCart } from '@/src/contexts/CartContext';
+import { formatUSDPrice } from '@/src/lib/pricing';
 import { toast } from 'react-toastify';
-
-const formatUSD = (value) => {
-  const numeric = Number.parseFloat(value || 0);
-  if (!Number.isFinite(numeric)) return '$0.00';
-  return `$${numeric.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
-};
 
 const htmlToPlainText = (html = '') => {
   return html
@@ -189,10 +180,10 @@ const ProductDefaultPage = () => {
                   <p className="price">
                     {product.on_sale && product.sale_price ? (
                       <>
-                        {formatUSD(product.sale_price)} <del>{formatUSD(product.regular_price)}</del>
+                        {formatUSDPrice(product.sale_price)} <del>{formatUSDPrice(product.regular_price)}</del>
                       </>
                     ) : (
-                      formatUSD(product.price)
+                      formatUSDPrice(product.price)
                     )}
                   </p>
                 </div>
@@ -255,18 +246,45 @@ const ProductDefaultPage = () => {
         </div>
       </div>
 
-      <GiftSection />
-
       <style jsx>{`
+        .shop-details-img {
+          display: grid;
+          grid-template-columns: 84px minmax(0, 1fr);
+          grid-template-areas: 'thumbs main';
+          align-items: start;
+          justify-content: stretch;
+          gap: 18px;
+        }
+
+        .product-img--main {
+          grid-area: main;
+          width: 100%;
+          float: none;
+        }
+
+        .product-img--main img {
+          display: block;
+          width: 100%;
+          height: auto;
+          object-fit: cover;
+        }
+
         .product-thumbs {
-          position: relative;
+          grid-area: thumbs;
+          position: static;
           left: auto;
           top: auto;
           flex-direction: column;
           display: flex;
           gap: 10px;
-          margin-top: 16px;
+          margin-top: 0;
           flex-wrap: nowrap;
+          max-height: 640px;
+          overflow-y: auto;
+          overflow-x: hidden;
+          padding-right: 4px;
+          align-self: start;
+          scrollbar-width: thin;
         }
 
         .product-thumbs .nav-link {
@@ -275,6 +293,10 @@ const ProductDefaultPage = () => {
           padding: 4px;
           background: #fff;
           line-height: 0;
+          margin-bottom: 0;
+          width: 80px;
+          height: 80px;
+          flex: 0 0 auto;
         }
 
         .product-thumbs .nav-link.active {
@@ -282,15 +304,38 @@ const ProductDefaultPage = () => {
         }
 
         .product-thumbs img {
-          width: 60px;
-          height: 60px;
+          width: 100%;
+          height: 100%;
           object-fit: cover;
         }
 
-        @media (max-width: 576px) {
+        @media (max-width: 991px) {
+          .shop-details-img {
+            grid-template-columns: 1fr;
+            grid-template-areas:
+              'main'
+              'thumbs';
+          }
+
           .product-thumbs {
             flex-direction: row;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-height: none;
+            padding-right: 0;
+            padding-bottom: 6px;
+          }
+        }
+
+        @media (max-width: 576px) {
+          .shop-details-img {
+            gap: 12px;
+          }
+
+          .product-thumbs .nav-link {
+            width: 68px;
+            height: 68px;
           }
         }
 
