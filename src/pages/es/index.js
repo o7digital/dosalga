@@ -1,7 +1,6 @@
 import Head from "next/head";
 import HeroSlider from "../../components/home-uomo/HeroSlider";
-import VideoSection from "../../components/home-uomo/VideoSection";
-import TrendingNow from "../../components/home-uomo/TrendingNow";
+import ShopPage from "../shop";
 
 export default function HomeEs() {
   const siteUrl = "https://dosalga.com";
@@ -32,8 +31,7 @@ export default function HomeEs() {
       </Head>
 
       <HeroSlider />
-      <TrendingNow />
-      <VideoSection />
+      <ShopPage />
     </>
   );
 }
