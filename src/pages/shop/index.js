@@ -202,7 +202,7 @@ const ShopPage = () => {
               )}
 
               {!loading && !error && products.map((product, index) => (
-                <div key={product.id} className={gridColumnClass}>
+                <div key={product.id} className={`${gridColumnClass} d-flex`}>
                   <ProductCard product={product} showCountdown={index === 0} />
                 </div>
               ))}

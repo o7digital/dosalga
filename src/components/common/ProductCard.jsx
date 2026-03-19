@@ -283,6 +283,38 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
       <span className="for-border" />
     </div>
       <style jsx>{`
+        .product-card {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          height: 100%;
+        }
+        .product-card-content {
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+          padding-top: 25px;
+          padding-bottom: 10px;
+          text-align: center;
+        }
+        .product-card-content h6 {
+          margin-bottom: 8px;
+          min-height: 4.2em;
+        }
+        .product-card-content h6 a {
+          display: -webkit-box;
+          overflow: hidden;
+          line-height: 1.4;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 3;
+        }
+        .product-card-content p:not(.price) {
+          margin-bottom: 14px;
+        }
+        .product-card-content .price {
+          margin-top: auto;
+          margin-bottom: 8px;
+        }
         .wishlist-toggle {
           background: transparent;
           border: none;
