@@ -119,8 +119,8 @@ export const CartProvider = ({ children }) => {
     setIsLoading(true);
     try {
       const orderData = {
-        payment_method: 'bacs',
-        payment_method_title: 'Virement bancaire',
+        payment_method: 'stripe',
+        payment_method_title: 'Credit Card (Stripe)',
         set_paid: false,
         billing: billingInfo,
         shipping: shippingInfo || billingInfo,

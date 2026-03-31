@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import SelectComponent from '@/src/components/common/SelectComponent';
 import { useCart } from '@/src/contexts/CartContext';
 import { formatUSDPrice } from '@/src/lib/pricing';
 import { toast } from 'react-toastify';
@@ -21,10 +20,18 @@ const MEXICO_STATE_CITIES = {
 
 const Checkout = () => {
   const router = useRouter();
-  const { cart, removeFromCart, updateQuantity, getCartTotal } = useCart();
+  const { cart, removeFromCart, updateQuantity, getCartTotal, createOrder, isLoading } = useCart();
   const [billingCountry, setBillingCountry] = useState('Mexico');
   const [billingState, setBillingState] = useState('');
   const [billingCity, setBillingCity] = useState('');
+  const [billingFirstName, setBillingFirstName] = useState('');
+  const [billingLastName, setBillingLastName] = useState('');
+  const [billingAddress, setBillingAddress] = useState('');
+  const [billingPostcode, setBillingPostcode] = useState('');
+  const [billingPhone, setBillingPhone] = useState('');
+  const [billingEmail, setBillingEmail] = useState('');
+  const [orderNotes, setOrderNotes] = useState('');
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const subtotal = getCartTotal();
   const shipping = 0;
   const tax = 0;
@@ -40,13 +47,65 @@ const Checkout = () => {
   const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
   const termsPath = `${localePrefix}/terms-and-conditions`;
 
-  const handlePlaceOrder = (event) => {
+  const getOrderPaymentUrl = (order) => {
+    if (order?.payment_url) return order.payment_url;
+    if (order?.checkout_payment_url) return order.checkout_payment_url;
+    if (order?.id && order?.order_key) {
+      const baseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL || 'https://oliviers44.sg-host.com';
+      return `${baseUrl}/checkout/order-pay/${order.id}/?pay_for_order=true&key=${order.order_key}`;
+    }
+
+    return null;
+  };
+
+  const handlePlaceOrder = async (event) => {
     event.preventDefault();
+
     if (cart.length === 0) {
       toast.warn('Your cart is empty.');
       return;
     }
-    toast.info('Checkout form is ready. Payment integration is pending.');
+
+    if (!billingFirstName || !billingLastName || !billingAddress || !billingPhone || !billingEmail) {
+      toast.warn('Please complete all required billing fields.');
+      return;
+    }
+
+    if (billingCountry === 'Mexico' && (!billingState || !billingCity)) {
+      toast.warn('Please select a state and city for Mexico.');
+      return;
+    }
+
+    if (!termsAccepted) {
+      toast.warn('You must accept the Terms & Conditions of Sale.');
+      return;
+    }
+
+    try {
+      const order = await createOrder({
+        first_name: billingFirstName,
+        last_name: billingLastName,
+        address_1: billingAddress,
+        city: billingCity,
+        state: billingState,
+        postcode: billingPostcode,
+        country: billingCountry === 'Mexico' ? 'MX' : billingCountry,
+        email: billingEmail,
+        phone: billingPhone,
+      });
+
+      const paymentUrl = getOrderPaymentUrl(order);
+
+      if (!paymentUrl) {
+        throw new Error('Unable to retrieve WooCommerce payment URL.');
+      }
+
+      toast.success('Redirecting to secure payment...');
+      window.location.href = paymentUrl;
+    } catch (error) {
+      console.error('Checkout error:', error);
+      toast.error(error.message || 'Unable to start WooCommerce payment.');
+    }
   };
 
   return (
@@ -62,13 +121,13 @@ const Checkout = () => {
                     <div className="col-lg-6">
                       <div className="form-inner">
                         <label>First Name</label>
-                        <input type="text" name="fname" placeholder="Your first name" />
+                        <input type="text" name="fname" placeholder="Your first name" value={billingFirstName} onChange={(event) => setBillingFirstName(event.target.value)} />
                       </div>
                     </div>
                     <div className="col-lg-6">
                       <div className="form-inner">
                         <label>Last Name</label>
-                        <input type="text" name="lname" placeholder="Your last name" />
+                        <input type="text" name="lname" placeholder="Your last name" value={billingLastName} onChange={(event) => setBillingLastName(event.target.value)} />
                       </div>
                     </div>
                     <div className="col-12">
@@ -95,7 +154,7 @@ const Checkout = () => {
                     <div className="col-12">
                       <div className="form-inner">
                         <label>Street Address</label>
-                        <input type="text" name="address" placeholder="House and street name" />
+                        <input type="text" name="address" placeholder="House and street name" value={billingAddress} onChange={(event) => setBillingAddress(event.target.value)} />
                       </div>
                     </div>
                     {billingCountry === 'Mexico' ? (
@@ -159,23 +218,23 @@ const Checkout = () => {
                     )}
                     <div className="col-12">
                       <div className="form-inner">
-                        <input type="text" name="postcode" placeholder="Post Code" />
+                        <input type="text" name="postcode" placeholder="Post Code" value={billingPostcode} onChange={(event) => setBillingPostcode(event.target.value)} />
                       </div>
                     </div>
                     <div className="col-12">
                       <div className="form-inner">
                         <label>Additional Information</label>
-                        <input type="text" name="phone" placeholder="Your Phone Number" />
+                        <input type="text" name="phone" placeholder="Your Phone Number" value={billingPhone} onChange={(event) => setBillingPhone(event.target.value)} />
                       </div>
                     </div>
                     <div className="col-12">
                       <div className="form-inner">
-                        <input type="email" name="email" placeholder="Your Email Address" />
+                        <input type="email" name="email" placeholder="Your Email Address" value={billingEmail} onChange={(event) => setBillingEmail(event.target.value)} />
                       </div>
                     </div>
                     <div className="col-12">
                       <div className="form-inner">
-                        <textarea name="message" placeholder="Order Notes (Optional)" rows={6} defaultValue="" />
+                        <textarea name="message" placeholder="Order Notes (Optional)" rows={6} value={orderNotes} onChange={(event) => setOrderNotes(event.target.value)} />
                       </div>
                     </div>
                   </div>
@@ -326,12 +385,12 @@ const Checkout = () => {
 
               <form className="payment-form" onSubmit={handlePlaceOrder}>
                 <div className="payment-methods mb-30">
-                  <ul className="payment-list">
-                    <li className="stripe active-payment">
+                  <div className="payment-list">
+                    <div className="stripe active-payment">
                       <div className="form-check payment-check card-only">
                         <div>
                           <h6>Card Payment</h6>
-                          <p className="para">Secure payment via Stripe.</p>
+                          <p className="para">Your banking details will be collected on the secure WooCommerce Stripe payment page after you place the order.</p>
                         </div>
                         <div className="card-brands" aria-label="Accepted cards">
                           <img src="/assets/img/home1/icon/visa.png" alt="Visa" />
@@ -340,45 +399,11 @@ const Checkout = () => {
                         </div>
                       </div>
                       <div className="checked checked--active" />
-                    </li>
-                  </ul>
-
-                  <div className="choose-payment-method pt-25 pb-25" id="strip-payment">
-                    <h5>Card Details</h5>
-                    <div className="row gy-4 g-4">
-                      <div className="col-md-12">
-                        <div className="input-area">
-                          <label>Card Number</label>
-                          <div className="input-field">
-                            <input type="text" placeholder="1234 1234 1234 1234" />
-                            <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment.png" alt="" />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-xl-7">
-                        <div className="input-area">
-                          <label>Expiration Date</label>
-                          <div className="row gy-4">
-                            <div className="col-sm-6">
-                              <SelectComponent options={['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']} placeholder="Month" />
-                            </div>
-                            <div className="col-sm-6">
-                              <SelectComponent options={['01', '02', '03', '04', '05', '06', '07']} placeholder="Day" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-xl-5">
-                        <div className="input-area">
-                          <label>CVC</label>
-                          <input type="text" placeholder="123" />
-                        </div>
-                      </div>
                     </div>
                   </div>
 
                   <div className="payment-form-bottom d-flex align-items-start">
-                    <input type="checkbox" className="custom-check-box" id="terms" />
+                    <input type="checkbox" className="custom-check-box" id="terms" checked={termsAccepted} onChange={(event) => setTermsAccepted(event.target.checked)} />
                     <label htmlFor="terms">
                       I have read and agree to the{' '}
                       <Link legacyBehavior href={termsPath}>
@@ -388,7 +413,9 @@ const Checkout = () => {
                   </div>
                 </div>
                 <div className="place-order-btn">
-                  <button type="submit" className="primary-btn1 hover-btn3" disabled={cart.length === 0}>Place Order</button>
+                  <button type="submit" className="primary-btn1 hover-btn3" disabled={cart.length === 0 || isLoading}>
+                    {isLoading ? 'Redirecting...' : 'Place Order'}
+                  </button>
                 </div>
               </form>
             </div>
