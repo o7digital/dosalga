@@ -3,6 +3,20 @@
  */
 import { useState, useEffect } from 'react';
 
+const buildQueryString = (params = {}) => {
+  const queryParams = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === undefined || value === null || value === '') {
+      return;
+    }
+
+    queryParams.append(key, String(value));
+  });
+
+  return queryParams.toString();
+};
+
 /**
  * Hook pour récupérer plusieurs produits
  * @param {Object} initialParams - Paramètres initiaux (page, per_page, category, etc.)
@@ -22,7 +36,7 @@ export const useProducts = (initialParams = {}) => {
       setError(null);
       
       // Construire l'URL avec les paramètres
-      const queryParams = new URLSearchParams(params).toString();
+      const queryParams = buildQueryString(params);
       const url = `/api/products${queryParams ? `?${queryParams}` : ''}`;
       
       const response = await fetch(url);
@@ -115,10 +129,10 @@ export const useProductSearch = () => {
       setLoading(true);
       setError(null);
       
-      const queryParams = new URLSearchParams({
+      const queryParams = buildQueryString({
         search: searchTerm,
         ...params
-      }).toString();
+      });
       
       const response = await fetch(`/api/products?${queryParams}`);
       const result = await response.json();

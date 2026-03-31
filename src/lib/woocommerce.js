@@ -2,6 +2,17 @@ import WooCommerceRestApi from "@woocommerce/woocommerce-rest-api";
 
 const FALLBACK_KEY = "ck_962f8b4455545de9a9a6155616535fdf8d9eb1db";
 const FALLBACK_SECRET = "cs_4242ab75e9fb88408afd2961efb76b7ce9211bc9";
+const MAX_PRODUCTS_PER_PAGE = 100;
+
+const normalizePerPage = (value, fallback = MAX_PRODUCTS_PER_PAGE) => {
+  const parsedValue = Number.parseInt(value, 10);
+
+  if (!Number.isFinite(parsedValue) || parsedValue <= 0) {
+    return fallback;
+  }
+
+  return Math.min(parsedValue, MAX_PRODUCTS_PER_PAGE);
+};
 
 const api = new WooCommerceRestApi({
   url: process.env.NEXT_PUBLIC_WORDPRESS_URL || "https://oliviers44.sg-host.com",
@@ -30,6 +41,58 @@ export const getProducts = async (params = {}) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching products:", error);
+    throw error;
+  }
+};
+
+/**
+ * Récupérer tous les produits sur toutes les pages WooCommerce
+ */
+export const getAllProducts = async (params = {}) => {
+  try {
+    const perPage = normalizePerPage(params.per_page);
+    const firstPageParams = {
+      ...params,
+      page: 1,
+      per_page: perPage,
+    };
+
+    const firstResponse = await api.get("products", firstPageParams);
+    const firstPageProducts = firstResponse.data;
+
+    if (!Array.isArray(firstPageProducts)) {
+      throw new Error("WooCommerce API returned an unexpected payload for page 1.");
+    }
+
+    const totalPages = Number.parseInt(firstResponse.headers?.["x-wp-totalpages"] || "1", 10);
+
+    if (!Number.isFinite(totalPages) || totalPages <= 1) {
+      return firstPageProducts;
+    }
+
+    const remainingPageRequests = [];
+
+    for (let page = 2; page <= totalPages; page += 1) {
+      remainingPageRequests.push(
+        api.get("products", {
+          ...firstPageParams,
+          page,
+        })
+      );
+    }
+
+    const remainingResponses = await Promise.all(remainingPageRequests);
+    const remainingProducts = remainingResponses.flatMap((response, index) => {
+      if (!Array.isArray(response.data)) {
+        throw new Error(`WooCommerce API returned an unexpected payload for page ${index + 2}.`);
+      }
+
+      return response.data;
+    });
+
+    return [...firstPageProducts, ...remainingProducts];
+  } catch (error) {
+    console.error("Error fetching all products:", error);
     throw error;
   }
 };

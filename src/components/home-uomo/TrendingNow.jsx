@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { formatUSDPrice, parsePriceValue } from '../../lib/pricing';
 
 const TrendingNow = () => {
-    const { products, loading, error } = useProducts({ limit: 12 });
+    const { products, loading, error } = useProducts({ all: true });
     const { pathname } = useRouter();
     const lang = (() => {
         const code = pathname.split('/')[1];

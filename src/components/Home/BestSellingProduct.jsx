@@ -8,7 +8,7 @@ const BestSellingProduct = () => {
   
   // Récupérer les produits best-sellers depuis WooCommerce
   const { products, loading, error } = useProducts({
-    per_page: 50,
+    all: true,
     orderby: 'popularity',
     order: 'desc'
   });
