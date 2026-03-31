@@ -104,7 +104,7 @@ const TrendingNow = () => {
             return 0;
         });
 
-        return sorted.slice(0, 12);
+        return sorted;
     }, [products, selectedCategory, sortOption]);
 
     if (loading) {
