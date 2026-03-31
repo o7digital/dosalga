@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import SelectComponent from '@/src/components/common/SelectComponent';
 import { useCart } from '@/src/contexts/CartContext';
 import { formatUSDPrice } from '@/src/lib/pricing';
@@ -19,6 +20,7 @@ const MEXICO_STATE_CITIES = {
 };
 
 const Checkout = () => {
+  const router = useRouter();
   const { cart, removeFromCart, updateQuantity, getCartTotal } = useCart();
   const [billingCountry, setBillingCountry] = useState('Mexico');
   const [billingState, setBillingState] = useState('');
@@ -33,6 +35,10 @@ const Checkout = () => {
     if (!billingState) return [];
     return MEXICO_STATE_CITIES[billingState] || [];
   }, [billingState]);
+  const localeSegment = router.pathname.split('/')[1];
+  const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
+  const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
+  const termsPath = `${localePrefix}/terms-and-conditions`;
 
   const handlePlaceOrder = (event) => {
     event.preventDefault();
@@ -321,36 +327,24 @@ const Checkout = () => {
               <form className="payment-form" onSubmit={handlePlaceOrder}>
                 <div className="payment-methods mb-30">
                   <ul className="payment-list">
-                    <li className="check-payment">
-                      <div className="form-check payment-check">
-                        <h6>Check payments</h6>
-                        <p className="para">Please send a check to Store Name, Store Street, Store State / Country, Store Postcode.</p>
+                    <li className="stripe active-payment">
+                      <div className="form-check payment-check card-only">
+                        <div>
+                          <h6>Card Payment</h6>
+                          <p className="para">Secure payment via Stripe.</p>
+                        </div>
+                        <div className="card-brands" aria-label="Accepted cards">
+                          <img src="/assets/img/home1/icon/visa.png" alt="Visa" />
+                          <img src="/assets/img/home1/icon/mastercard.png" alt="Mastercard" />
+                          <img src="/assets/img/home1/icon/american-express.png" alt="American Express" />
+                        </div>
                       </div>
-                      <div className="checked" />
-                    </li>
-                    <li className="cash-delivary">
-                      <div className="form-check payment-check">
-                        <h6>Cash on delivery</h6>
-                        <p className="para">Pay with cash upon delivery.</p>
-                      </div>
-                      <div className="checked" />
-                    </li>
-                    <li className="paypal">
-                      <div className="form-check payment-check paypal">
-                        <h6>Paypal</h6>
-                        <img src="https://beautico-nextjs.vercel.app/assets/img/inner-page/payment.png" alt="" />
-                        <a href="#" className="about-paypal">What is PayPal?</a>
-                      </div>
-                      <div className="checked" />
-                    </li>
-                    <li className="stripe">
-                      <h6>Card</h6>
-                      <div className="checked" />
+                      <div className="checked checked--active" />
                     </li>
                   </ul>
 
-                  <div className="choose-payment-method pt-25 pb-25" id="strip-payment" style={{ display: 'none' }}>
-                    <h5>Select Your Payment Method</h5>
+                  <div className="choose-payment-method pt-25 pb-25" id="strip-payment">
+                    <h5>Card Details</h5>
                     <div className="row gy-4 g-4">
                       <div className="col-md-12">
                         <div className="input-area">
@@ -385,7 +379,12 @@ const Checkout = () => {
 
                   <div className="payment-form-bottom d-flex align-items-start">
                     <input type="checkbox" className="custom-check-box" id="terms" />
-                    <label htmlFor="terms">I have read and agree to the website <a href="#">Terms and conditions</a></label>
+                    <label htmlFor="terms">
+                      I have read and agree to the{' '}
+                      <Link legacyBehavior href={termsPath}>
+                        <a>Terms &amp; Conditions of Sale</a>
+                      </Link>
+                    </label>
                   </div>
                 </div>
                 <div className="place-order-btn">
@@ -444,6 +443,40 @@ const Checkout = () => {
         .empty-product .product-info p {
           margin: 8px 0 16px;
           color: #666;
+        }
+
+        .card-only {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+        }
+
+        .card-brands {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+
+        .card-brands img {
+          height: 22px;
+          width: auto;
+          display: block;
+        }
+
+        .active-payment {
+          border: 1px solid #111;
+          border-radius: 8px;
+          padding: 18px 18px 14px;
+        }
+
+        .checked--active {
+          background: #111;
+          border-radius: 50%;
+          width: 14px;
+          height: 14px;
+          margin-top: 4px;
         }
       `}</style>
     </>
