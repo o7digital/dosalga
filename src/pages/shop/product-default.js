@@ -20,6 +20,9 @@ const htmlToPlainText = (html = '') => {
 const ProductDefaultPage = () => {
   const router = useRouter();
   const { addToCart } = useCart();
+  const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
+  const localeSegment = router.pathname.split('/')[1];
+  const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
 
   const queryId = Array.isArray(router.query.id) ? router.query.id[0] : router.query.id;
   const { products: fallbackProducts } = useProducts({ per_page: 1, orderby: 'date', order: 'desc' });
@@ -94,6 +97,11 @@ const ProductDefaultPage = () => {
   const handleAddToCart = () => {
     if (!product) return false;
 
+    if (!product.purchasable || !product.price) {
+      toast.warn('This product is not available for purchase yet.');
+      return false;
+    }
+
     if (sizeOptions.length > 0 && !selectedSize) {
       toast.warn('Please select a size before adding to cart.');
       return false;
@@ -126,7 +134,7 @@ const ProductDefaultPage = () => {
     return (
       <div className="container py-5 mt-110 mb-110">
         <div className="alert alert-danger mb-3">{error || 'Unable to load product.'}</div>
-        <Link legacyBehavior href="/shop">
+        <Link legacyBehavior href={`${localePrefix}/shop`}>
           <a className="primary-btn1">Back to shop</a>
         </Link>
       </div>
@@ -229,8 +237,8 @@ const ProductDefaultPage = () => {
                       <li>
                         <span>Category:</span>{' '}
                         {product.categories.map((category, index) => (
-                          <React.Fragment key={category.id || category.slug || index}>
-                            <Link legacyBehavior href="/shop">
+                            <React.Fragment key={category.id || category.slug || index}>
+                            <Link legacyBehavior href={`${localePrefix}/shop`}>
                               <a>{category.name}</a>
                             </Link>
                             {index < product.categories.length - 1 ? ', ' : ''}

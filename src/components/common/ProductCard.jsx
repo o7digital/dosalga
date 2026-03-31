@@ -15,7 +15,10 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
   const { addToCart } = useCart();
   const router = useRouter();
   const [rating, setRating] = useState(0);
-  const isSpanish = router.pathname.startsWith('/es');
+  const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
+  const localeSegment = router.pathname.split('/')[1];
+  const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
+  const isSpanish = localeSegment === 'es';
 
   // Extraire les données du produit WooCommerce
   const {
@@ -31,9 +34,10 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
     stock_status = 'instock',
     on_sale = false,
     type = 'simple',
+    purchasable = true,
     date_created
   } = product;
-  const productLink = detailHref || `/shop/product/${id}`;
+  const productLink = detailHref || `${localePrefix}/shop/product/${id}`;
 
   // Utiliser la première image ou une image par défaut
   const mainImage = images[0]?.src || '/assets/img/placeholder.png';
@@ -108,6 +112,12 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (!purchasable || !price) {
+      router.push(productLink);
+      return;
+    }
+
     addToCart(product, 1);
     toast.success(isSpanish ? 'Producto anadido al carrito' : 'Product added to cart');
   };
@@ -152,10 +162,10 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
         <div className="overlay">
           <div className="cart-area">
             {stock_status === 'instock' ? (
-              type === 'variable' ? (
+              type === 'variable' || !purchasable || !price ? (
                 <Link legacyBehavior href={productLink}>
                   <a className="hover-btn3 add-cart-btn">
-                    Voir les options
+                    {isSpanish ? 'Ver producto' : 'View product'}
                   </a>
                 </Link>
               ) : (
