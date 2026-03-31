@@ -1,16 +1,38 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import SelectComponent from '@/src/components/common/SelectComponent';
 import { useCart } from '@/src/contexts/CartContext';
 import { formatUSDPrice } from '@/src/lib/pricing';
 import { toast } from 'react-toastify';
 
+const MEXICO_STATE_CITIES = {
+  'Ciudad de Mexico': ['Alvaro Obregon', 'Benito Juarez', 'Coyoacan', 'Cuauhtemoc', 'Iztapalapa', 'Miguel Hidalgo'],
+  'Estado de Mexico': ['Ecatepec', 'Naucalpan', 'Nezahualcoyotl', 'Toluca', 'Tlalnepantla'],
+  Jalisco: ['Guadalajara', 'Zapopan', 'Tlaquepaque', 'Tonalá', 'Puerto Vallarta'],
+  NuevoLeon: ['Monterrey', 'San Nicolas', 'Guadalupe', 'Apodaca', 'Santa Catarina'],
+  Puebla: ['Puebla', 'Tehuacan', 'San Martin Texmelucan', 'Atlixco'],
+  Queretaro: ['Santiago de Queretaro', 'San Juan del Rio', 'El Marques'],
+  Guanajuato: ['Leon', 'Irapuato', 'Celaya', 'Salamanca', 'Guanajuato'],
+  Veracruz: ['Veracruz', 'Xalapa', 'Coatzacoalcos', 'Cordoba'],
+  Yucatan: ['Merida', 'Valladolid', 'Tizimin'],
+  QuintanaRoo: ['Cancun', 'Playa del Carmen', 'Cozumel', 'Tulum'],
+};
+
 const Checkout = () => {
   const { cart, removeFromCart, updateQuantity, getCartTotal } = useCart();
+  const [billingCountry, setBillingCountry] = useState('Mexico');
+  const [billingState, setBillingState] = useState('');
+  const [billingCity, setBillingCity] = useState('');
   const subtotal = getCartTotal();
   const shipping = 0;
   const tax = 0;
   const total = subtotal + shipping + tax;
+
+  const mexicoStates = useMemo(() => Object.keys(MEXICO_STATE_CITIES), []);
+  const mexicoCities = useMemo(() => {
+    if (!billingState) return [];
+    return MEXICO_STATE_CITIES[billingState] || [];
+  }, [billingState]);
 
   const handlePlaceOrder = (event) => {
     event.preventDefault();
@@ -46,7 +68,22 @@ const Checkout = () => {
                     <div className="col-12">
                       <div className="form-inner">
                         <label>Country / Region</label>
-                        <input type="text" name="country" placeholder="Your country name" />
+                        <select
+                          name="country"
+                          value={billingCountry}
+                          onChange={(event) => {
+                            const nextCountry = event.target.value;
+                            setBillingCountry(nextCountry);
+                            setBillingState('');
+                            setBillingCity('');
+                          }}
+                        >
+                          <option value="Mexico">Mexico</option>
+                          <option value="United States">United States</option>
+                          <option value="Canada">Canada</option>
+                          <option value="France">France</option>
+                          <option value="Other">Other</option>
+                        </select>
                       </div>
                     </div>
                     <div className="col-12">
@@ -55,11 +92,65 @@ const Checkout = () => {
                         <input type="text" name="address" placeholder="House and street name" />
                       </div>
                     </div>
-                    <div className="col-12">
-                      <div className="form-inner">
-                        <SelectComponent options={['Dhaka', 'Saidpur', 'Newyork']} placeholder="Town / City" />
-                      </div>
-                    </div>
+                    {billingCountry === 'Mexico' ? (
+                      <>
+                        <div className="col-md-6">
+                          <div className="form-inner">
+                            <label>State</label>
+                            <select
+                              name="state"
+                              value={billingState}
+                              onChange={(event) => {
+                                setBillingState(event.target.value);
+                                setBillingCity('');
+                              }}
+                            >
+                              <option value="">Select a state</option>
+                              {mexicoStates.map((state) => (
+                                <option key={state} value={state}>
+                                  {state}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div className="form-inner">
+                            <label>Town / City</label>
+                            <select
+                              name="city"
+                              value={billingCity}
+                              onChange={(event) => setBillingCity(event.target.value)}
+                              disabled={!billingState}
+                            >
+                              <option value="">
+                                {billingState ? 'Select a city' : 'Select a state first'}
+                              </option>
+                              {mexicoCities.map((city) => (
+                                <option key={city} value={city}>
+                                  {city}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="col-md-6">
+                          <div className="form-inner">
+                            <label>State / Province</label>
+                            <input type="text" name="state" placeholder="State / Province" />
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div className="form-inner">
+                            <label>Town / City</label>
+                            <input type="text" name="city" placeholder="Town / City" />
+                          </div>
+                        </div>
+                      </>
+                    )}
                     <div className="col-12">
                       <div className="form-inner">
                         <input type="text" name="postcode" placeholder="Post Code" />
@@ -307,6 +398,22 @@ const Checkout = () => {
       </div>
 
       <style jsx>{`
+        .form-inner select {
+          width: 100%;
+          min-height: 52px;
+          border: 1px solid #ddd;
+          border-radius: 6px;
+          padding: 0 14px;
+          background: #fff;
+          color: #111;
+        }
+
+        .form-inner select:disabled {
+          background: #f5f5f5;
+          color: #777;
+          cursor: not-allowed;
+        }
+
         .delete-btn {
           border: 0;
           background: transparent;
