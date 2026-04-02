@@ -5,23 +5,31 @@ import { useCart } from '@/src/contexts/CartContext';
 import { formatUSDPrice } from '@/src/lib/pricing';
 import { toast } from 'react-toastify';
 
-const MEXICO_STATE_CITIES = {
-  'Ciudad de Mexico': ['Alvaro Obregon', 'Benito Juarez', 'Coyoacan', 'Cuauhtemoc', 'Iztapalapa', 'Miguel Hidalgo'],
-  'Estado de Mexico': ['Ecatepec', 'Naucalpan', 'Nezahualcoyotl', 'Toluca', 'Tlalnepantla'],
-  Jalisco: ['Guadalajara', 'Zapopan', 'Tlaquepaque', 'Tonalá', 'Puerto Vallarta'],
-  NuevoLeon: ['Monterrey', 'San Nicolas', 'Guadalupe', 'Apodaca', 'Santa Catarina'],
-  Puebla: ['Puebla', 'Tehuacan', 'San Martin Texmelucan', 'Atlixco'],
-  Queretaro: ['Santiago de Queretaro', 'San Juan del Rio', 'El Marques'],
-  Guanajuato: ['Leon', 'Irapuato', 'Celaya', 'Salamanca', 'Guanajuato'],
-  Veracruz: ['Veracruz', 'Xalapa', 'Coatzacoalcos', 'Cordoba'],
-  Yucatan: ['Merida', 'Valladolid', 'Tizimin'],
-  QuintanaRoo: ['Cancun', 'Playa del Carmen', 'Cozumel', 'Tulum'],
-};
+const COUNTRY_OPTIONS = [
+  { value: 'MX', label: 'Mexico' },
+  { value: 'US', label: 'United States' },
+  { value: 'CA', label: 'Canada' },
+  { value: 'FR', label: 'France' },
+  { value: 'OTHER', label: 'Other' },
+];
+
+const MEXICO_STATES = [
+  { code: 'DF', label: 'Ciudad de Mexico', cities: ['Alvaro Obregon', 'Benito Juarez', 'Coyoacan', 'Cuauhtemoc', 'Iztapalapa', 'Miguel Hidalgo'] },
+  { code: 'MX', label: 'Estado de Mexico', cities: ['Ecatepec', 'Naucalpan', 'Nezahualcoyotl', 'Toluca', 'Tlalnepantla'] },
+  { code: 'JA', label: 'Jalisco', cities: ['Guadalajara', 'Zapopan', 'Tlaquepaque', 'Tonala', 'Puerto Vallarta'] },
+  { code: 'NL', label: 'Nuevo Leon', cities: ['Monterrey', 'San Nicolas', 'Guadalupe', 'Apodaca', 'Santa Catarina'] },
+  { code: 'PU', label: 'Puebla', cities: ['Puebla', 'Tehuacan', 'San Martin Texmelucan', 'Atlixco'] },
+  { code: 'QT', label: 'Queretaro', cities: ['Santiago de Queretaro', 'San Juan del Rio', 'El Marques'] },
+  { code: 'GT', label: 'Guanajuato', cities: ['Leon', 'Irapuato', 'Celaya', 'Salamanca', 'Guanajuato'] },
+  { code: 'VE', label: 'Veracruz', cities: ['Veracruz', 'Xalapa', 'Coatzacoalcos', 'Cordoba'] },
+  { code: 'YU', label: 'Yucatan', cities: ['Merida', 'Valladolid', 'Tizimin'] },
+  { code: 'QR', label: 'Quintana Roo', cities: ['Cancun', 'Playa del Carmen', 'Cozumel', 'Tulum'] },
+];
 
 const Checkout = () => {
   const router = useRouter();
   const { cart, removeFromCart, updateQuantity, getCartTotal, createOrder, isLoading } = useCart();
-  const [billingCountry, setBillingCountry] = useState('Mexico');
+  const [billingCountry, setBillingCountry] = useState('MX');
   const [billingState, setBillingState] = useState('');
   const [billingCity, setBillingCity] = useState('');
   const [billingFirstName, setBillingFirstName] = useState('');
@@ -37,10 +45,10 @@ const Checkout = () => {
   const tax = 0;
   const total = subtotal + shipping + tax;
 
-  const mexicoStates = useMemo(() => Object.keys(MEXICO_STATE_CITIES), []);
+  const mexicoStates = useMemo(() => MEXICO_STATES, []);
   const mexicoCities = useMemo(() => {
     if (!billingState) return [];
-    return MEXICO_STATE_CITIES[billingState] || [];
+    return MEXICO_STATES.find((state) => state.code === billingState)?.cities || [];
   }, [billingState]);
   const localeSegment = router.pathname.split('/')[1];
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
@@ -71,7 +79,7 @@ const Checkout = () => {
       return;
     }
 
-    if (billingCountry === 'Mexico' && (!billingState || !billingCity)) {
+    if (billingCountry === 'MX' && (!billingState || !billingCity)) {
       toast.warn('Please select a state and city for Mexico.');
       return;
     }
@@ -89,9 +97,10 @@ const Checkout = () => {
         city: billingCity,
         state: billingState,
         postcode: billingPostcode,
-        country: billingCountry === 'Mexico' ? 'MX' : billingCountry,
+        country: billingCountry === 'OTHER' ? '' : billingCountry,
         email: billingEmail,
         phone: billingPhone,
+        customer_note: orderNotes,
       });
 
       const paymentUrl = getOrderPaymentUrl(order);
@@ -143,11 +152,11 @@ const Checkout = () => {
                             setBillingCity('');
                           }}
                         >
-                          <option value="Mexico">Mexico</option>
-                          <option value="United States">United States</option>
-                          <option value="Canada">Canada</option>
-                          <option value="France">France</option>
-                          <option value="Other">Other</option>
+                          {COUNTRY_OPTIONS.map((country) => (
+                            <option key={country.value} value={country.value}>
+                              {country.label}
+                            </option>
+                          ))}
                         </select>
                       </div>
                     </div>
@@ -157,7 +166,7 @@ const Checkout = () => {
                         <input type="text" name="address" placeholder="House and street name" value={billingAddress} onChange={(event) => setBillingAddress(event.target.value)} />
                       </div>
                     </div>
-                    {billingCountry === 'Mexico' ? (
+                    {billingCountry === 'MX' ? (
                       <>
                         <div className="col-md-6">
                           <div className="form-inner">
@@ -172,8 +181,8 @@ const Checkout = () => {
                             >
                               <option value="">Select a state</option>
                               {mexicoStates.map((state) => (
-                                <option key={state} value={state}>
-                                  {state}
+                                <option key={state.code} value={state.code}>
+                                  {state.label}
                                 </option>
                               ))}
                             </select>
@@ -205,13 +214,13 @@ const Checkout = () => {
                         <div className="col-md-6">
                           <div className="form-inner">
                             <label>State / Province</label>
-                            <input type="text" name="state" placeholder="State / Province" />
+                            <input type="text" name="state" placeholder="State / Province" value={billingState} onChange={(event) => setBillingState(event.target.value)} />
                           </div>
                         </div>
                         <div className="col-md-6">
                           <div className="form-inner">
                             <label>Town / City</label>
-                            <input type="text" name="city" placeholder="Town / City" />
+                            <input type="text" name="city" placeholder="Town / City" value={billingCity} onChange={(event) => setBillingCity(event.target.value)} />
                           </div>
                         </div>
                       </>

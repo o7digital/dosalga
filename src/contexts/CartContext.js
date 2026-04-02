@@ -119,11 +119,9 @@ export const CartProvider = ({ children }) => {
     setIsLoading(true);
     try {
       const orderData = {
-        payment_method: 'stripe',
-        payment_method_title: 'Credit Card (Stripe)',
-        set_paid: false,
         billing: billingInfo,
         shipping: shippingInfo || billingInfo,
+        customer_note: billingInfo.customer_note || '',
         line_items: cart.map((item) => ({
           product_id: item.id,
           quantity: item.quantity,
