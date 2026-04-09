@@ -118,6 +118,12 @@ export const CartProvider = ({ children }) => {
   const createOrder = async (billingInfo, shippingInfo = null) => {
     setIsLoading(true);
     try {
+      const invalidVariableItem = cart.find((item) => item.variation && !item.variation?.id);
+
+      if (invalidVariableItem) {
+        throw new Error(`Product "${invalidVariableItem.name}" has incomplete options. Remove it from the cart and add it again after selecting all required options.`);
+      }
+
       const orderData = {
         billing: billingInfo,
         shipping: shippingInfo || billingInfo,
@@ -140,7 +146,7 @@ export const CartProvider = ({ children }) => {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || 'Erreur lors de la création de la commande');
+        throw new Error(result.error || result.message || 'Erreur lors de la création de la commande');
       }
 
       // Vider le panier après une commande réussie

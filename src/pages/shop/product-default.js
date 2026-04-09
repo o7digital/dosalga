@@ -17,6 +17,13 @@ const htmlToPlainText = (html = '') => {
     .trim();
 };
 
+const isSizeAttribute = (attribute) => {
+  const slug = attribute?.slug?.toLowerCase();
+  const name = attribute?.name?.toLowerCase();
+
+  return slug === 'pa_size' || slug === 'size' || name?.includes('size');
+};
+
 const ProductDefaultPage = () => {
   const router = useRouter();
   const { addToCart } = useCart();
@@ -59,10 +66,7 @@ const ProductDefaultPage = () => {
   const sizeOptions = useMemo(() => {
     const attrs = Array.isArray(product?.attributes) ? product.attributes : [];
     const sizeAttr = attrs.find(
-      (attr) =>
-        attr?.name?.toLowerCase().includes('size') ||
-        attr?.slug === 'pa_size' ||
-        attr?.slug === 'size'
+      (attr) => isSizeAttribute(attr)
     );
 
     if (Array.isArray(sizeAttr?.options) && sizeAttr.options.length > 0) {
@@ -71,6 +75,26 @@ const ProductDefaultPage = () => {
 
     return [];
   }, [product?.attributes]);
+  const variationAttributes = useMemo(() => {
+    const attrs = Array.isArray(product?.attributes) ? product.attributes : [];
+    return attrs.filter((attr) => attr?.variation);
+  }, [product?.attributes]);
+  const hasUnsupportedVariationSetup = product?.type === 'variable' && variationAttributes.length > 1;
+  const selectedVariation = useMemo(() => {
+    if (!Array.isArray(product?.variations) || !selectedSize || hasUnsupportedVariationSetup) {
+      return null;
+    }
+
+    return product.variations.find((variation) => {
+      if (variation?.purchasable === false || variation?.stock_status === 'outofstock') {
+        return false;
+      }
+
+      return Array.isArray(variation?.attributes) && variation.attributes.some(
+        (attribute) => isSizeAttribute(attribute) && String(attribute?.option) === String(selectedSize)
+      );
+    }) || null;
+  }, [hasUnsupportedVariationSetup, product?.variations, selectedSize]);
 
   const images = Array.isArray(product?.images) && product.images.length > 0
     ? product.images
@@ -107,7 +131,17 @@ const ProductDefaultPage = () => {
       return false;
     }
 
-    const variation = selectedSize ? { size: selectedSize } : null;
+    if (hasUnsupportedVariationSetup) {
+      toast.warn('This product has multiple required options and cannot be added from this page yet.');
+      return false;
+    }
+
+    if (product.type === 'variable' && sizeOptions.length > 0 && !selectedVariation) {
+      toast.warn('The selected variation is unavailable.');
+      return false;
+    }
+
+    const variation = selectedVariation ? { id: selectedVariation.id, size: selectedSize } : null;
     addToCart(product, quantity, variation);
     toast.success('Product added to cart.');
     return true;
