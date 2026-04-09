@@ -24,6 +24,22 @@ const isSizeAttribute = (attribute) => {
   return slug === 'pa_size' || slug === 'size' || name?.includes('size');
 };
 
+const getAttributeKey = (attribute) => {
+  return (attribute?.slug || attribute?.name || '').toLowerCase();
+};
+
+const normalizeOption = (value) => String(value || '').trim().toLowerCase();
+
+const variationHasOption = (variation, key, option) => {
+  return Array.isArray(variation?.attributes) && variation.attributes.some(
+    (attribute) => getAttributeKey(attribute) === key && normalizeOption(attribute?.option) === normalizeOption(option)
+  );
+};
+
+const isVariationAvailable = (variation) => {
+  return variation?.purchasable !== false && variation?.stock_status !== 'outofstock';
+};
+
 const ProductDefaultPage = () => {
   const router = useRouter();
   const { addToCart } = useCart();
@@ -39,12 +55,12 @@ const ProductDefaultPage = () => {
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedOptions, setSelectedOptions] = useState({});
 
   useEffect(() => {
     setSelectedImage(0);
     setQuantity(1);
-    setSelectedSize(null);
+    setSelectedOptions({});
   }, [resolvedId]);
 
   useEffect(() => {
@@ -63,44 +79,115 @@ const ProductDefaultPage = () => {
     html.style.overflowY = 'auto';
   }, []);
 
-  const sizeOptions = useMemo(() => {
-    const attrs = Array.isArray(product?.attributes) ? product.attributes : [];
-    const sizeAttr = attrs.find(
-      (attr) => isSizeAttribute(attr)
-    );
-
-    if (Array.isArray(sizeAttr?.options) && sizeAttr.options.length > 0) {
-      return sizeAttr.options;
-    }
-
-    return [];
-  }, [product?.attributes]);
   const variationAttributes = useMemo(() => {
     const attrs = Array.isArray(product?.attributes) ? product.attributes : [];
-    return attrs.filter((attr) => attr?.variation);
+    return attrs.filter((attr) => attr?.variation && Array.isArray(attr?.options) && attr.options.length > 0);
   }, [product?.attributes]);
-  const hasUnsupportedVariationSetup = product?.type === 'variable' && variationAttributes.length > 1;
+  const availableVariations = useMemo(() => {
+    return Array.isArray(product?.variations) ? product.variations.filter(isVariationAvailable) : [];
+  }, [product?.variations]);
+  const availableOptionsByAttribute = useMemo(() => {
+    return variationAttributes.reduce((accumulator, attribute) => {
+      const key = getAttributeKey(attribute);
+      const options = attribute.options.filter((option) => {
+        return availableVariations.some((variation) => {
+          if (!variationHasOption(variation, key, option)) {
+            return false;
+          }
+
+          return Object.entries(selectedOptions).every(([selectedKey, selectedValue]) => {
+            if (!selectedValue || selectedKey === key) {
+              return true;
+            }
+
+            return variationHasOption(variation, selectedKey, selectedValue);
+          });
+        });
+      });
+
+      accumulator[key] = options;
+      return accumulator;
+    }, {});
+  }, [availableVariations, selectedOptions, variationAttributes]);
   const selectedVariation = useMemo(() => {
-    if (!Array.isArray(product?.variations) || !selectedSize || hasUnsupportedVariationSetup) {
+    if (product?.type !== 'variable' || variationAttributes.length === 0) {
       return null;
     }
 
-    return product.variations.find((variation) => {
-      if (variation?.purchasable === false || variation?.stock_status === 'outofstock') {
-        return false;
-      }
+    const hasFullSelection = variationAttributes.every((attribute) => selectedOptions[getAttributeKey(attribute)]);
+    if (!hasFullSelection) {
+      return null;
+    }
 
-      return Array.isArray(variation?.attributes) && variation.attributes.some(
-        (attribute) => isSizeAttribute(attribute) && String(attribute?.option) === String(selectedSize)
-      );
+    return availableVariations.find((variation) => {
+      return variationAttributes.every((attribute) => {
+        const key = getAttributeKey(attribute);
+        return variationHasOption(variation, key, selectedOptions[key]);
+      });
     }) || null;
-  }, [hasUnsupportedVariationSetup, product?.variations, selectedSize]);
+  }, [availableVariations, product?.type, selectedOptions, variationAttributes]);
+  const previewVariation = useMemo(() => {
+    if (product?.type !== 'variable' || availableVariations.length === 0) {
+      return null;
+    }
+
+    const selectedEntries = Object.entries(selectedOptions).filter(([, value]) => value);
+    if (selectedEntries.length === 0) {
+      return null;
+    }
+
+    return availableVariations.find((variation) => {
+      return selectedEntries.every(([key, value]) => variationHasOption(variation, key, value));
+    }) || null;
+  }, [availableVariations, product?.type, selectedOptions]);
+
+  const handleOptionSelect = (attributeKey, option) => {
+    setSelectedOptions((previous) => {
+      const next = {
+        ...previous,
+        [attributeKey]: option,
+      };
+
+      variationAttributes.forEach((attribute) => {
+        const key = getAttributeKey(attribute);
+        if (key === attributeKey || !next[key]) {
+          return;
+        }
+
+        const stillValid = availableVariations.some((variation) => {
+          if (!variationHasOption(variation, key, next[key])) {
+            return false;
+          }
+
+          return Object.entries(next).every(([selectedKey, selectedValue]) => {
+            if (!selectedValue || selectedKey === key) {
+              return true;
+            }
+
+            return variationHasOption(variation, selectedKey, selectedValue);
+          });
+        });
+
+        if (!stillValid) {
+          delete next[key];
+        }
+      });
+
+      return next;
+    });
+  };
 
   const images = Array.isArray(product?.images) && product.images.length > 0
     ? product.images
     : [{ src: '/assets/img/placeholder.png', alt: product?.name || 'Product image' }];
 
   const currentImage = images[selectedImage] || images[0];
+  const displayImage = previewVariation?.image?.src
+    ? {
+        src: previewVariation.image.src,
+        alt: previewVariation.image.alt || product?.name,
+      }
+    : currentImage;
   const ratingCount = Number.parseInt(product?.rating_count || 0, 10);
   const ratingValue = Number.parseFloat(product?.average_rating || 0);
   const productSummary = useMemo(() => {
@@ -126,22 +213,30 @@ const ProductDefaultPage = () => {
       return false;
     }
 
-    if (sizeOptions.length > 0 && !selectedSize) {
-      toast.warn('Please select a size before adding to cart.');
-      return false;
+    if (product.type === 'variable') {
+      const missingAttributes = variationAttributes
+        .filter((attribute) => !selectedOptions[getAttributeKey(attribute)])
+        .map((attribute) => attribute.name);
+
+      if (missingAttributes.length > 0) {
+        toast.warn(`Please select: ${missingAttributes.join(', ')}.`);
+        return false;
+      }
+
+      if (!selectedVariation) {
+        toast.warn('The selected variation is unavailable.');
+        return false;
+      }
     }
 
-    if (hasUnsupportedVariationSetup) {
-      toast.warn('This product has multiple required options and cannot be added from this page yet.');
-      return false;
-    }
-
-    if (product.type === 'variable' && sizeOptions.length > 0 && !selectedVariation) {
-      toast.warn('The selected variation is unavailable.');
-      return false;
-    }
-
-    const variation = selectedVariation ? { id: selectedVariation.id, size: selectedSize } : null;
+    const variation = selectedVariation ? {
+      id: selectedVariation.id,
+      attributes: selectedVariation.attributes.reduce((accumulator, attribute) => {
+        accumulator[attribute.name] = attribute.option;
+        return accumulator;
+      }, {}),
+      size: selectedVariation.attributes.find(isSizeAttribute)?.option || null,
+    } : null;
     addToCart(product, quantity, variation);
     toast.success('Product added to cart.');
     return true;
@@ -181,10 +276,10 @@ const ProductDefaultPage = () => {
         <div className="container-xl container-fluid-lg container">
           <div className="row gy-5">
             <div className="col-lg-6">
-              <div className="shop-details-img">
-                <div className="shop-details-tab-img product-img--main" style={{ overflow: 'hidden' }}>
-                  <img src={currentImage.src} alt={currentImage.alt || product.name} />
-                </div>
+                <div className="shop-details-img">
+                  <div className="shop-details-tab-img product-img--main" style={{ overflow: 'hidden' }}>
+                    <img src={displayImage.src} alt={displayImage.alt || product.name} />
+                  </div>
 
                 {images.length > 1 && (
                   <div className="nav nav-pills product-thumbs" aria-orientation="vertical">
@@ -240,23 +335,34 @@ const ProductDefaultPage = () => {
                     </div>
                   </div>
 
-                  {sizeOptions.length > 0 && (
-                    <div className="quantity-color">
-                      <h6 className="widget-title">Size</h6>
-                      <div className="size-options">
-                        {sizeOptions.map((size) => (
-                          <button
-                            key={size}
-                            type="button"
-                            className={`size-chip ${selectedSize === size ? 'active' : ''}`}
-                            onClick={() => setSelectedSize(size)}
-                          >
-                            {size}
-                          </button>
-                        ))}
+                  {variationAttributes.map((attribute) => {
+                    const key = getAttributeKey(attribute);
+                    const availableOptions = availableOptionsByAttribute[key] || [];
+
+                    return (
+                      <div key={key} className="quantity-color">
+                        <h6 className="widget-title">{attribute.name}</h6>
+                        <div className="size-options">
+                          {attribute.options.map((option) => {
+                            const isActive = selectedOptions[key] === option;
+                            const isAvailable = availableOptions.includes(option);
+
+                            return (
+                              <button
+                                key={option}
+                                type="button"
+                                className={`size-chip ${isActive ? 'active' : ''}`}
+                                disabled={!isAvailable}
+                                onClick={() => handleOptionSelect(key, option)}
+                              >
+                                {option}
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    );
+                  })}
                 </div>
 
                 <div className="shop-details-btn">
@@ -420,6 +526,12 @@ const ProductDefaultPage = () => {
           border-color: #111;
           background: #111;
           color: #fff;
+        }
+
+        .size-chip:disabled {
+          opacity: 0.45;
+          cursor: not-allowed;
+          background: #f5f5f5;
         }
 
         .shop-details-btn button {

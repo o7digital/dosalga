@@ -308,9 +308,15 @@ const Checkout = () => {
                                 <a>{item.name}</a>
                               </Link>
                             </h5>
-                            {item.variation?.size && (
+                            {item.variation?.attributes ? (
+                              Object.entries(item.variation.attributes).map(([attributeName, attributeValue]) => (
+                                <p key={`${key}-${attributeName}`} className="variation-meta">
+                                  {attributeName}: {attributeValue}
+                                </p>
+                              ))
+                            ) : item.variation?.size ? (
                               <p className="variation-meta">Size: {item.variation.size}</p>
-                            )}
+                            ) : null}
                             <div className="product-total">
                               <div className="quantity-counter">
                                 <button
