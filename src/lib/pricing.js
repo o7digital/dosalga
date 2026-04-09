@@ -1,5 +1,3 @@
-const MXN_TO_USD_RATE = 18.5;
-
 export const parsePriceValue = (value) => {
   const raw = String(value ?? '').trim();
   if (!raw) return null;
@@ -15,7 +13,7 @@ export const parsePriceValue = (value) => {
 export const convertStorePriceToUSD = (value) => {
   const numeric = parsePriceValue(value);
   if (numeric === null) return null;
-  return numeric / MXN_TO_USD_RATE;
+  return numeric;
 };
 
 export const formatUSDPrice = (value, options = {}) => {
