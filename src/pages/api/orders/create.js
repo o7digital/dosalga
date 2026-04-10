@@ -124,47 +124,54 @@ export default async function handler(req, res) {
 
     // Apply SOCIO discount directly on the created WooCommerce order
     // so totals shown on order-pay/Stripe match the checkout summary.
+    let couponSyncWarning = null;
+
     if (isSocioCoupon(couponCode)) {
       const discountCandidate = parseAmount(couponDiscountAmount, 0);
 
       if (discountCandidate > 0) {
-        const { default: wcApi } = await import('@/src/lib/woocommerce');
-        const { data: wcOrder } = await wcApi.get(`orders/${order.order_id}`);
-        const currentTotal = parseAmount(wcOrder?.total, 0);
-        const appliedDiscount = Math.min(discountCandidate, currentTotal);
+        try {
+          const { default: wcApi } = await import('@/src/lib/woocommerce');
+          const { data: wcOrder } = await wcApi.get(`orders/${order.order_id}`);
+          const currentTotal = parseAmount(wcOrder?.total, 0);
+          const appliedDiscount = Math.min(discountCandidate, currentTotal);
 
-        if (appliedDiscount > 0) {
-          const cleanedFeeLines = Array.isArray(wcOrder?.fee_lines)
-            ? wcOrder.fee_lines
-                .filter((feeLine) => !String(feeLine?.name ?? '').toUpperCase().includes(SOCIO_COUPON_CODE))
-                .map((feeLine) => ({
-                  id: feeLine.id,
-                  name: feeLine.name,
-                  total: String(feeLine.total ?? '0'),
-                  taxable: feeLine.taxable ?? false,
-                }))
-            : [];
+          if (appliedDiscount > 0) {
+            const cleanedFeeLines = Array.isArray(wcOrder?.fee_lines)
+              ? wcOrder.fee_lines
+                  .filter((feeLine) => !String(feeLine?.name ?? '').toUpperCase().includes(SOCIO_COUPON_CODE))
+                  .map((feeLine) => ({
+                    id: feeLine.id,
+                    name: feeLine.name,
+                    total: String(feeLine.total ?? '0'),
+                    taxable: feeLine.taxable ?? false,
+                  }))
+              : [];
 
-          const cleanedMetaData = Array.isArray(wcOrder?.meta_data)
-            ? wcOrder.meta_data.filter((meta) => !['dosalga_coupon_code', 'dosalga_coupon_discount', 'dosalga_coupon_type'].includes(meta?.key))
-            : [];
+            const cleanedMetaData = Array.isArray(wcOrder?.meta_data)
+              ? wcOrder.meta_data.filter((meta) => !['dosalga_coupon_code', 'dosalga_coupon_discount', 'dosalga_coupon_type'].includes(meta?.key))
+              : [];
 
-          await wcApi.put(`orders/${order.order_id}`, {
-            fee_lines: [
-              ...cleanedFeeLines,
-              {
-                name: `${SOCIO_COUPON_CODE} -95% margin`,
-                total: (-appliedDiscount).toFixed(2),
-                taxable: false,
-              },
-            ],
-            meta_data: [
-              ...cleanedMetaData,
-              { key: 'dosalga_coupon_code', value: SOCIO_COUPON_CODE },
-              { key: 'dosalga_coupon_discount', value: appliedDiscount.toFixed(2) },
-              { key: 'dosalga_coupon_type', value: 'margin_percent' },
-            ],
-          });
+            await wcApi.put(`orders/${order.order_id}`, {
+              fee_lines: [
+                ...cleanedFeeLines,
+                {
+                  name: `${SOCIO_COUPON_CODE} -95% margin`,
+                  total: (-appliedDiscount).toFixed(2),
+                  taxable: false,
+                },
+              ],
+              meta_data: [
+                ...cleanedMetaData,
+                { key: 'dosalga_coupon_code', value: SOCIO_COUPON_CODE },
+                { key: 'dosalga_coupon_discount', value: appliedDiscount.toFixed(2) },
+                { key: 'dosalga_coupon_type', value: 'margin_percent' },
+              ],
+            });
+          }
+        } catch (couponSyncError) {
+          console.error('SOCIO coupon sync warning:', couponSyncError);
+          couponSyncWarning = 'SOCIO coupon could not be synchronized on Woo order (non-blocking).';
         }
       }
     }
@@ -178,6 +185,7 @@ export default async function handler(req, res) {
         id: order.order_id,
         payment_url: paymentUrl,
       },
+      warning: couponSyncWarning,
       message: 'Commande créée avec succès'
     });
   } catch (error) {
