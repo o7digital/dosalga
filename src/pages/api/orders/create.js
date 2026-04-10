@@ -198,6 +198,13 @@ export default async function handler(req, res) {
       }
     }
 
+    if (isSocioCoupon(normalizedCouponCode) && !isSocioDiscountApplied) {
+      return res.status(422).json({
+        success: false,
+        message: 'Le coupon SOCIO n’est pas configuré côté WooCommerce. Créez le coupon SOCIO dans WooCommerce > Marketing > Coupons.',
+      });
+    }
+
     const paymentUrl = `${WORDPRESS_URL}/checkout/order-pay/${order.order_id}/?pay_for_order=true&key=${order.order_key}`;
     
     res.status(201).json({
