@@ -12,6 +12,8 @@ const isSocioCoupon = (value) => {
   return normalized === SOCIO_COUPON_CODE || normalized === `${SOCIO_COUPON_CODE}95`;
 };
 
+const normalizeCouponCode = (value) => String(value ?? '').trim().toUpperCase();
+
 const storeApiRequest = async ({ path, method = 'GET', token, body }) => {
   const headers = {
     Accept: 'application/json',
@@ -93,6 +95,27 @@ export default async function handler(req, res) {
       }));
     }
 
+    let couponSyncWarning = null;
+    let isSocioDiscountApplied = false;
+    const normalizedCouponCode = normalizeCouponCode(couponCode);
+
+    // First try applying the coupon through Woo Store API cart token flow.
+    // This path does not require wc/v3 write permissions.
+    if (isSocioCoupon(normalizedCouponCode)) {
+      try {
+        ({ token } = await storeApiRequest({
+          path: 'cart/apply-coupon',
+          method: 'POST',
+          token,
+          body: { code: SOCIO_COUPON_CODE },
+        }));
+        isSocioDiscountApplied = true;
+      } catch (storeCouponError) {
+        console.error('Store coupon apply warning:', storeCouponError);
+        couponSyncWarning = 'SOCIO coupon is active in the app but missing in WooCommerce coupons.';
+      }
+    }
+
     ({ token } = await storeApiRequest({
       path: 'cart/update-customer',
       method: 'POST',
@@ -122,11 +145,9 @@ export default async function handler(req, res) {
       throw new Error('Unable to create WooCommerce checkout session.');
     }
 
-    // Apply SOCIO discount directly on the created WooCommerce order
-    // so totals shown on order-pay/Stripe match the checkout summary.
-    let couponSyncWarning = null;
-
-    if (isSocioCoupon(couponCode)) {
+    // Fallback: if Store API coupon could not be applied, try direct wc/v3 order edit.
+    // This requires write permissions on Woo REST keys.
+    if (isSocioCoupon(normalizedCouponCode) && !isSocioDiscountApplied) {
       const discountCandidate = parseAmount(couponDiscountAmount, 0);
 
       if (discountCandidate > 0) {
@@ -168,10 +189,11 @@ export default async function handler(req, res) {
                 { key: 'dosalga_coupon_type', value: 'margin_percent' },
               ],
             });
+            isSocioDiscountApplied = true;
           }
         } catch (couponSyncError) {
           console.error('SOCIO coupon sync warning:', couponSyncError);
-          couponSyncWarning = 'SOCIO coupon could not be synchronized on Woo order (non-blocking).';
+          couponSyncWarning = 'SOCIO coupon could not be synchronized on Woo order.';
         }
       }
     }
@@ -185,6 +207,7 @@ export default async function handler(req, res) {
         id: order.order_id,
         payment_url: paymentUrl,
       },
+      coupon_applied: isSocioDiscountApplied,
       warning: couponSyncWarning,
       message: 'Commande créée avec succès'
     });

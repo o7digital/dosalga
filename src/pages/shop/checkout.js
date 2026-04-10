@@ -118,6 +118,14 @@ const Checkout = () => {
         customer_note: orderNotes,
       });
 
+      if (appliedCoupon?.code === 'SOCIO' && order?.coupon_applied === false) {
+        throw new Error(order?.warning || 'SOCIO is not configured in WooCommerce coupons. Payment has been stopped.');
+      }
+
+      if (order?.warning) {
+        toast.warn(order.warning);
+      }
+
       const paymentUrl = getOrderPaymentUrl(order);
 
       if (!paymentUrl) {

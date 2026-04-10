@@ -239,10 +239,18 @@ export const CartProvider = ({ children }) => {
         throw new Error(result.error || result.message || 'Erreur lors de la création de la commande');
       }
 
-      // Vider le panier après une commande réussie
-      clearCart();
+      const couponApplied = result.coupon_applied !== false;
 
-      return result.data;
+      // Vider le panier seulement si la commande est prête pour paiement
+      if (couponApplied) {
+        clearCart();
+      }
+
+      return {
+        ...result.data,
+        warning: result.warning || null,
+        coupon_applied: couponApplied,
+      };
     } catch (error) {
       console.error('Error creating order:', error);
       throw error;
