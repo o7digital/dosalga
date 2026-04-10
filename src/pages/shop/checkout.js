@@ -28,7 +28,19 @@ const MEXICO_STATES = [
 
 const Checkout = () => {
   const router = useRouter();
-  const { cart, removeFromCart, updateQuantity, getCartTotal, createOrder, isLoading } = useCart();
+  const {
+    cart,
+    removeFromCart,
+    updateQuantity,
+    getCartTotal,
+    getDiscountAmount,
+    getCartTotalAfterDiscount,
+    appliedCoupon,
+    applyCouponCode,
+    removeCouponCode,
+    createOrder,
+    isLoading,
+  } = useCart();
   const [billingCountry, setBillingCountry] = useState('MX');
   const [billingState, setBillingState] = useState('');
   const [billingCity, setBillingCity] = useState('');
@@ -40,10 +52,13 @@ const Checkout = () => {
   const [billingEmail, setBillingEmail] = useState('');
   const [orderNotes, setOrderNotes] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [couponInput, setCouponInput] = useState('');
+  const [couponFeedback, setCouponFeedback] = useState(null);
   const subtotal = getCartTotal();
+  const discount = getDiscountAmount();
   const shipping = 0;
   const tax = 0;
-  const total = subtotal + shipping + tax;
+  const total = getCartTotalAfterDiscount() + shipping + tax;
 
   const mexicoStates = useMemo(() => MEXICO_STATES, []);
   const mexicoCities = useMemo(() => {
@@ -115,6 +130,12 @@ const Checkout = () => {
       console.error('Checkout error:', error);
       toast.error(error.message || 'Unable to start WooCommerce payment.');
     }
+  };
+
+  const handleApplyCoupon = (event) => {
+    event.preventDefault();
+    const result = applyCouponCode(couponInput);
+    setCouponFeedback(result);
   };
 
   return (
@@ -362,6 +383,38 @@ const Checkout = () => {
                 </ul>
               </div>
 
+              <div className="coupon-area mb-30">
+                <div className="cart-coupon-input">
+                  <h5>Coupon Code</h5>
+                  <form onSubmit={handleApplyCoupon}>
+                    <div className="form-inner">
+                      <input
+                        type="text"
+                        placeholder="Coupon Code (SOCIO)"
+                        value={couponInput}
+                        onChange={(event) => setCouponInput(event.target.value)}
+                      />
+                      <button type="submit" className="primary-btn1 hover-btn3">Apply Code</button>
+                    </div>
+                  </form>
+                  {couponFeedback?.message && (
+                    <p className={`coupon-feedback ${couponFeedback.success ? 'ok' : 'error'}`}>
+                      {couponFeedback.message}
+                    </p>
+                  )}
+                  {appliedCoupon && (
+                    <div className="active-coupon">
+                      <span>
+                        Code actif: <strong>{appliedCoupon.code}</strong> (95% off margin)
+                      </span>
+                      <button type="button" className="remove-coupon-btn" onClick={removeCouponCode}>
+                        Remove
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <div className="cost-summary mb-30">
                 <table className="table cost-summary-table">
                   <thead>
@@ -382,6 +435,10 @@ const Checkout = () => {
                     <tr>
                       <td>Total (tax incl.)</td>
                       <td>{formatUSDPrice(total)}</td>
+                    </tr>
+                    <tr>
+                      <td>Discount</td>
+                      <td>{appliedCoupon ? `-${formatUSDPrice(discount)}` : '—'}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -519,6 +576,35 @@ const Checkout = () => {
           width: 14px;
           height: 14px;
           margin-top: 4px;
+        }
+
+        .coupon-feedback {
+          margin-top: 10px;
+          font-size: 14px;
+        }
+
+        .coupon-feedback.ok {
+          color: #15803d;
+        }
+
+        .coupon-feedback.error {
+          color: #b91c1c;
+        }
+
+        .active-coupon {
+          margin-top: 8px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+
+        .remove-coupon-btn {
+          border: 1px solid #ddd;
+          background: #fff;
+          border-radius: 4px;
+          padding: 4px 8px;
+          font-size: 12px;
         }
       `}</style>
     </>
