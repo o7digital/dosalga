@@ -1,13 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/src/contexts/CartContext';
 
 const Cart = () => {
-  const { cart, removeFromCart, updateQuantity, getCartTotal } = useCart();
+  const {
+    cart,
+    removeFromCart,
+    updateQuantity,
+    getCartTotal,
+    getDiscountAmount,
+    getCartTotalAfterDiscount,
+    appliedCoupon,
+    applyCouponCode,
+    removeCouponCode,
+  } = useCart();
+  const [couponInput, setCouponInput] = useState('');
+  const [couponFeedback, setCouponFeedback] = useState(null);
 
   const subtotal = getCartTotal();
+  const discount = getDiscountAmount();
   const shipping = 0;
-  const total = subtotal + shipping;
+  const total = getCartTotalAfterDiscount() + shipping;
+
+  const handleApplyCoupon = (event) => {
+    event.preventDefault();
+    const result = applyCouponCode(couponInput);
+    setCouponFeedback(result);
+  };
 
   return (
     <>
@@ -103,12 +122,32 @@ const Cart = () => {
               <div className="coupon-area">
                 <div className="cart-coupon-input">
                   <h5>Coupon Code</h5>
-                  <form onSubmit={(e) => e.preventDefault()}>
+                  <form onSubmit={handleApplyCoupon}>
                     <div className="form-inner">
-                      <input type="text" placeholder="Coupon Code" />
+                      <input
+                        type="text"
+                        placeholder="Coupon Code (SOCIO)"
+                        value={couponInput}
+                        onChange={(e) => setCouponInput(e.target.value)}
+                      />
                       <button type="submit" className="primary-btn1 hover-btn3">Apply Code</button>
                     </div>
                   </form>
+                  {couponFeedback?.message && (
+                    <p className={`coupon-feedback ${couponFeedback.success ? 'ok' : 'error'}`}>
+                      {couponFeedback.message}
+                    </p>
+                  )}
+                  {appliedCoupon && (
+                    <div className="active-coupon">
+                      <span>
+                        Code actif: <strong>{appliedCoupon.code}</strong> (95% off margin)
+                      </span>
+                      <button type="button" className="remove-coupon-btn" onClick={removeCouponCode}>
+                        Remove
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -141,12 +180,28 @@ const Cart = () => {
                     </td>
                   </tr>
                   <tr>
+                    <td>Discount</td>
+                    <td>{appliedCoupon ? 'SOCIO (95% margin)' : '—'}</td>
+                    <td>-${discount.toFixed(2)}</td>
+                  </tr>
+                  <tr>
                     <td>Subtotal</td>
                     <td />
                     <td>${subtotal.toFixed(2)}</td>
                   </tr>
+                  <tr>
+                    <td>Total after discount</td>
+                    <td />
+                    <td>${total.toFixed(2)}</td>
+                  </tr>
                 </tbody>
               </table>
+
+              {appliedCoupon?.code === 'SOCIO' && (
+                <p className="cost-note">
+                  Coupon SOCIO actif: remise de 95% appliquée sur la marge.
+                </p>
+              )}
 
               <Link legacyBehavior href="/shop/checkout">
                 <a className="primary-btn1 hover-btn3">Product Checkout</a>
@@ -177,6 +232,41 @@ const Cart = () => {
           background: #fff;
           border-radius: 4px;
           cursor: pointer;
+        }
+
+        .coupon-feedback {
+          margin-top: 10px;
+          font-size: 14px;
+        }
+
+        .coupon-feedback.ok {
+          color: #15803d;
+        }
+
+        .coupon-feedback.error {
+          color: #b91c1c;
+        }
+
+        .active-coupon {
+          margin-top: 8px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+
+        .remove-coupon-btn {
+          border: 1px solid #ddd;
+          background: #fff;
+          border-radius: 4px;
+          padding: 4px 8px;
+          font-size: 12px;
+        }
+
+        .cost-note {
+          margin: 12px 0 18px;
+          color: #475569;
+          font-size: 14px;
         }
       `}</style>
     </>
