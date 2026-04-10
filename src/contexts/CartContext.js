@@ -203,6 +203,8 @@ export const CartProvider = ({ children }) => {
         billing: billingInfo,
         shipping: shippingInfo || billingInfo,
         customer_note: billingInfo.customer_note || '',
+        coupon_code: appliedCoupon?.code || '',
+        coupon_discount_amount: getDiscountAmount(),
         fee_lines: appliedCoupon?.code === SOCIO_COUPON_CODE
           ? [{
               name: `${SOCIO_COUPON_CODE} -95% margin`,
