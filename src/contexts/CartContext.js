@@ -4,6 +4,17 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const CartContext = createContext();
+const SOCIO_COUPON_CODE = 'SOCIO';
+const SOCIO_MARGIN_DISCOUNT_RATE = 0.95;
+const DEFAULT_MARGIN_RATE = 0.35;
+
+const normalizeRate = (value, fallback) => {
+  const parsedValue = Number.parseFloat(value);
+  if (!Number.isFinite(parsedValue)) return fallback;
+  if (parsedValue < 0) return 0;
+  if (parsedValue > 1) return 1;
+  return parsedValue;
+};
 
 export const useCart = () => {
   const context = useContext(CartContext);
@@ -16,6 +27,8 @@ export const useCart = () => {
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const fallbackMarginRate = normalizeRate(process.env.NEXT_PUBLIC_SOCIO_MARGIN_RATE, DEFAULT_MARGIN_RATE);
 
   // Charger le panier depuis localStorage au démarrage
   useEffect(() => {
@@ -28,6 +41,16 @@ export const CartProvider = ({ children }) => {
         localStorage.removeItem('dosalga_cart');
       }
     }
+
+    const savedCoupon = localStorage.getItem('dosalga_coupon');
+    if (savedCoupon) {
+      try {
+        setAppliedCoupon(JSON.parse(savedCoupon));
+      } catch (error) {
+        console.error('Error loading coupon:', error);
+        localStorage.removeItem('dosalga_coupon');
+      }
+    }
   }, []);
 
   // Sauvegarder le panier dans localStorage à chaque modification
@@ -38,6 +61,14 @@ export const CartProvider = ({ children }) => {
       localStorage.removeItem('dosalga_cart');
     }
   }, [cart]);
+
+  useEffect(() => {
+    if (appliedCoupon) {
+      localStorage.setItem('dosalga_coupon', JSON.stringify(appliedCoupon));
+    } else {
+      localStorage.removeItem('dosalga_coupon');
+    }
+  }, [appliedCoupon]);
 
   // Ajouter un produit au panier
   const addToCart = (product, quantity = 1, variation = null) => {
@@ -102,11 +133,55 @@ export const CartProvider = ({ children }) => {
   // Vider le panier
   const clearCart = () => {
     setCart([]);
+    setAppliedCoupon(null);
+  };
+
+  const applyCouponCode = (rawCode = '') => {
+    const normalizedCode = rawCode.trim().toUpperCase();
+
+    if (!normalizedCode) {
+      return { success: false, message: 'Veuillez saisir un code promo.' };
+    }
+
+    if (normalizedCode === SOCIO_COUPON_CODE || normalizedCode === `${SOCIO_COUPON_CODE}95`) {
+      setAppliedCoupon({
+        code: SOCIO_COUPON_CODE,
+        label: 'Remise socios',
+        type: 'margin_percent',
+        rate: SOCIO_MARGIN_DISCOUNT_RATE,
+      });
+      return { success: true, message: 'Code SOCIO appliqué: -95% sur la marge.' };
+    }
+
+    return { success: false, message: 'Code promo invalide.' };
+  };
+
+  const removeCouponCode = () => {
+    setAppliedCoupon(null);
   };
 
   // Calculer le total du panier
   const getCartTotal = () => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  };
+
+  const getDiscountAmount = () => {
+    if (!appliedCoupon || appliedCoupon.type !== 'margin_percent') {
+      return 0;
+    }
+
+    return cart.reduce((discountTotal, item) => {
+      const itemPrice = Number.parseFloat(item.price || 0);
+      const margin = Math.max(0, itemPrice * fallbackMarginRate);
+      const discountPerItem = margin * appliedCoupon.rate;
+      return discountTotal + discountPerItem * item.quantity;
+    }, 0);
+  };
+
+  const getCartTotalAfterDiscount = () => {
+    const subtotal = getCartTotal();
+    const discount = getDiscountAmount();
+    return Math.max(0, subtotal - discount);
   };
 
   // Compter le nombre total d'articles
@@ -128,6 +203,19 @@ export const CartProvider = ({ children }) => {
         billing: billingInfo,
         shipping: shippingInfo || billingInfo,
         customer_note: billingInfo.customer_note || '',
+        fee_lines: appliedCoupon?.code === SOCIO_COUPON_CODE
+          ? [{
+              name: `${SOCIO_COUPON_CODE} -95% margin`,
+              total: `-${getDiscountAmount().toFixed(2)}`,
+              taxable: false,
+            }]
+          : [],
+        meta_data: appliedCoupon?.code === SOCIO_COUPON_CODE
+          ? [
+              { key: 'dosalga_coupon_code', value: SOCIO_COUPON_CODE },
+              { key: 'dosalga_coupon_type', value: 'margin_percent' },
+            ]
+          : [],
         line_items: cart.map((item) => ({
           product_id: item.id,
           quantity: item.quantity,
@@ -169,7 +257,12 @@ export const CartProvider = ({ children }) => {
     updateQuantity,
     clearCart,
     getCartTotal,
+    getDiscountAmount,
+    getCartTotalAfterDiscount,
     getCartItemsCount,
+    appliedCoupon,
+    applyCouponCode,
+    removeCouponCode,
     createOrder,
   };
 
