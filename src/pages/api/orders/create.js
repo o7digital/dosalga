@@ -1,4 +1,8 @@
 const WORDPRESS_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL || 'https://oliviers44.sg-host.com';
+const CHECKOUT_BASE_URL =
+  process.env.WC_CHECKOUT_BASE_URL ||
+  process.env.NEXT_PUBLIC_CHECKOUT_BASE_URL ||
+  WORDPRESS_URL;
 const SOCIO_COUPON_CODE = 'SOCIO';
 
 const parseAmount = (value, fallback = 0) => {
@@ -13,6 +17,19 @@ const isSocioCoupon = (value) => {
 };
 
 const normalizeCouponCode = (value) => String(value ?? '').trim().toUpperCase();
+
+const normalizeBaseUrl = (value, fallback) => {
+  try {
+    return new URL(value).origin;
+  } catch {
+    return fallback;
+  }
+};
+
+const buildPaymentUrl = (orderId, orderKey) => {
+  const baseUrl = normalizeBaseUrl(CHECKOUT_BASE_URL, WORDPRESS_URL);
+  return `${baseUrl}/checkout/order-pay/${orderId}/?pay_for_order=true&key=${orderKey}`;
+};
 
 const storeApiRequest = async ({ path, method = 'GET', token, body }) => {
   const headers = {
@@ -205,7 +222,7 @@ export default async function handler(req, res) {
       });
     }
 
-    const paymentUrl = `${WORDPRESS_URL}/checkout/order-pay/${order.order_id}/?pay_for_order=true&key=${order.order_key}`;
+    const paymentUrl = buildPaymentUrl(order.order_id, order.order_key);
     
     res.status(201).json({
       success: true,

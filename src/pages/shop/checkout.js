@@ -69,12 +69,29 @@ const Checkout = () => {
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
   const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
   const termsPath = `${localePrefix}/terms-and-conditions`;
+  const checkoutBaseUrl =
+    process.env.NEXT_PUBLIC_CHECKOUT_BASE_URL ||
+    process.env.NEXT_PUBLIC_WORDPRESS_URL ||
+    'https://oliviers44.sg-host.com';
+
+  const normalizePaymentUrl = (url) => {
+    if (!url) return null;
+    try {
+      const parsedUrl = new URL(url);
+      const targetOrigin = new URL(checkoutBaseUrl).origin;
+      parsedUrl.protocol = new URL(targetOrigin).protocol;
+      parsedUrl.host = new URL(targetOrigin).host;
+      return parsedUrl.toString();
+    } catch {
+      return url;
+    }
+  };
 
   const getOrderPaymentUrl = (order) => {
-    if (order?.payment_url) return order.payment_url;
-    if (order?.checkout_payment_url) return order.checkout_payment_url;
+    if (order?.payment_url) return normalizePaymentUrl(order.payment_url);
+    if (order?.checkout_payment_url) return normalizePaymentUrl(order.checkout_payment_url);
     if (order?.id && order?.order_key) {
-      const baseUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL || 'https://oliviers44.sg-host.com';
+      const baseUrl = checkoutBaseUrl;
       return `${baseUrl}/checkout/order-pay/${order.id}/?pay_for_order=true&key=${order.order_key}`;
     }
 
