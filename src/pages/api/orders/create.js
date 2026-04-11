@@ -31,6 +31,19 @@ const buildPaymentUrl = (orderId, orderKey) => {
   return `${baseUrl}/checkout/order-pay/${orderId}/?pay_for_order=true&key=${orderKey}`;
 };
 
+const normalizeVariationAttributes = (variationAttributes) => {
+  if (!Array.isArray(variationAttributes)) {
+    return [];
+  }
+
+  return variationAttributes
+    .filter((attribute) => attribute?.attribute && attribute?.value)
+    .map((attribute) => ({
+      attribute: String(attribute.attribute),
+      value: String(attribute.value),
+    }));
+};
+
 const storeApiRequest = async ({ path, method = 'GET', token, body }) => {
   const headers = {
     Accept: 'application/json',
@@ -61,6 +74,56 @@ const storeApiRequest = async ({ path, method = 'GET', token, body }) => {
     data: payload,
     token: response.headers.get('cart-token') || token,
   };
+};
+
+const addStoreCartItem = async ({ item, token }) => {
+  const productId = Number.parseInt(item?.product_id, 10);
+  const variationId = Number.parseInt(item?.variation_id, 10);
+  const quantity = Number.parseInt(item?.quantity, 10);
+
+  if (!Number.isFinite(productId) || productId <= 0 || !Number.isFinite(quantity) || quantity <= 0) {
+    return token;
+  }
+
+  const variationAttributes = normalizeVariationAttributes(item?.variation_attributes);
+  const attempts = [];
+
+  if (Number.isFinite(variationId) && variationId > 0) {
+    attempts.push({
+      id: variationId,
+      quantity,
+      ...(variationAttributes.length > 0 ? { variation: variationAttributes } : {}),
+    });
+  }
+
+  attempts.push({
+    id: productId,
+    quantity,
+    ...(variationAttributes.length > 0 ? { variation: variationAttributes } : {}),
+  });
+
+  const uniqueAttempts = attempts.filter((attempt, index, collection) => {
+    return collection.findIndex((entry) => JSON.stringify(entry) === JSON.stringify(attempt)) === index;
+  });
+
+  let lastError = null;
+  let nextToken = token;
+
+  for (const attempt of uniqueAttempts) {
+    try {
+      ({ token: nextToken } = await storeApiRequest({
+        path: 'cart/add-item',
+        method: 'POST',
+        token: nextToken,
+        body: attempt,
+      }));
+      return nextToken;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  throw lastError || new Error('Unable to add item to WooCommerce cart.');
 };
 
 export default async function handler(req, res) {
@@ -99,17 +162,7 @@ export default async function handler(req, res) {
     ({ token } = await storeApiRequest({ path: 'cart' }));
 
     for (const item of lineItems) {
-      const itemId = item.variation_id || item.product_id;
-
-      if (!itemId || !item.quantity) {
-        continue;
-      }
-
-      ({ token } = await storeApiRequest({
-        path: `cart/add-item?id=${encodeURIComponent(itemId)}&quantity=${encodeURIComponent(item.quantity)}`,
-        method: 'POST',
-        token,
-      }));
+      token = await addStoreCartItem({ item, token });
     }
 
     let couponSyncWarning = null;

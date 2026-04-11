@@ -95,6 +95,7 @@ export const CartProvider = ({ children }) => {
             image: product.images?.[0]?.src || '/assets/img/placeholder.png',
             quantity,
             variation,
+            product_type: product.type || 'simple',
             stock_status: product.stock_status
           }
         ];
@@ -193,7 +194,11 @@ export const CartProvider = ({ children }) => {
   const createOrder = async (billingInfo, shippingInfo = null) => {
     setIsLoading(true);
     try {
-      const invalidVariableItem = cart.find((item) => item.variation && !item.variation?.id);
+      const invalidVariableItem = cart.find((item) => {
+        const explicitMissingVariationId = item.variation && !item.variation?.id;
+        const variableWithoutSelection = item.product_type === 'variable' && !item.variation?.id;
+        return explicitMissingVariationId || variableWithoutSelection;
+      });
 
       if (invalidVariableItem) {
         throw new Error(`Product "${invalidVariableItem.name}" has incomplete options. Remove it from the cart and add it again after selecting all required options.`);
@@ -221,7 +226,20 @@ export const CartProvider = ({ children }) => {
         line_items: cart.map((item) => ({
           product_id: item.id,
           quantity: item.quantity,
-          variation_id: item.variation?.id || 0
+          variation_id: item.variation?.id || 0,
+          variation_attributes: Array.isArray(item.variation?.attributesRaw)
+            ? item.variation.attributesRaw
+                .filter((attribute) => attribute?.attribute && attribute?.value)
+                .map((attribute) => ({
+                  attribute: String(attribute.attribute),
+                  value: String(attribute.value),
+                }))
+            : Object.entries(item.variation?.attributes || {})
+                .filter(([, value]) => value)
+                .map(([attribute, value]) => ({
+                  attribute: String(attribute),
+                  value: String(value),
+                })),
         })),
       };
 
@@ -253,6 +271,9 @@ export const CartProvider = ({ children }) => {
       };
     } catch (error) {
       console.error('Error creating order:', error);
+      if (/Missing attributes for variable product/i.test(error?.message || '')) {
+        throw new Error('One or more products need required options (size/color). Remove them from cart and add them again after selecting all options.');
+      }
       throw error;
     } finally {
       setIsLoading(false);

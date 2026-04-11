@@ -235,6 +235,10 @@ const ProductDefaultPage = () => {
         accumulator[attribute.name] = attribute.option;
         return accumulator;
       }, {}),
+      attributesRaw: selectedVariation.attributes.map((attribute) => ({
+        attribute: attribute.slug || attribute.name,
+        value: attribute.option,
+      })),
       size: selectedVariation.attributes.find(isSizeAttribute)?.option || null,
     } : null;
     addToCart(product, quantity, variation);
