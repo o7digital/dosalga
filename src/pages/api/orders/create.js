@@ -4,6 +4,7 @@ const CHECKOUT_BASE_URL =
   process.env.NEXT_PUBLIC_CHECKOUT_BASE_URL ||
   WORDPRESS_URL;
 const SOCIO_COUPON_CODE = 'SOCIO';
+const CHECKOUT_DEBUG = process.env.CHECKOUT_DEBUG === '1';
 
 const parseAmount = (value, fallback = 0) => {
   const normalized = String(value ?? '').trim().replace(',', '.');
@@ -29,6 +30,35 @@ const normalizeBaseUrl = (value, fallback) => {
 const buildPaymentUrl = (orderId, orderKey) => {
   const baseUrl = normalizeBaseUrl(CHECKOUT_BASE_URL, WORDPRESS_URL);
   return `${baseUrl}/checkout/order-pay/${orderId}/?pay_for_order=true&key=${orderKey}`;
+};
+
+const readRequestIp = (req) => {
+  const forwardedFor = req.headers['x-forwarded-for'];
+  if (typeof forwardedFor === 'string' && forwardedFor.trim()) {
+    return forwardedFor.split(',')[0].trim();
+  }
+
+  if (Array.isArray(forwardedFor) && forwardedFor.length > 0) {
+    return String(forwardedFor[0]).split(',')[0].trim();
+  }
+
+  const cfIp = req.headers['cf-connecting-ip'];
+  if (typeof cfIp === 'string' && cfIp.trim()) {
+    return cfIp.trim();
+  }
+
+  return req.socket?.remoteAddress || 'unknown';
+};
+
+const getCheckoutDebugContext = (req, orderData = {}) => {
+  return {
+    ip: readRequestIp(req),
+    cfCountry: req.headers['cf-ipcountry'] || null,
+    userAgent: req.headers['user-agent'] || null,
+    billingCountry: orderData?.billing?.country || null,
+    billingState: orderData?.billing?.state || null,
+    billingCity: orderData?.billing?.city || null,
+  };
 };
 
 const normalizeVariationAttributes = (variationAttributes) => {
@@ -127,25 +157,33 @@ const addStoreCartItem = async ({ item, token }) => {
 };
 
 export default async function handler(req, res) {
+  const debugId = `co_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
   if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
+    return res.status(405).json({ message: 'Method not allowed', debug_id: debugId });
   }
 
   try {
     const orderData = req.body;
+    const debugContext = getCheckoutDebugContext(req, orderData);
+    if (CHECKOUT_DEBUG) {
+      console.info(`[checkout:${debugId}] request_received`, debugContext);
+    }
 
     // Validation basique
     if (!orderData.line_items || orderData.line_items.length === 0) {
       return res.status(400).json({
         success: false,
-        message: 'Le panier est vide'
+        message: 'Le panier est vide',
+        debug_id: debugId,
       });
     }
 
     if (!orderData.billing) {
       return res.status(400).json({
         success: false,
-        message: 'Les informations de facturation sont requises'
+        message: 'Les informations de facturation sont requises',
+        debug_id: debugId,
       });
     }
 
@@ -160,9 +198,15 @@ export default async function handler(req, res) {
 
     let token;
     ({ token } = await storeApiRequest({ path: 'cart' }));
+    if (CHECKOUT_DEBUG) {
+      console.info(`[checkout:${debugId}] cart_token_created`);
+    }
 
     for (const item of lineItems) {
       token = await addStoreCartItem({ item, token });
+    }
+    if (CHECKOUT_DEBUG) {
+      console.info(`[checkout:${debugId}] cart_items_added`, { count: lineItems.length });
     }
 
     let couponSyncWarning = null;
@@ -195,6 +239,13 @@ export default async function handler(req, res) {
         shipping_address: shipping || billing,
       },
     }));
+    if (CHECKOUT_DEBUG) {
+      console.info(`[checkout:${debugId}] customer_updated`, {
+        billingCountry: billing?.country || null,
+        billingState: billing?.state || null,
+        billingCity: billing?.city || null,
+      });
+    }
 
     ({ token } = await storeApiRequest({
       path: 'checkout?__experimental_calc_totals=true',
@@ -205,11 +256,19 @@ export default async function handler(req, res) {
         customer_note: customerNote,
       },
     }));
+    if (CHECKOUT_DEBUG) {
+      console.info(`[checkout:${debugId}] checkout_totals_calculated`);
+    }
 
     const { data: order } = await storeApiRequest({
       path: 'checkout',
       token,
     });
+    if (CHECKOUT_DEBUG) {
+      console.info(`[checkout:${debugId}] checkout_order_created`, {
+        orderId: order?.order_id || null,
+      });
+    }
 
     if (!order?.order_id || !order?.order_key) {
       throw new Error('Unable to create WooCommerce checkout session.');
@@ -247,7 +306,7 @@ export default async function handler(req, res) {
               fee_lines: [
                 ...cleanedFeeLines,
                 {
-                  name: `${SOCIO_COUPON_CODE} -95% margin`,
+                  name: `${SOCIO_COUPON_CODE} -95%`,
                   total: (-appliedDiscount).toFixed(2),
                   taxable: false,
                 },
@@ -256,7 +315,7 @@ export default async function handler(req, res) {
                 ...cleanedMetaData,
                 { key: 'dosalga_coupon_code', value: SOCIO_COUPON_CODE },
                 { key: 'dosalga_coupon_discount', value: appliedDiscount.toFixed(2) },
-                { key: 'dosalga_coupon_type', value: 'margin_percent' },
+                { key: 'dosalga_coupon_type', value: 'percent' },
               ],
             });
             isSocioDiscountApplied = true;
@@ -272,6 +331,7 @@ export default async function handler(req, res) {
       return res.status(422).json({
         success: false,
         message: 'Le coupon SOCIO n’est pas configuré côté WooCommerce. Créez le coupon SOCIO dans WooCommerce > Marketing > Coupons.',
+        debug_id: debugId,
       });
     }
 
@@ -286,14 +346,16 @@ export default async function handler(req, res) {
       },
       coupon_applied: isSocioDiscountApplied,
       warning: couponSyncWarning,
-      message: 'Commande créée avec succès'
+      message: 'Commande créée avec succès',
+      debug_id: debugId,
     });
   } catch (error) {
-    console.error('Error creating order:', error);
+    console.error(`[checkout:${debugId}] error`, error);
     res.status(500).json({ 
       success: false,
       message: 'Erreur lors de la création de la commande',
-      error: error.message 
+      error: error.message,
+      debug_id: debugId,
     });
   }
 }

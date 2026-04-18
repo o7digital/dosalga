@@ -47,6 +47,7 @@ const Checkout = () => {
   const [billingFirstName, setBillingFirstName] = useState('');
   const [billingLastName, setBillingLastName] = useState('');
   const [billingAddress, setBillingAddress] = useState('');
+  const [billingColony, setBillingColony] = useState('');
   const [billingPostcode, setBillingPostcode] = useState('');
   const [billingPhone, setBillingPhone] = useState('');
   const [billingEmail, setBillingEmail] = useState('');
@@ -126,6 +127,7 @@ const Checkout = () => {
         first_name: billingFirstName,
         last_name: billingLastName,
         address_1: billingAddress,
+        address_2: billingColony,
         city: billingCity,
         state: billingState,
         postcode: billingPostcode,
@@ -210,6 +212,12 @@ const Checkout = () => {
                       <div className="form-inner">
                         <label>Street Address</label>
                         <input type="text" name="address" placeholder="House and street name" value={billingAddress} onChange={(event) => setBillingAddress(event.target.value)} />
+                      </div>
+                    </div>
+                    <div className="col-12">
+                      <div className="form-inner">
+                        <label>Colony / Colonia</label>
+                        <input type="text" name="colony" placeholder="Neighborhood / Colonia" value={billingColony} onChange={(event) => setBillingColony(event.target.value)} />
                       </div>
                     </div>
                     {billingCountry === 'MX' ? (
@@ -430,7 +438,7 @@ const Checkout = () => {
                   {appliedCoupon && (
                     <div className="active-coupon">
                       <span>
-                        Code actif: <strong>{appliedCoupon.code}</strong> (95% off margin)
+                        Code actif: <strong>{appliedCoupon.code}</strong> (-95%)
                       </span>
                       <button type="button" className="remove-coupon-btn" onClick={removeCouponCode}>
                         Remove
