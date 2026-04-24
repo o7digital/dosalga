@@ -72,13 +72,14 @@ const Checkout = () => {
   const termsPath = `${localePrefix}/terms-and-conditions`;
   const checkoutBaseUrl =
     process.env.NEXT_PUBLIC_CHECKOUT_BASE_URL ||
-    process.env.NEXT_PUBLIC_WORDPRESS_URL ||
-    'https://oliviers44.sg-host.com';
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (typeof window !== 'undefined' ? window.location.origin : '');
 
   const normalizePaymentUrl = (url) => {
     if (!url) return null;
     try {
       const parsedUrl = new URL(url);
+      if (!checkoutBaseUrl) return parsedUrl.toString();
       const targetOrigin = new URL(checkoutBaseUrl).origin;
       parsedUrl.protocol = new URL(targetOrigin).protocol;
       parsedUrl.host = new URL(targetOrigin).host;

@@ -1,8 +1,4 @@
 const WORDPRESS_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL || 'https://oliviers44.sg-host.com';
-const CHECKOUT_BASE_URL =
-  process.env.WC_CHECKOUT_BASE_URL ||
-  process.env.NEXT_PUBLIC_CHECKOUT_BASE_URL ||
-  WORDPRESS_URL;
 const SOCIO_COUPON_CODE = 'SOCIO';
 const CHECKOUT_DEBUG = process.env.CHECKOUT_DEBUG === '1';
 
@@ -27,8 +23,31 @@ const normalizeBaseUrl = (value, fallback) => {
   }
 };
 
-const buildPaymentUrl = (orderId, orderKey) => {
-  const baseUrl = normalizeBaseUrl(CHECKOUT_BASE_URL, WORDPRESS_URL);
+const resolveCheckoutBaseUrl = (req) => {
+  const configuredBaseUrl =
+    process.env.WC_CHECKOUT_BASE_URL ||
+    process.env.NEXT_PUBLIC_CHECKOUT_BASE_URL ||
+    process.env.NEXT_PUBLIC_SITE_URL;
+
+  if (configuredBaseUrl) {
+    return normalizeBaseUrl(configuredBaseUrl, WORDPRESS_URL);
+  }
+
+  const host = req.headers.host;
+  if (host) {
+    const protoHeader = req.headers['x-forwarded-proto'];
+    const protocol = Array.isArray(protoHeader)
+      ? String(protoHeader[0]).split(',')[0].trim()
+      : String(protoHeader || '').split(',')[0].trim();
+    const safeProtocol = protocol === 'http' ? 'http' : 'https';
+    return `${safeProtocol}://${host}`;
+  }
+
+  return WORDPRESS_URL;
+};
+
+const buildPaymentUrl = (orderId, orderKey, req) => {
+  const baseUrl = resolveCheckoutBaseUrl(req);
   return `${baseUrl}/checkout/order-pay/${orderId}/?pay_for_order=true&key=${orderKey}`;
 };
 
@@ -335,7 +354,7 @@ export default async function handler(req, res) {
       });
     }
 
-    const paymentUrl = buildPaymentUrl(order.order_id, order.order_key);
+    const paymentUrl = buildPaymentUrl(order.order_id, order.order_key, req);
     
     res.status(201).json({
       success: true,
