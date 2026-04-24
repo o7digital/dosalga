@@ -3,14 +3,10 @@ import Head from "next/head";
 
 const TaxesAndDutiesPage = () => {
   const siteUrl = "https://dosalga.com";
-  const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+  const locales = ['en', 'es'];
   const slugByLocale = {
     en: '/taxes-and-duties',
     es: '/impuestos-y-aranceles',
-    de: '/taxes-and-duties',
-    fr: '/taxes-and-duties',
-    it: '/taxes-and-duties',
-    pt: '/taxes-and-duties',
   };
   const currentLocale = 'en';
   const hrefFor = (locale) => {
@@ -18,6 +14,7 @@ const TaxesAndDutiesPage = () => {
     return `${siteUrl}${locale === 'en' ? '' : `/${locale}`}${slug}`;
   };
   const ogLocale = 'en_US';
+  const ogImage = `${siteUrl}/assets/img/sm-logo.svg`;
 
   return (
     <>
@@ -33,17 +30,16 @@ const TaxesAndDutiesPage = () => {
         ))}
         <link rel="alternate" hrefLang="x-default" href={hrefFor('en')} />
         <meta property="og:locale" content={ogLocale} />
-        <meta property="og:url" content={hrefFor(currentLocale)} />
-
-        <meta property="og:locale" content="en_US" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={`${siteUrl}/taxes-and-duties`} />
+        <meta property="og:url" content={hrefFor(currentLocale)} />
         <meta property="og:title" content="Taxes & Import Duties | Dosalga" />
         <meta
           property="og:description"
           content="Review Dosalga's Taxes & Import Duties policy for international orders, including United States and Mexico deliveries."
         />
         <meta property="og:site_name" content="Dosalga" />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:alt" content="Dosalga" />
       </Head>
 
       <div className="privacy-policy-section pt-120 pb-120">

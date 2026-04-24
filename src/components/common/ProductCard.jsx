@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useCountdownTimer } from '@/src/hooks/useCountdownTimer';
 import { useWishlist } from '@/src/contexts/WishlistContext';
 import { useCart } from '@/src/contexts/CartContext';
+import { formatUSDPrice } from '@/src/lib/pricing';
 import { toast } from 'react-toastify';
 
 /**
@@ -14,18 +15,10 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
   const { addToCart } = useCart();
   const router = useRouter();
   const [rating, setRating] = useState(0);
-  const isSpanish = router.pathname.startsWith('/es');
-  // Fixed MXN -> USD conversion for display
-  const MXN_TO_USD_RATE = 18.5;
-  const formatPrice = (value) => {
-    const numeric = Number.parseFloat(value);
-    if (!Number.isFinite(numeric)) return '';
-    const usd = numeric / MXN_TO_USD_RATE;
-    return `$${usd.toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })} USD`;
-  };
+  const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
+  const localeSegment = router.pathname.split('/')[1];
+  const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
+  const isSpanish = localeSegment === 'es';
 
   // Extraire les données du produit WooCommerce
   const {
@@ -41,9 +34,10 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
     stock_status = 'instock',
     on_sale = false,
     type = 'simple',
+    purchasable = true,
     date_created
   } = product;
-  const productLink = detailHref || `/shop/product/${id}`;
+  const productLink = detailHref || `${localePrefix}/shop/product/${id}`;
 
   // Utiliser la première image ou une image par défaut
   const mainImage = images[0]?.src || '/assets/img/placeholder.png';
@@ -118,6 +112,12 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (!purchasable || !price) {
+      router.push(productLink);
+      return;
+    }
+
     addToCart(product, 1);
     toast.success(isSpanish ? 'Producto anadido al carrito' : 'Product added to cart');
   };
@@ -162,10 +162,10 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
         <div className="overlay">
           <div className="cart-area">
             {stock_status === 'instock' ? (
-              type === 'variable' ? (
+              type === 'variable' || !purchasable || !price ? (
                 <Link legacyBehavior href={productLink}>
                   <a className="hover-btn3 add-cart-btn">
-                    Voir les options
+                    {isSpanish ? 'Ver producto' : 'View product'}
                   </a>
                 </Link>
               ) : (
@@ -262,11 +262,11 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
         <p className="price">
           {on_sale && sale_price ? (
             <>
-              {formatPrice(sale_price)} 
-              <del>{formatPrice(regular_price)}</del>
+              {formatUSDPrice(sale_price)}
+              <del>{formatUSDPrice(regular_price)}</del>
             </>
           ) : (
-            formatPrice(price)
+            formatUSDPrice(price)
           )}
         </p>
 
@@ -293,6 +293,38 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
       <span className="for-border" />
     </div>
       <style jsx>{`
+        .product-card {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          height: 100%;
+        }
+        .product-card-content {
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+          padding-top: 25px;
+          padding-bottom: 10px;
+          text-align: center;
+        }
+        .product-card-content h6 {
+          margin-bottom: 8px;
+          min-height: 4.2em;
+        }
+        .product-card-content h6 a {
+          display: -webkit-box;
+          overflow: hidden;
+          line-height: 1.4;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 3;
+        }
+        .product-card-content p:not(.price) {
+          margin-bottom: 14px;
+        }
+        .product-card-content .price {
+          margin-top: auto;
+          margin-bottom: 8px;
+        }
         .wishlist-toggle {
           background: transparent;
           border: none;

@@ -2,18 +2,20 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import React from 'react';
 
+const ALL_LANGUAGES = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+const VISIBLE_LANGUAGES = ['en', 'es'];
+
 const LanguageSwitcher = () => {
   const router = useRouter();
-  const languages = ['en', 'es', 'de', 'fr', 'it', 'pt'];
 
   const currentLang = (() => {
     const seg = router.pathname.split('/')[1];
-    return languages.includes(seg) ? seg : 'en';
+    return ALL_LANGUAGES.includes(seg) ? seg : 'en';
   })();
 
   const buildPath = (targetLang) => {
     const segments = router.asPath.split('/');
-    if (languages.includes(segments[1])) {
+    if (ALL_LANGUAGES.includes(segments[1])) {
       segments[1] = targetLang === 'en' ? '' : targetLang;
     } else if (targetLang !== 'en') {
       segments.splice(1, 0, targetLang);
@@ -29,7 +31,7 @@ const LanguageSwitcher = () => {
       alignItems: 'center',
       marginRight: '15px'
     }}>
-      {languages.map((lang) => {
+      {VISIBLE_LANGUAGES.map((lang) => {
         const active = currentLang === lang;
         const label = lang.toUpperCase();
         return (

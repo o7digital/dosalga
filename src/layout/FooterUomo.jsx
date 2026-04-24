@@ -20,6 +20,22 @@ const FooterUomo = () => {
             it: 'Activewear premium e prodotti lifestyle per tutti.',
             pt: 'Activewear premium e produtos lifestyle para todos.',
         },
+        keywordsTitle: {
+            en: 'Keywords',
+            es: 'Palabras clave',
+            de: 'Suchbegriffe',
+            fr: 'Mots-clés',
+            it: 'Parole chiave',
+            pt: 'Palavras-chave',
+        },
+        keywords: {
+            en: 'fitness clothing Miami Florida, fitness clothing store Miami Florida, gym clothing for women Miami Florida, gym clothing for men Miami Florida, workout clothing Miami Florida, training clothes Miami Florida, fitness apparel brand Miami Florida, performance fitness clothing Miami Florida, yoga fitness clothing Miami Florida, running fitness clothing Miami Florida, fitness clothing Mexico City, fitness clothing CDMX, fitness clothing store Mexico City, gym clothing for women CDMX, gym clothing for men CDMX, workout clothing Mexico City, training clothes CDMX, fitness apparel brand Mexico City, performance fitness clothing CDMX, yoga fitness clothing CDMX',
+            es: 'ropa fitness Miami Florida, tienda de ropa fitness Miami Florida, ropa de gimnasio para mujer Miami Florida, ropa de gimnasio para hombre Miami Florida, ropa de entrenamiento Miami Florida, ropa deportiva fitness Miami Florida, ropa fitness premium Miami Florida, ropa fitness de alto rendimiento Miami Florida, ropa de yoga fitness Miami Florida, ropa fitness para correr Miami Florida, ropa fitness Ciudad de México, ropa fitness CDMX, tienda de ropa fitness Ciudad de México, ropa de gimnasio para mujer CDMX, ropa de gimnasio para hombre CDMX, ropa de entrenamiento Ciudad de México, ropa deportiva fitness CDMX, ropa fitness premium Ciudad de México, ropa fitness de alto rendimiento CDMX, ropa de yoga fitness CDMX',
+            de: 'Fitnessbekleidung Miami Florida, Fitnessbekleidung Shop Miami Florida, Damen Fitnessbekleidung Miami Florida, Herren Fitnessbekleidung Miami Florida, Trainingsbekleidung Miami Florida, Sportbekleidung Fitness Miami Florida, Premium Fitnessbekleidung Miami Florida, Performance Fitnessbekleidung Miami Florida, Yoga Fitnessbekleidung Miami Florida, Lauf Fitnessbekleidung Miami Florida, Fitnessbekleidung Mexiko-Stadt, Fitnessbekleidung CDMX, Fitnessbekleidung Shop Mexiko-Stadt, Damen Fitnessbekleidung CDMX, Herren Fitnessbekleidung CDMX, Trainingsbekleidung Mexiko-Stadt, Sportbekleidung Fitness CDMX, Premium Fitnessbekleidung Mexiko-Stadt, Performance Fitnessbekleidung CDMX, Yoga Fitnessbekleidung CDMX',
+            fr: 'vêtements fitness Miami Florida, boutique de vêtements fitness Miami Florida, vêtements de gym femme Miami Florida, vêtements de gym homme Miami Florida, vêtements d\'entraînement Miami Florida, vêtements de sport fitness Miami Florida, vêtements fitness premium Miami Florida, vêtements fitness performance Miami Florida, vêtements de yoga fitness Miami Florida, vêtements fitness running Miami Florida, vêtements fitness Mexico City, vêtements fitness CDMX, boutique de vêtements fitness Mexico City, vêtements de gym femme CDMX, vêtements de gym homme CDMX, vêtements d\'entraînement Mexico City, vêtements de sport fitness CDMX, vêtements fitness premium Mexico City, vêtements fitness performance CDMX, vêtements de yoga fitness CDMX',
+            it: 'abbigliamento fitness Miami Florida, negozio abbigliamento fitness Miami Florida, abbigliamento palestra donna Miami Florida, abbigliamento palestra uomo Miami Florida, abbigliamento da allenamento Miami Florida, abbigliamento sportivo fitness Miami Florida, abbigliamento fitness premium Miami Florida, abbigliamento fitness performance Miami Florida, abbigliamento yoga fitness Miami Florida, abbigliamento running fitness Miami Florida, abbigliamento fitness Città del Messico, abbigliamento fitness CDMX, negozio abbigliamento fitness Città del Messico, abbigliamento palestra donna CDMX, abbigliamento palestra uomo CDMX, abbigliamento da allenamento Città del Messico, abbigliamento sportivo fitness CDMX, abbigliamento fitness premium Città del Messico, abbigliamento fitness performance CDMX, abbigliamento yoga fitness CDMX',
+            pt: 'roupa fitness Miami Florida, loja de roupa fitness Miami Florida, roupa de academia feminina Miami Florida, roupa de academia masculina Miami Florida, roupa de treino Miami Florida, roupa esportiva fitness Miami Florida, roupa fitness premium Miami Florida, roupa fitness de performance Miami Florida, roupa de yoga fitness Miami Florida, roupa fitness para corrida Miami Florida, roupa fitness Cidade do México, roupa fitness CDMX, loja de roupa fitness Cidade do México, roupa de academia feminina CDMX, roupa de academia masculina CDMX, roupa de treino Cidade do México, roupa esportiva fitness CDMX, roupa fitness premium Cidade do México, roupa fitness de performance CDMX, roupa de yoga fitness CDMX',
+        },
         company: { en: 'COMPANY', es: 'COMPAÑÍA', de: 'UNTERNEHMEN', fr: 'ENTREPRISE', it: 'AZIENDA', pt: 'EMPRESA' },
         help: { en: 'HELP', es: 'AYUDA', de: 'AIDE', fr: 'AIDE', it: 'AIUTO', pt: 'AJUDA' },
         subscribe: { en: 'SUBSCRIBE', es: 'SUSCRÍBETE', de: 'ABONNIEREN', fr: 'S’ABONNER', it: 'ISCRIVITI', pt: 'ASSINAR' },
@@ -153,6 +169,15 @@ const FooterUomo = () => {
                     </div>
                 </div>
             </div>
+
+            {labels.keywords[lang] && (
+                <div className="footer-keywords">
+                    <div className="container">
+                        <p className="keyword-label">{labels.keywordsTitle[lang]}</p>
+                        <p className="keyword-list">{labels.keywords[lang]}</p>
+                    </div>
+                </div>
+            )}
 
             <style jsx>{`
                 .uomo-footer {
@@ -335,6 +360,28 @@ const FooterUomo = () => {
                 .footer-bottom {
                     padding: 16px 0;
                     border-top: 1px solid rgba(0,0,0,0.12);
+                }
+
+                .footer-keywords {
+                    padding: 12px 0 24px;
+                    border-top: 1px solid rgba(0,0,0,0.12);
+                    background: #bcbcbc;
+                }
+
+                .keyword-label {
+                    font-size: 12px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 0.8px;
+                    color: #000;
+                    margin: 0 0 6px;
+                }
+
+                .keyword-list {
+                    font-size: 12px;
+                    color: #111;
+                    line-height: 1.6;
+                    margin: 0;
                 }
 
                 .copyright {

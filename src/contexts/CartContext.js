@@ -5,16 +5,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const CartContext = createContext();
 const SOCIO_COUPON_CODE = 'SOCIO';
-const SOCIO_MARGIN_DISCOUNT_RATE = 0.95;
-const DEFAULT_MARGIN_RATE = 0.35;
-
-const normalizeRate = (value, fallback) => {
-  const parsedValue = Number.parseFloat(value);
-  if (!Number.isFinite(parsedValue)) return fallback;
-  if (parsedValue < 0) return 0;
-  if (parsedValue > 1) return 1;
-  return parsedValue;
-};
+const SOCIO_DISCOUNT_RATE = 0.95;
 
 export const useCart = () => {
   const context = useContext(CartContext);
@@ -28,7 +19,6 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [appliedCoupon, setAppliedCoupon] = useState(null);
-  const fallbackMarginRate = normalizeRate(process.env.NEXT_PUBLIC_SOCIO_MARGIN_RATE, DEFAULT_MARGIN_RATE);
 
   // Charger le panier depuis localStorage au démarrage
   useEffect(() => {
@@ -95,6 +85,7 @@ export const CartProvider = ({ children }) => {
             image: product.images?.[0]?.src || '/assets/img/placeholder.png',
             quantity,
             variation,
+            product_type: product.type || 'simple',
             stock_status: product.stock_status
           }
         ];
@@ -147,10 +138,10 @@ export const CartProvider = ({ children }) => {
       setAppliedCoupon({
         code: SOCIO_COUPON_CODE,
         label: 'Remise socios',
-        type: 'margin_percent',
-        rate: SOCIO_MARGIN_DISCOUNT_RATE,
+        type: 'percent',
+        rate: SOCIO_DISCOUNT_RATE,
       });
-      return { success: true, message: 'Code SOCIO appliqué: -95% sur la marge.' };
+      return { success: true, message: 'Code SOCIO appliqué: -95% sur le total.' };
     }
 
     return { success: false, message: 'Code promo invalide.' };
@@ -166,16 +157,12 @@ export const CartProvider = ({ children }) => {
   };
 
   const getDiscountAmount = () => {
-    if (!appliedCoupon || appliedCoupon.type !== 'margin_percent') {
+    if (!appliedCoupon || appliedCoupon.type !== 'percent') {
       return 0;
     }
 
-    return cart.reduce((discountTotal, item) => {
-      const itemPrice = Number.parseFloat(item.price || 0);
-      const margin = Math.max(0, itemPrice * fallbackMarginRate);
-      const discountPerItem = margin * appliedCoupon.rate;
-      return discountTotal + discountPerItem * item.quantity;
-    }, 0);
+    const subtotal = getCartTotal();
+    return subtotal * appliedCoupon.rate;
   };
 
   const getCartTotalAfterDiscount = () => {
@@ -193,15 +180,25 @@ export const CartProvider = ({ children }) => {
   const createOrder = async (billingInfo, shippingInfo = null) => {
     setIsLoading(true);
     try {
+      const invalidVariableItem = cart.find((item) => {
+        const explicitMissingVariationId = item.variation && !item.variation?.id;
+        const variableWithoutSelection = item.product_type === 'variable' && !item.variation?.id;
+        return explicitMissingVariationId || variableWithoutSelection;
+      });
+
+      if (invalidVariableItem) {
+        throw new Error(`Product "${invalidVariableItem.name}" has incomplete options. Remove it from the cart and add it again after selecting all required options.`);
+      }
+
       const orderData = {
-        payment_method: 'bacs',
-        payment_method_title: 'Virement bancaire',
-        set_paid: false,
         billing: billingInfo,
         shipping: shippingInfo || billingInfo,
+        customer_note: billingInfo.customer_note || '',
+        coupon_code: appliedCoupon?.code || '',
+        coupon_discount_amount: getDiscountAmount(),
         fee_lines: appliedCoupon?.code === SOCIO_COUPON_CODE
           ? [{
-              name: `${SOCIO_COUPON_CODE} -95% margin`,
+              name: `${SOCIO_COUPON_CODE} -95%`,
               total: `-${getDiscountAmount().toFixed(2)}`,
               taxable: false,
             }]
@@ -209,13 +206,26 @@ export const CartProvider = ({ children }) => {
         meta_data: appliedCoupon?.code === SOCIO_COUPON_CODE
           ? [
               { key: 'dosalga_coupon_code', value: SOCIO_COUPON_CODE },
-              { key: 'dosalga_coupon_type', value: 'margin_percent' },
+              { key: 'dosalga_coupon_type', value: 'percent' },
             ]
           : [],
         line_items: cart.map((item) => ({
           product_id: item.id,
           quantity: item.quantity,
-          variation_id: item.variation?.id || 0
+          variation_id: item.variation?.id || 0,
+          variation_attributes: Array.isArray(item.variation?.attributesRaw)
+            ? item.variation.attributesRaw
+                .filter((attribute) => attribute?.attribute && attribute?.value)
+                .map((attribute) => ({
+                  attribute: String(attribute.attribute),
+                  value: String(attribute.value),
+                }))
+            : Object.entries(item.variation?.attributes || {})
+                .filter(([, value]) => value)
+                .map(([attribute, value]) => ({
+                  attribute: String(attribute),
+                  value: String(value),
+                })),
         })),
       };
 
@@ -230,15 +240,28 @@ export const CartProvider = ({ children }) => {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || 'Erreur lors de la création de la commande');
+        const baseMessage = result.error || result.message || 'Erreur lors de la création de la commande';
+        const debugSuffix = result?.debug_id ? ` (debug: ${result.debug_id})` : '';
+        throw new Error(`${baseMessage}${debugSuffix}`);
       }
 
-      // Vider le panier après une commande réussie
-      clearCart();
+      const couponApplied = result.coupon_applied !== false;
 
-      return result.data;
+      // Vider le panier seulement si la commande est prête pour paiement
+      if (couponApplied) {
+        clearCart();
+      }
+
+      return {
+        ...result.data,
+        warning: result.warning || null,
+        coupon_applied: couponApplied,
+      };
     } catch (error) {
       console.error('Error creating order:', error);
+      if (/Missing attributes for variable product/i.test(error?.message || '')) {
+        throw new Error('One or more products need required options (size/color). Remove them from cart and add them again after selecting all options.');
+      }
       throw error;
     } finally {
       setIsLoading(false);

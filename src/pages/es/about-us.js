@@ -3,11 +3,12 @@ import Head from "next/head";
 
 const AboutPageEs = () => {
   const siteUrl = "https://dosalga.com";
-  const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+  const locales = ['en', 'es'];
   const currentLocale = 'es';
   const slug = '/about-us';
   const hrefFor = (locale) => `${siteUrl}${locale === 'en' ? '' : `/${locale}`}${slug}`;
   const ogLocale = 'es_ES';
+  const ogImage = `${siteUrl}/assets/img/sm-logo.svg`;
   
   return (
     <>
@@ -31,6 +32,8 @@ const AboutPageEs = () => {
         <meta property="og:title" content="Sobre Dosalga - Productos para la vida diaria" />
         <meta property="og:description" content="Empresa dedicada a simplificar la compra de productos esenciales con entregas donde los necesitas. Historia, visión, misión y valores de Dosalga." />
         <meta property="og:site_name" content="Dosalga" />
+        <meta property="og:image" content={ogImage} />
+        <meta property="og:image:alt" content="Dosalga" />
       </Head>
     <div className="about-page pt-100 pb-100">
       <div className="container">

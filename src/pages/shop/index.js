@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
 import ProductViewModal from '@/src/components/common/ProductViewModal';
 import ProductCard from '@/src/components/common/ProductCard';
 import { useProducts } from '@/src/hooks/useProducts';
 import { useCategories } from '@/src/hooks/useCategories';
+import { formatUSDPrice } from '@/src/lib/pricing';
 
 const SORT_PRESETS = {
   newest: { orderby: 'date', order: 'desc' },
@@ -14,10 +16,14 @@ const SORT_PRESETS = {
 };
 
 const ShopPage = () => {
+  const router = useRouter();
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
   const [activeColumn, setActiveColumn] = useState('column-4');
   const [sortKey, setSortKey] = useState('newest');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
+  const localeSegment = router.pathname.split('/')[1];
+  const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
 
   const sidebarRef = useRef(null);
   const sidebarBtnRef = useRef(null);
@@ -43,7 +49,7 @@ const ShopPage = () => {
 
   const productParams = useMemo(() => {
     const params = {
-      per_page: 24,
+      all: true,
       orderby: sortPreset.orderby,
       order: sortPreset.order,
     };
@@ -76,11 +82,11 @@ const ShopPage = () => {
               <h5 className="shop-widget-title">Categories</h5>
               <ul className="shop-item">
                 <li>
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setSelectedCategory('');
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setSelectedCategory('');
                     }}
                   >
                     All Products
@@ -110,7 +116,7 @@ const ShopPage = () => {
               return (
                 <div className="top-product-widget mb-20" key={product.id}>
                   <div className="top-product-img">
-                    <Link legacyBehavior href={`/shop/product/${product.id}`}>
+                    <Link legacyBehavior href={`${localePrefix}/shop/product/${product.id}`}>
                       <a>
                         <img src={image} alt={product.name} />
                       </a>
@@ -118,11 +124,11 @@ const ShopPage = () => {
                   </div>
                   <div className="top-product-content">
                     <h6>
-                      <Link legacyBehavior href={`/shop/product/${product.id}`}>
+                      <Link legacyBehavior href={`${localePrefix}/shop/product/${product.id}`}>
                         <a>{product.name}</a>
                       </Link>
                     </h6>
-                    <span>${Number.parseFloat(product.price || 0).toFixed(2)}</span>
+                    <span>{formatUSDPrice(product.price)}</span>
                   </div>
                 </div>
               );
@@ -201,7 +207,7 @@ const ShopPage = () => {
               )}
 
               {!loading && !error && products.map((product, index) => (
-                <div key={product.id} className={gridColumnClass}>
+                <div key={product.id} className={`${gridColumnClass} d-flex`}>
                   <ProductCard product={product} showCountdown={index === 0} />
                 </div>
               ))}

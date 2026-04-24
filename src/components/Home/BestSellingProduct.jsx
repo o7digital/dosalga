@@ -1,24 +1,14 @@
-import React, { useState } from 'react';
-import Link from 'next/link';
+import React from 'react';
 import { useProducts } from '@/src/hooks/useProducts';
 import ProductCard from '@/src/components/common/ProductCard';
 
 const BestSellingProduct = () => {
-  const [displayCount, setDisplayCount] = useState(8);
-  
   // Récupérer les produits best-sellers depuis WooCommerce
   const { products, loading, error } = useProducts({
-    per_page: 50,
+    all: true,
     orderby: 'popularity',
     order: 'desc'
   });
-
-  const loadMore = () => {
-    setDisplayCount(prev => prev + 8);
-  };
-
-  const displayedProducts = products.slice(0, displayCount);
-  const hasMore = displayCount < products.length;
 
   return (
     <>
@@ -53,7 +43,7 @@ const BestSellingProduct = () => {
                     <p>Aucun produit disponible pour le moment.</p>
                   </div>
                 ) : (
-                  displayedProducts.map((product, index) => (
+                  products.map((product, index) => (
                     <div key={product.id} className="col-lg-3 col-md-6">
                       <ProductCard 
                         product={product} 
@@ -63,24 +53,6 @@ const BestSellingProduct = () => {
                   ))
                 )}
               </div>
-              
-              {/* Bouton View More Products */}
-              {hasMore && (
-                <div className="row mt-5">
-                  <div className="col-12 text-center">
-                    <button 
-                      onClick={loadMore}
-                      className="primary-btn1 hover-btn3"
-                      style={{ border: 'none', cursor: 'pointer' }}
-                    >
-                      View More Products
-                      <svg width={15} height={15} viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M1.5 7.5H13.5M13.5 7.5L7.5 1.5M13.5 7.5L7.5 13.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              )}
             </>
           )}
         </div>

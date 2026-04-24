@@ -2,9 +2,10 @@ import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useProducts } from '../../hooks/useProducts';
 import { useRouter } from 'next/router';
+import { formatUSDPrice, parsePriceValue } from '../../lib/pricing';
 
 const TrendingNow = () => {
-    const { products, loading, error } = useProducts({ limit: 12 });
+    const { products, loading, error } = useProducts({ all: true });
     const { pathname } = useRouter();
     const lang = (() => {
         const code = pathname.split('/')[1];
@@ -74,24 +75,6 @@ const TrendingNow = () => {
         return [{ id: 'all', label: allLabel }, ...ordered];
     }, [products, lang]);
 
-    const parsePriceValue = (value) => {
-        const raw = String(value ?? '').trim();
-        if (!raw) return null;
-        const normalized = raw.includes(',') && !raw.includes('.')
-            ? raw.replace(',', '.')
-            : raw.replace(/,/g, '');
-        const numeric = Number(normalized);
-        return Number.isFinite(numeric) ? numeric : null;
-    };
-
-    const MXN_TO_USD_RATE = 18.5;
-    const formatPrice = (value) => {
-        const numeric = parsePriceValue(value);
-        if (numeric === null) return '';
-        const usd = numeric / MXN_TO_USD_RATE;
-        return `$${usd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
-    };
-
     const filteredProducts = useMemo(() => {
         const source = Array.isArray(products) ? [...products] : [];
 
@@ -121,7 +104,7 @@ const TrendingNow = () => {
             return 0;
         });
 
-        return sorted.slice(0, 12);
+        return sorted;
     }, [products, selectedCategory, sortOption]);
 
     if (loading) {
@@ -274,11 +257,11 @@ const TrendingNow = () => {
                                             <div className="product-price">
                                                 {product.on_sale ? (
                                                     <>
-                                                        <span className="regular-price">{formatPrice(product.regular_price)}</span>
-                                                        <span className="sale-price">{formatPrice(product.sale_price)}</span>
+                                                        <span className="regular-price">{formatUSDPrice(product.regular_price)}</span>
+                                                        <span className="sale-price">{formatUSDPrice(product.sale_price)}</span>
                                                     </>
                                                 ) : (
-                                                    <span className="price">{formatPrice(product.price)}</span>
+                                                    <span className="price">{formatUSDPrice(product.price)}</span>
                                                 )}
                                             </div>
                                         </div>

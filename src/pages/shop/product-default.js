@@ -1,19 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import GiftSection from '@/src/components/common/GiftSection';
 import { useProduct, useProducts } from '@/src/hooks/useProducts';
 import { useCart } from '@/src/contexts/CartContext';
+import { formatUSDPrice } from '@/src/lib/pricing';
 import { toast } from 'react-toastify';
-
-const formatUSD = (value) => {
-  const numeric = Number.parseFloat(value || 0);
-  if (!Number.isFinite(numeric)) return '$0.00';
-  return `$${numeric.toLocaleString('en-US', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
-};
 
 const htmlToPlainText = (html = '') => {
   return html
@@ -26,9 +17,35 @@ const htmlToPlainText = (html = '') => {
     .trim();
 };
 
+const isSizeAttribute = (attribute) => {
+  const slug = attribute?.slug?.toLowerCase();
+  const name = attribute?.name?.toLowerCase();
+
+  return slug === 'pa_size' || slug === 'size' || name?.includes('size');
+};
+
+const getAttributeKey = (attribute) => {
+  return (attribute?.slug || attribute?.name || '').toLowerCase();
+};
+
+const normalizeOption = (value) => String(value || '').trim().toLowerCase();
+
+const variationHasOption = (variation, key, option) => {
+  return Array.isArray(variation?.attributes) && variation.attributes.some(
+    (attribute) => getAttributeKey(attribute) === key && normalizeOption(attribute?.option) === normalizeOption(option)
+  );
+};
+
+const isVariationAvailable = (variation) => {
+  return variation?.purchasable !== false && variation?.stock_status !== 'outofstock';
+};
+
 const ProductDefaultPage = () => {
   const router = useRouter();
   const { addToCart } = useCart();
+  const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
+  const localeSegment = router.pathname.split('/')[1];
+  const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
 
   const queryId = Array.isArray(router.query.id) ? router.query.id[0] : router.query.id;
   const { products: fallbackProducts } = useProducts({ per_page: 1, orderby: 'date', order: 'desc' });
@@ -38,12 +55,12 @@ const ProductDefaultPage = () => {
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [selectedSize, setSelectedSize] = useState(null);
+  const [selectedOptions, setSelectedOptions] = useState({});
 
   useEffect(() => {
     setSelectedImage(0);
     setQuantity(1);
-    setSelectedSize(null);
+    setSelectedOptions({});
   }, [resolvedId]);
 
   useEffect(() => {
@@ -62,27 +79,115 @@ const ProductDefaultPage = () => {
     html.style.overflowY = 'auto';
   }, []);
 
-  const sizeOptions = useMemo(() => {
+  const variationAttributes = useMemo(() => {
     const attrs = Array.isArray(product?.attributes) ? product.attributes : [];
-    const sizeAttr = attrs.find(
-      (attr) =>
-        attr?.name?.toLowerCase().includes('size') ||
-        attr?.slug === 'pa_size' ||
-        attr?.slug === 'size'
-    );
+    return attrs.filter((attr) => attr?.variation && Array.isArray(attr?.options) && attr.options.length > 0);
+  }, [product?.attributes]);
+  const availableVariations = useMemo(() => {
+    return Array.isArray(product?.variations) ? product.variations.filter(isVariationAvailable) : [];
+  }, [product?.variations]);
+  const availableOptionsByAttribute = useMemo(() => {
+    return variationAttributes.reduce((accumulator, attribute) => {
+      const key = getAttributeKey(attribute);
+      const options = attribute.options.filter((option) => {
+        return availableVariations.some((variation) => {
+          if (!variationHasOption(variation, key, option)) {
+            return false;
+          }
 
-    if (Array.isArray(sizeAttr?.options) && sizeAttr.options.length > 0) {
-      return sizeAttr.options;
+          return Object.entries(selectedOptions).every(([selectedKey, selectedValue]) => {
+            if (!selectedValue || selectedKey === key) {
+              return true;
+            }
+
+            return variationHasOption(variation, selectedKey, selectedValue);
+          });
+        });
+      });
+
+      accumulator[key] = options;
+      return accumulator;
+    }, {});
+  }, [availableVariations, selectedOptions, variationAttributes]);
+  const selectedVariation = useMemo(() => {
+    if (product?.type !== 'variable' || variationAttributes.length === 0) {
+      return null;
     }
 
-    return [];
-  }, [product?.attributes]);
+    const hasFullSelection = variationAttributes.every((attribute) => selectedOptions[getAttributeKey(attribute)]);
+    if (!hasFullSelection) {
+      return null;
+    }
+
+    return availableVariations.find((variation) => {
+      return variationAttributes.every((attribute) => {
+        const key = getAttributeKey(attribute);
+        return variationHasOption(variation, key, selectedOptions[key]);
+      });
+    }) || null;
+  }, [availableVariations, product?.type, selectedOptions, variationAttributes]);
+  const previewVariation = useMemo(() => {
+    if (product?.type !== 'variable' || availableVariations.length === 0) {
+      return null;
+    }
+
+    const selectedEntries = Object.entries(selectedOptions).filter(([, value]) => value);
+    if (selectedEntries.length === 0) {
+      return null;
+    }
+
+    return availableVariations.find((variation) => {
+      return selectedEntries.every(([key, value]) => variationHasOption(variation, key, value));
+    }) || null;
+  }, [availableVariations, product?.type, selectedOptions]);
+
+  const handleOptionSelect = (attributeKey, option) => {
+    setSelectedOptions((previous) => {
+      const next = {
+        ...previous,
+        [attributeKey]: option,
+      };
+
+      variationAttributes.forEach((attribute) => {
+        const key = getAttributeKey(attribute);
+        if (key === attributeKey || !next[key]) {
+          return;
+        }
+
+        const stillValid = availableVariations.some((variation) => {
+          if (!variationHasOption(variation, key, next[key])) {
+            return false;
+          }
+
+          return Object.entries(next).every(([selectedKey, selectedValue]) => {
+            if (!selectedValue || selectedKey === key) {
+              return true;
+            }
+
+            return variationHasOption(variation, selectedKey, selectedValue);
+          });
+        });
+
+        if (!stillValid) {
+          delete next[key];
+        }
+      });
+
+      return next;
+    });
+  };
 
   const images = Array.isArray(product?.images) && product.images.length > 0
     ? product.images
     : [{ src: '/assets/img/placeholder.png', alt: product?.name || 'Product image' }];
 
   const currentImage = images[selectedImage] || images[0];
+  const displayImage = previewVariation?.image?.src
+    ? {
+        src: previewVariation.image.src,
+        alt: previewVariation.image.alt || product?.name,
+      }
+    : currentImage;
   const ratingCount = Number.parseInt(product?.rating_count || 0, 10);
   const ratingValue = Number.parseFloat(product?.average_rating || 0);
   const productSummary = useMemo(() => {
@@ -103,12 +208,39 @@ const ProductDefaultPage = () => {
   const handleAddToCart = () => {
     if (!product) return false;
 
-    if (sizeOptions.length > 0 && !selectedSize) {
-      toast.warn('Please select a size before adding to cart.');
+    if (!product.purchasable || !product.price) {
+      toast.warn('This product is not available for purchase yet.');
       return false;
     }
 
-    const variation = selectedSize ? { size: selectedSize } : null;
+    if (product.type === 'variable') {
+      const missingAttributes = variationAttributes
+        .filter((attribute) => !selectedOptions[getAttributeKey(attribute)])
+        .map((attribute) => attribute.name);
+
+      if (missingAttributes.length > 0) {
+        toast.warn(`Please select: ${missingAttributes.join(', ')}.`);
+        return false;
+      }
+
+      if (!selectedVariation) {
+        toast.warn('The selected variation is unavailable.');
+        return false;
+      }
+    }
+
+    const variation = selectedVariation ? {
+      id: selectedVariation.id,
+      attributes: selectedVariation.attributes.reduce((accumulator, attribute) => {
+        accumulator[attribute.name] = attribute.option;
+        return accumulator;
+      }, {}),
+      attributesRaw: selectedVariation.attributes.map((attribute) => ({
+        attribute: attribute.slug || attribute.name,
+        value: attribute.option,
+      })),
+      size: selectedVariation.attributes.find(isSizeAttribute)?.option || null,
+    } : null;
     addToCart(product, quantity, variation);
     toast.success('Product added to cart.');
     return true;
@@ -117,7 +249,7 @@ const ProductDefaultPage = () => {
   const handleBuyNow = () => {
     const added = handleAddToCart();
     if (added) {
-      router.push('/shop/cart');
+      router.push('/shop/checkout');
     }
   };
 
@@ -135,7 +267,7 @@ const ProductDefaultPage = () => {
     return (
       <div className="container py-5 mt-110 mb-110">
         <div className="alert alert-danger mb-3">{error || 'Unable to load product.'}</div>
-        <Link legacyBehavior href="/shop">
+        <Link legacyBehavior href={`${localePrefix}/shop`}>
           <a className="primary-btn1">Back to shop</a>
         </Link>
       </div>
@@ -148,10 +280,10 @@ const ProductDefaultPage = () => {
         <div className="container-xl container-fluid-lg container">
           <div className="row gy-5">
             <div className="col-lg-6">
-              <div className="shop-details-img">
-                <div className="shop-details-tab-img product-img--main" style={{ overflow: 'hidden' }}>
-                  <img src={currentImage.src} alt={currentImage.alt || product.name} />
-                </div>
+                <div className="shop-details-img">
+                  <div className="shop-details-tab-img product-img--main" style={{ overflow: 'hidden' }}>
+                    <img src={displayImage.src} alt={displayImage.alt || product.name} />
+                  </div>
 
                 {images.length > 1 && (
                   <div className="nav nav-pills product-thumbs" aria-orientation="vertical">
@@ -189,10 +321,10 @@ const ProductDefaultPage = () => {
                   <p className="price">
                     {product.on_sale && product.sale_price ? (
                       <>
-                        {formatUSD(product.sale_price)} <del>{formatUSD(product.regular_price)}</del>
+                        {formatUSDPrice(product.sale_price)} <del>{formatUSDPrice(product.regular_price)}</del>
                       </>
                     ) : (
-                      formatUSD(product.price)
+                      formatUSDPrice(product.price)
                     )}
                   </p>
                 </div>
@@ -207,23 +339,34 @@ const ProductDefaultPage = () => {
                     </div>
                   </div>
 
-                  {sizeOptions.length > 0 && (
-                    <div className="quantity-color">
-                      <h6 className="widget-title">Size</h6>
-                      <div className="size-options">
-                        {sizeOptions.map((size) => (
-                          <button
-                            key={size}
-                            type="button"
-                            className={`size-chip ${selectedSize === size ? 'active' : ''}`}
-                            onClick={() => setSelectedSize(size)}
-                          >
-                            {size}
-                          </button>
-                        ))}
+                  {variationAttributes.map((attribute) => {
+                    const key = getAttributeKey(attribute);
+                    const availableOptions = availableOptionsByAttribute[key] || [];
+
+                    return (
+                      <div key={key} className="quantity-color">
+                        <h6 className="widget-title">{attribute.name}</h6>
+                        <div className="size-options">
+                          {attribute.options.map((option) => {
+                            const isActive = selectedOptions[key] === option;
+                            const isAvailable = availableOptions.includes(option);
+
+                            return (
+                              <button
+                                key={option}
+                                type="button"
+                                className={`size-chip ${isActive ? 'active' : ''}`}
+                                disabled={!isAvailable}
+                                onClick={() => handleOptionSelect(key, option)}
+                              >
+                                {option}
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    );
+                  })}
                 </div>
 
                 <div className="shop-details-btn">
@@ -238,8 +381,8 @@ const ProductDefaultPage = () => {
                       <li>
                         <span>Category:</span>{' '}
                         {product.categories.map((category, index) => (
-                          <React.Fragment key={category.id || category.slug || index}>
-                            <Link legacyBehavior href="/shop">
+                            <React.Fragment key={category.id || category.slug || index}>
+                            <Link legacyBehavior href={`${localePrefix}/shop`}>
                               <a>{category.name}</a>
                             </Link>
                             {index < product.categories.length - 1 ? ', ' : ''}
@@ -255,18 +398,45 @@ const ProductDefaultPage = () => {
         </div>
       </div>
 
-      <GiftSection />
-
       <style jsx>{`
+        .shop-details-img {
+          display: grid;
+          grid-template-columns: 84px minmax(0, 1fr);
+          grid-template-areas: 'thumbs main';
+          align-items: start;
+          justify-content: stretch;
+          gap: 18px;
+        }
+
+        .product-img--main {
+          grid-area: main;
+          width: 100%;
+          float: none;
+        }
+
+        .product-img--main img {
+          display: block;
+          width: 100%;
+          height: auto;
+          object-fit: cover;
+        }
+
         .product-thumbs {
-          position: relative;
+          grid-area: thumbs;
+          position: static;
           left: auto;
           top: auto;
           flex-direction: column;
           display: flex;
           gap: 10px;
-          margin-top: 16px;
+          margin-top: 0;
           flex-wrap: nowrap;
+          max-height: 640px;
+          overflow-y: auto;
+          overflow-x: hidden;
+          padding-right: 4px;
+          align-self: start;
+          scrollbar-width: thin;
         }
 
         .product-thumbs .nav-link {
@@ -275,6 +445,10 @@ const ProductDefaultPage = () => {
           padding: 4px;
           background: #fff;
           line-height: 0;
+          margin-bottom: 0;
+          width: 80px;
+          height: 80px;
+          flex: 0 0 auto;
         }
 
         .product-thumbs .nav-link.active {
@@ -282,15 +456,38 @@ const ProductDefaultPage = () => {
         }
 
         .product-thumbs img {
-          width: 60px;
-          height: 60px;
+          width: 100%;
+          height: 100%;
           object-fit: cover;
         }
 
-        @media (max-width: 576px) {
+        @media (max-width: 991px) {
+          .shop-details-img {
+            grid-template-columns: 1fr;
+            grid-template-areas:
+              'main'
+              'thumbs';
+          }
+
           .product-thumbs {
             flex-direction: row;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            max-height: none;
+            padding-right: 0;
+            padding-bottom: 6px;
+          }
+        }
+
+        @media (max-width: 576px) {
+          .shop-details-img {
+            gap: 12px;
+          }
+
+          .product-thumbs .nav-link {
+            width: 68px;
+            height: 68px;
           }
         }
 
@@ -333,6 +530,12 @@ const ProductDefaultPage = () => {
           border-color: #111;
           background: #111;
           color: #fff;
+        }
+
+        .size-chip:disabled {
+          opacity: 0.45;
+          cursor: not-allowed;
+          background: #f5f5f5;
         }
 
         .shop-details-btn button {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/src/contexts/CartContext';
+import { formatUSDPrice } from '@/src/lib/pricing';
 
 const Cart = () => {
   const {
@@ -84,7 +85,7 @@ const Cart = () => {
                           </td>
 
                           <td data-label="Price">
-                            <p className="price">${itemPrice.toFixed(2)}</p>
+                            <p className="price">{formatUSDPrice(itemPrice)}</p>
                           </td>
 
                           <td data-label="Quantity">
@@ -107,7 +108,7 @@ const Cart = () => {
                             </div>
                           </td>
 
-                          <td data-label="Total">${lineTotal.toFixed(2)}</td>
+                          <td data-label="Total">{formatUSDPrice(lineTotal)}</td>
                         </tr>
                       );
                     })}
@@ -158,7 +159,7 @@ const Cart = () => {
                   <tr>
                     <th>Cart Totals</th>
                     <th />
-                    <th>${total.toFixed(2)}</th>
+                    <th>{formatUSDPrice(total)}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -173,9 +174,9 @@ const Cart = () => {
                     </td>
                     <td>
                       <ul className="single-cost text-center">
-                        <li>${shipping.toFixed(2)}</li>
-                        <li>${subtotal.toFixed(2)}</li>
-                        <li>${total.toFixed(2)}</li>
+                        <li>{formatUSDPrice(shipping)}</li>
+                        <li>{formatUSDPrice(subtotal)}</li>
+                        <li>{formatUSDPrice(total)}</li>
                       </ul>
                     </td>
                   </tr>
@@ -187,7 +188,12 @@ const Cart = () => {
                   <tr>
                     <td>Subtotal</td>
                     <td />
-                    <td>${subtotal.toFixed(2)}</td>
+                    <td>{formatUSDPrice(subtotal)}</td>
+                  </tr>
+                  <tr>
+                    <td>Total after discount</td>
+                    <td />
+                    <td>${total.toFixed(2)}</td>
                   </tr>
                   <tr>
                     <td>Total after discount</td>
