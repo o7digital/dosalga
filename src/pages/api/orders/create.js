@@ -42,18 +42,18 @@ const resolveCheckoutBaseUrl = (req) => {
     return normalizeBaseUrl(forcedCheckoutBaseUrl, WORDPRESS_URL);
   }
 
-  const requestOrigin = resolveRequestOrigin(req);
-  if (requestOrigin) {
-    return requestOrigin;
-  }
-
   const configuredBaseUrl =
     process.env.WC_CHECKOUT_BASE_URL ||
     process.env.NEXT_PUBLIC_CHECKOUT_BASE_URL ||
-    process.env.NEXT_PUBLIC_SITE_URL;
+    process.env.NEXT_PUBLIC_WORDPRESS_URL;
 
   if (configuredBaseUrl) {
     return normalizeBaseUrl(configuredBaseUrl, WORDPRESS_URL);
+  }
+
+  const requestOrigin = resolveRequestOrigin(req);
+  if (requestOrigin) {
+    return requestOrigin;
   }
 
   return WORDPRESS_URL;
