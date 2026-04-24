@@ -70,10 +70,12 @@ const Checkout = () => {
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
   const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
   const termsPath = `${localePrefix}/terms-and-conditions`;
+  const runtimeOrigin = typeof window !== 'undefined' ? window.location.origin : '';
   const checkoutBaseUrl =
+    runtimeOrigin ||
     process.env.NEXT_PUBLIC_CHECKOUT_BASE_URL ||
     process.env.NEXT_PUBLIC_SITE_URL ||
-    (typeof window !== 'undefined' ? window.location.origin : '');
+    '';
 
   const normalizePaymentUrl = (url) => {
     if (!url) return null;

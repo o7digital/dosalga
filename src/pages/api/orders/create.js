@@ -23,7 +23,30 @@ const normalizeBaseUrl = (value, fallback) => {
   }
 };
 
+const resolveRequestOrigin = (req) => {
+  const hostHeader = req.headers['x-forwarded-host'] || req.headers.host;
+  const host = Array.isArray(hostHeader) ? String(hostHeader[0]).split(',')[0].trim() : String(hostHeader || '').split(',')[0].trim();
+  if (!host) return null;
+
+  const protoHeader = req.headers['x-forwarded-proto'];
+  const protocol = Array.isArray(protoHeader)
+    ? String(protoHeader[0]).split(',')[0].trim()
+    : String(protoHeader || '').split(',')[0].trim();
+  const safeProtocol = protocol === 'http' ? 'http' : 'https';
+  return `${safeProtocol}://${host}`;
+};
+
 const resolveCheckoutBaseUrl = (req) => {
+  const forcedCheckoutBaseUrl = process.env.WC_FORCE_CHECKOUT_BASE_URL;
+  if (forcedCheckoutBaseUrl) {
+    return normalizeBaseUrl(forcedCheckoutBaseUrl, WORDPRESS_URL);
+  }
+
+  const requestOrigin = resolveRequestOrigin(req);
+  if (requestOrigin) {
+    return requestOrigin;
+  }
+
   const configuredBaseUrl =
     process.env.WC_CHECKOUT_BASE_URL ||
     process.env.NEXT_PUBLIC_CHECKOUT_BASE_URL ||
@@ -31,16 +54,6 @@ const resolveCheckoutBaseUrl = (req) => {
 
   if (configuredBaseUrl) {
     return normalizeBaseUrl(configuredBaseUrl, WORDPRESS_URL);
-  }
-
-  const host = req.headers.host;
-  if (host) {
-    const protoHeader = req.headers['x-forwarded-proto'];
-    const protocol = Array.isArray(protoHeader)
-      ? String(protoHeader[0]).split(',')[0].trim()
-      : String(protoHeader || '').split(',')[0].trim();
-    const safeProtocol = protocol === 'http' ? 'http' : 'https';
-    return `${safeProtocol}://${host}`;
   }
 
   return WORDPRESS_URL;
