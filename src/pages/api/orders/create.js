@@ -367,7 +367,10 @@ export default async function handler(req, res) {
       });
     }
 
-    const paymentUrl = buildPaymentUrl(order.order_id, order.order_key, req);
+    const paymentUrl =
+      order?.payment_url ||
+      order?.checkout_payment_url ||
+      buildPaymentUrl(order.order_id, order.order_key, req);
     
     res.status(201).json({
       success: true,
