@@ -26,6 +26,8 @@ const MEXICO_STATES = [
   { code: 'QR', label: 'Quintana Roo', cities: ['Cancun', 'Playa del Carmen', 'Cozumel', 'Tulum'] },
 ];
 
+const CURP_REGEX = /^[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]\d$/;
+
 const Checkout = () => {
   const router = useRouter();
   const {
@@ -51,10 +53,24 @@ const Checkout = () => {
   const [billingPostcode, setBillingPostcode] = useState('');
   const [billingPhone, setBillingPhone] = useState('');
   const [billingEmail, setBillingEmail] = useState('');
+  const [billingIdentityNumber, setBillingIdentityNumber] = useState('');
   const [orderNotes, setOrderNotes] = useState('');
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [couponInput, setCouponInput] = useState('');
   const [couponFeedback, setCouponFeedback] = useState(null);
+  const [shipToDifferentAddress, setShipToDifferentAddress] = useState(false);
+  const [shippingFirstName, setShippingFirstName] = useState('');
+  const [shippingLastName, setShippingLastName] = useState('');
+  const [shippingAddress, setShippingAddress] = useState('');
+  const [shippingColony, setShippingColony] = useState('');
+  const [shippingCountry, setShippingCountry] = useState('MX');
+  const [shippingState, setShippingState] = useState('');
+  const [shippingCity, setShippingCity] = useState('');
+  const [shippingPostcode, setShippingPostcode] = useState('');
+  const [shippingPhone, setShippingPhone] = useState('');
+  const [shippingIdentityNumber, setShippingIdentityNumber] = useState('');
+  const [createAccount, setCreateAccount] = useState(false);
+  const [accountPassword, setAccountPassword] = useState('');
   const subtotal = getCartTotal();
   const discount = getDiscountAmount();
   const shipping = 0;
@@ -66,6 +82,10 @@ const Checkout = () => {
     if (!billingState) return [];
     return MEXICO_STATES.find((state) => state.code === billingState)?.cities || [];
   }, [billingState]);
+  const shippingMexicoCities = useMemo(() => {
+    if (!shippingState) return [];
+    return MEXICO_STATES.find((state) => state.code === shippingState)?.cities || [];
+  }, [shippingState]);
   const localeSegment = router.pathname.split('/')[1];
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
   const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
@@ -76,6 +96,9 @@ const Checkout = () => {
 
     return null;
   };
+  const getIdentityLabel = (countryCode) => (countryCode === 'MX' ? 'CURP / RFC' : 'Tax ID');
+  const normalizeIdentityValue = (value) => value.trim().toUpperCase();
+  const isValidMexicanCurp = (value) => CURP_REGEX.test(normalizeIdentityValue(value));
 
   const handlePlaceOrder = async (event) => {
     event.preventDefault();
@@ -89,9 +112,42 @@ const Checkout = () => {
       toast.warn('Please complete all required billing fields.');
       return;
     }
+    if (!billingIdentityNumber.trim()) {
+      toast.warn(`Please enter ${getIdentityLabel(billingCountry)}.`);
+      return;
+    }
+    if (billingCountry === 'MX' && !isValidMexicanCurp(billingIdentityNumber)) {
+      toast.warn('Please enter a valid CURP (18 characters).');
+      return;
+    }
 
     if (billingCountry === 'MX' && (!billingState || !billingCity)) {
       toast.warn('Please select a state and city for Mexico.');
+      return;
+    }
+
+    if (shipToDifferentAddress) {
+      if (!shippingFirstName || !shippingLastName || !shippingAddress) {
+        toast.warn('Please complete the required shipping fields.');
+        return;
+      }
+
+      if (shippingCountry === 'MX' && (!shippingState || !shippingCity)) {
+        toast.warn('Please select a shipping state and city for Mexico.');
+        return;
+      }
+      if (!shippingIdentityNumber.trim()) {
+        toast.warn(`Please enter shipping ${getIdentityLabel(shippingCountry)}.`);
+        return;
+      }
+      if (shippingCountry === 'MX' && !isValidMexicanCurp(shippingIdentityNumber)) {
+        toast.warn('Please enter a valid shipping CURP (18 characters).');
+        return;
+      }
+    }
+
+    if (createAccount && accountPassword.length < 8) {
+      toast.warn('Please enter a password of at least 8 characters to create your account.');
       return;
     }
 
@@ -101,7 +157,13 @@ const Checkout = () => {
     }
 
     try {
-      const order = await createOrder({
+      const identityLabel = getIdentityLabel(billingCountry);
+      const identityValue = normalizeIdentityValue(billingIdentityNumber);
+      const normalizedOrderNote = [orderNotes, `${identityLabel}: ${identityValue}`]
+        .filter(Boolean)
+        .join('\n');
+
+      const billingInfo = {
         first_name: billingFirstName,
         last_name: billingLastName,
         address_1: billingAddress,
@@ -112,7 +174,27 @@ const Checkout = () => {
         country: billingCountry === 'OTHER' ? '' : billingCountry,
         email: billingEmail,
         phone: billingPhone,
-        customer_note: orderNotes,
+        customer_note: normalizedOrderNote,
+        tax_id: identityValue,
+      };
+      const shippingInfo = shipToDifferentAddress
+        ? {
+            first_name: shippingFirstName,
+            last_name: shippingLastName,
+            address_1: shippingAddress,
+            address_2: shippingColony,
+            city: shippingCity,
+            state: shippingState,
+            postcode: shippingPostcode,
+            country: shippingCountry === 'OTHER' ? '' : shippingCountry,
+            phone: shippingPhone || billingPhone,
+            tax_id: normalizeIdentityValue(shippingIdentityNumber),
+          }
+        : billingInfo;
+
+      const order = await createOrder(billingInfo, shippingInfo, {
+        createAccount,
+        accountPassword: createAccount ? accountPassword : '',
       });
 
       if (appliedCoupon?.code === 'SOCIO' && order?.coupon_applied === false) {
@@ -128,6 +210,13 @@ const Checkout = () => {
       if (!paymentUrl) {
         throw new Error('Unable to retrieve WooCommerce payment URL.');
       }
+
+      console.info('[checkout] redirect_to_payment', {
+        debugId: order?.debug_id || null,
+        orderId: order?.id || order?.order_id || null,
+        paymentUrl,
+        couponApplied: order?.coupon_applied ?? null,
+      });
 
       toast.success('Redirecting to secure payment...');
       window.location.href = paymentUrl;
@@ -270,6 +359,18 @@ const Checkout = () => {
                     </div>
                     <div className="col-12">
                       <div className="form-inner">
+                        <label>{getIdentityLabel(billingCountry)}</label>
+                        <input
+                          type="text"
+                          name="identity_number"
+                          placeholder={billingCountry === 'MX' ? 'CURP (18 characters)' : 'Your Tax ID'}
+                          value={billingIdentityNumber}
+                          onChange={(event) => setBillingIdentityNumber(event.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-12">
+                      <div className="form-inner">
                         <input type="email" name="email" placeholder="Your Email Address" value={billingEmail} onChange={(event) => setBillingEmail(event.target.value)} />
                       </div>
                     </div>
@@ -283,28 +384,151 @@ const Checkout = () => {
               </div>
 
               <div className="form-wrap box--shadow">
-                <h4>Ship to a Different Address?</h4>
-                <form>
-                  <div className="row">
+                <div className="section-toggle">
+                  <h4>Ship to a Different Address?</h4>
+                  <label className="inline-check">
+                    <input
+                      type="checkbox"
+                      checked={shipToDifferentAddress}
+                      onChange={(event) => setShipToDifferentAddress(event.target.checked)}
+                    />
+                    <span>Use a separate delivery recipient</span>
+                  </label>
+                </div>
+                {shipToDifferentAddress && (
+                  <form>
+                    <div className="row">
                     <div className="col-md-6">
                       <div className="form-inner">
                         <label>First Name</label>
-                        <input type="text" name="ship_fname" placeholder="Your first name" />
+                        <input type="text" name="ship_fname" placeholder="Recipient first name" value={shippingFirstName} onChange={(event) => setShippingFirstName(event.target.value)} />
                       </div>
                     </div>
                     <div className="col-md-6">
                       <div className="form-inner">
                         <label>Last Name</label>
-                        <input type="text" name="ship_lname" placeholder="Your last name" />
+                        <input type="text" name="ship_lname" placeholder="Recipient last name" value={shippingLastName} onChange={(event) => setShippingLastName(event.target.value)} />
                       </div>
                     </div>
                     <div className="col-12">
                       <div className="form-inner">
-                        <textarea name="ship_message" placeholder="Order Notes (Optional)" rows={3} defaultValue="" />
+                        <label>Country / Region</label>
+                        <select
+                          name="ship_country"
+                          value={shippingCountry}
+                          onChange={(event) => {
+                            const nextCountry = event.target.value;
+                            setShippingCountry(nextCountry);
+                            setShippingState('');
+                            setShippingCity('');
+                          }}
+                        >
+                          {COUNTRY_OPTIONS.map((country) => (
+                            <option key={country.value} value={country.value}>
+                              {country.label}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                     </div>
-                  </div>
-                </form>
+                    <div className="col-12">
+                      <div className="form-inner">
+                        <label>Street Address</label>
+                        <input type="text" name="ship_address" placeholder="Delivery street address" value={shippingAddress} onChange={(event) => setShippingAddress(event.target.value)} />
+                      </div>
+                    </div>
+                    <div className="col-12">
+                      <div className="form-inner">
+                        <label>Colony / Colonia</label>
+                        <input type="text" name="ship_colony" placeholder="Neighborhood / Colonia" value={shippingColony} onChange={(event) => setShippingColony(event.target.value)} />
+                      </div>
+                    </div>
+                    {shippingCountry === 'MX' ? (
+                      <>
+                        <div className="col-md-6">
+                          <div className="form-inner">
+                            <label>State</label>
+                            <select
+                              name="ship_state"
+                              value={shippingState}
+                              onChange={(event) => {
+                                setShippingState(event.target.value);
+                                setShippingCity('');
+                              }}
+                            >
+                              <option value="">Select a state</option>
+                              {mexicoStates.map((state) => (
+                                <option key={state.code} value={state.code}>
+                                  {state.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div className="form-inner">
+                            <label>Town / City</label>
+                            <select
+                              name="ship_city"
+                              value={shippingCity}
+                              onChange={(event) => setShippingCity(event.target.value)}
+                              disabled={!shippingState}
+                            >
+                              <option value="">
+                                {shippingState ? 'Select a city' : 'Select a state first'}
+                              </option>
+                              {shippingMexicoCities.map((city) => (
+                                <option key={city} value={city}>
+                                  {city}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="col-md-6">
+                          <div className="form-inner">
+                            <label>State / Province</label>
+                            <input type="text" name="ship_state" placeholder="State / Province" value={shippingState} onChange={(event) => setShippingState(event.target.value)} />
+                          </div>
+                        </div>
+                        <div className="col-md-6">
+                          <div className="form-inner">
+                            <label>Town / City</label>
+                            <input type="text" name="ship_city" placeholder="Town / City" value={shippingCity} onChange={(event) => setShippingCity(event.target.value)} />
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    <div className="col-md-6">
+                      <div className="form-inner">
+                        <label>Post Code</label>
+                        <input type="text" name="ship_postcode" placeholder="Post Code" value={shippingPostcode} onChange={(event) => setShippingPostcode(event.target.value)} />
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="form-inner">
+                        <label>Phone</label>
+                        <input type="text" name="ship_phone" placeholder="Recipient phone (optional)" value={shippingPhone} onChange={(event) => setShippingPhone(event.target.value)} />
+                      </div>
+                    </div>
+                    <div className="col-12">
+                      <div className="form-inner">
+                        <label>Shipping {getIdentityLabel(shippingCountry)}</label>
+                        <input
+                          type="text"
+                          name="ship_identity_number"
+                          placeholder={shippingCountry === 'MX' ? 'CURP (18 characters)' : 'Recipient Tax ID'}
+                          value={shippingIdentityNumber}
+                          onChange={(event) => setShippingIdentityNumber(event.target.value)}
+                        />
+                      </div>
+                    </div>
+                    </div>
+                  </form>
+                )}
               </div>
             </div>
 
@@ -469,6 +693,27 @@ const Checkout = () => {
               <form className="payment-form" onSubmit={handlePlaceOrder}>
                 <div className="payment-methods mb-30">
                   <div className="payment-list">
+                    <div className="account-option">
+                      <label className="inline-check">
+                        <input
+                          type="checkbox"
+                          checked={createAccount}
+                          onChange={(event) => setCreateAccount(event.target.checked)}
+                        />
+                        <span>Create your account</span>
+                      </label>
+                      {createAccount && (
+                        <div className="form-inner account-password">
+                          <input
+                            type="password"
+                            name="account_password"
+                            placeholder="Account password"
+                            value={accountPassword}
+                            onChange={(event) => setAccountPassword(event.target.value)}
+                          />
+                        </div>
+                      )}
+                    </div>
                     <div className="stripe active-payment">
                       <div className="form-check payment-check card-only">
                         <div>
@@ -521,6 +766,46 @@ const Checkout = () => {
           background: #f5f5f5;
           color: #777;
           cursor: not-allowed;
+        }
+
+        .section-toggle {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 16px;
+          flex-wrap: wrap;
+          margin-bottom: 18px;
+        }
+
+        .section-toggle h4 {
+          margin-bottom: 0;
+        }
+
+        .inline-check {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          cursor: pointer;
+          color: #111;
+          line-height: 1.35;
+        }
+
+        .inline-check input {
+          width: 16px;
+          height: 16px;
+          flex: 0 0 auto;
+        }
+
+        .account-option {
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          padding: 16px 18px;
+          margin-bottom: 16px;
+          background: #fff;
+        }
+
+        .account-password {
+          margin-top: 14px;
         }
 
         .delete-btn {
