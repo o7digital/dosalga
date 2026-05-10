@@ -4,8 +4,9 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const CartContext = createContext();
-const SOCIO_COUPON_CODE = 'SOCIO';
-const SOCIO_DISCOUNT_RATE = 0.95;
+const SOCIO_COUPON_CODE = 'X9YPYWYH';
+const SOCIO_DISCOUNT_RATE = 0.90;
+const SOCIO_DISCOUNT_PERCENT = Math.round(SOCIO_DISCOUNT_RATE * 100);
 
 export const useCart = () => {
   const context = useContext(CartContext);
@@ -35,7 +36,12 @@ export const CartProvider = ({ children }) => {
     const savedCoupon = localStorage.getItem('dosalga_coupon');
     if (savedCoupon) {
       try {
-        setAppliedCoupon(JSON.parse(savedCoupon));
+        const parsedCoupon = JSON.parse(savedCoupon);
+        if (parsedCoupon?.code === SOCIO_COUPON_CODE) {
+          setAppliedCoupon(parsedCoupon);
+        } else {
+          localStorage.removeItem('dosalga_coupon');
+        }
       } catch (error) {
         console.error('Error loading coupon:', error);
         localStorage.removeItem('dosalga_coupon');
@@ -134,14 +140,14 @@ export const CartProvider = ({ children }) => {
       return { success: false, message: 'Veuillez saisir un code promo.' };
     }
 
-    if (normalizedCode === SOCIO_COUPON_CODE || normalizedCode === `${SOCIO_COUPON_CODE}95`) {
+    if (normalizedCode === SOCIO_COUPON_CODE) {
       setAppliedCoupon({
         code: SOCIO_COUPON_CODE,
         label: 'Remise socios',
         type: 'percent',
         rate: SOCIO_DISCOUNT_RATE,
       });
-      return { success: true, message: 'Code SOCIO appliqué: -95% sur le total.' };
+      return { success: true, message: `Code ${SOCIO_COUPON_CODE} appliqué: -${SOCIO_DISCOUNT_PERCENT}% sur le total.` };
     }
 
     return { success: false, message: 'Code promo invalide.' };
@@ -177,7 +183,7 @@ export const CartProvider = ({ children }) => {
   };
 
   // Créer une commande WooCommerce
-  const createOrder = async (billingInfo, shippingInfo = null) => {
+  const createOrder = async (billingInfo, shippingInfo = null, checkoutOptions = {}) => {
     setIsLoading(true);
     try {
       const invalidVariableItem = cart.find((item) => {
@@ -194,21 +200,32 @@ export const CartProvider = ({ children }) => {
         billing: billingInfo,
         shipping: shippingInfo || billingInfo,
         customer_note: billingInfo.customer_note || '',
+        create_account: Boolean(checkoutOptions.createAccount),
+        account_password: checkoutOptions.accountPassword || '',
         coupon_code: appliedCoupon?.code || '',
         coupon_discount_amount: getDiscountAmount(),
         fee_lines: appliedCoupon?.code === SOCIO_COUPON_CODE
           ? [{
-              name: `${SOCIO_COUPON_CODE} -95%`,
+              name: `${SOCIO_COUPON_CODE} -${SOCIO_DISCOUNT_PERCENT}%`,
               total: `-${getDiscountAmount().toFixed(2)}`,
               taxable: false,
             }]
           : [],
-        meta_data: appliedCoupon?.code === SOCIO_COUPON_CODE
-          ? [
-              { key: 'dosalga_coupon_code', value: SOCIO_COUPON_CODE },
-              { key: 'dosalga_coupon_type', value: 'percent' },
-            ]
-          : [],
+        meta_data: [
+          ...(appliedCoupon?.code === SOCIO_COUPON_CODE
+            ? [
+                { key: 'dosalga_coupon_code', value: SOCIO_COUPON_CODE },
+                { key: 'dosalga_coupon_type', value: 'percent' },
+                { key: 'dosalga_coupon_rate', value: String(SOCIO_DISCOUNT_RATE) },
+              ]
+            : []),
+          ...(billingInfo.tax_id
+            ? [{ key: '_dosalga_billing_tax_id', value: billingInfo.tax_id }]
+            : []),
+          ...(shippingInfo?.tax_id && shippingInfo.tax_id !== billingInfo.tax_id
+            ? [{ key: '_dosalga_shipping_tax_id', value: shippingInfo.tax_id }]
+            : []),
+        ],
         line_items: cart.map((item) => ({
           product_id: item.id,
           quantity: item.quantity,
@@ -254,6 +271,7 @@ export const CartProvider = ({ children }) => {
 
       return {
         ...result.data,
+        debug_id: result.debug_id || null,
         warning: result.warning || null,
         coupon_applied: couponApplied,
       };

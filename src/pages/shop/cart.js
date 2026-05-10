@@ -3,6 +3,9 @@ import Link from 'next/link';
 import { useCart } from '@/src/contexts/CartContext';
 import { formatUSDPrice } from '@/src/lib/pricing';
 
+const SOCIO_COUPON_CODE = 'X9YPYWYH';
+const SOCIO_DISCOUNT_PERCENT = 90;
+
 const Cart = () => {
   const {
     cart,
@@ -127,7 +130,7 @@ const Cart = () => {
                     <div className="form-inner">
                       <input
                         type="text"
-                        placeholder="Coupon Code (SOCIO)"
+                        placeholder={`Coupon Code (${SOCIO_COUPON_CODE})`}
                         value={couponInput}
                         onChange={(e) => setCouponInput(e.target.value)}
                       />
@@ -142,7 +145,7 @@ const Cart = () => {
                   {appliedCoupon && (
                     <div className="active-coupon">
                       <span>
-                        Code actif: <strong>{appliedCoupon.code}</strong> (95% off margin)
+                        Code actif: <strong>{appliedCoupon.code}</strong> ({SOCIO_DISCOUNT_PERCENT}% off)
                       </span>
                       <button type="button" className="remove-coupon-btn" onClick={removeCouponCode}>
                         Remove
@@ -182,7 +185,7 @@ const Cart = () => {
                   </tr>
                   <tr>
                     <td>Discount</td>
-                    <td>{appliedCoupon ? 'SOCIO (95% margin)' : '—'}</td>
+                    <td>{appliedCoupon ? `${appliedCoupon.code} (${SOCIO_DISCOUNT_PERCENT}%)` : '—'}</td>
                     <td>-${discount.toFixed(2)}</td>
                   </tr>
                   <tr>
@@ -203,9 +206,9 @@ const Cart = () => {
                 </tbody>
               </table>
 
-              {appliedCoupon?.code === 'SOCIO' && (
+              {appliedCoupon?.code === SOCIO_COUPON_CODE && (
                 <p className="cost-note">
-                  Coupon SOCIO actif: remise de 95% appliquée sur la marge.
+                  Coupon {SOCIO_COUPON_CODE} actif: remise de {SOCIO_DISCOUNT_PERCENT}% appliquée.
                 </p>
               )}
 

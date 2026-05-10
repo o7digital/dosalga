@@ -27,6 +27,8 @@ const MEXICO_STATES = [
 ];
 
 const CURP_REGEX = /^[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]\d$/;
+const SOCIO_COUPON_CODE = 'X9YPYWYH';
+const SOCIO_DISCOUNT_PERCENT = 90;
 
 const Checkout = () => {
   const router = useRouter();
@@ -157,11 +159,7 @@ const Checkout = () => {
     }
 
     try {
-      const identityLabel = getIdentityLabel(billingCountry);
       const identityValue = normalizeIdentityValue(billingIdentityNumber);
-      const normalizedOrderNote = [orderNotes, `${identityLabel}: ${identityValue}`]
-        .filter(Boolean)
-        .join('\n');
 
       const billingInfo = {
         first_name: billingFirstName,
@@ -174,7 +172,7 @@ const Checkout = () => {
         country: billingCountry === 'OTHER' ? '' : billingCountry,
         email: billingEmail,
         phone: billingPhone,
-        customer_note: normalizedOrderNote,
+        customer_note: orderNotes,
         tax_id: identityValue,
       };
       const shippingInfo = shipToDifferentAddress
@@ -197,8 +195,8 @@ const Checkout = () => {
         accountPassword: createAccount ? accountPassword : '',
       });
 
-      if (appliedCoupon?.code === 'SOCIO' && order?.coupon_applied === false) {
-        throw new Error(order?.warning || 'SOCIO is not configured in WooCommerce coupons. Payment has been stopped.');
+      if (appliedCoupon?.code === SOCIO_COUPON_CODE && order?.coupon_applied === false) {
+        throw new Error(order?.warning || `${SOCIO_COUPON_CODE} is not configured in WooCommerce coupons. Payment has been stopped.`);
       }
 
       if (order?.warning) {
@@ -625,7 +623,7 @@ const Checkout = () => {
                     <div className="form-inner">
                       <input
                         type="text"
-                        placeholder="Coupon Code (SOCIO)"
+                        placeholder={`Coupon Code (${SOCIO_COUPON_CODE})`}
                         value={couponInput}
                         onChange={(event) => setCouponInput(event.target.value)}
                       />
@@ -640,7 +638,7 @@ const Checkout = () => {
                   {appliedCoupon && (
                     <div className="active-coupon">
                       <span>
-                        Code actif: <strong>{appliedCoupon.code}</strong> (-95%)
+                        Code actif: <strong>{appliedCoupon.code}</strong> (-{SOCIO_DISCOUNT_PERCENT}%)
                       </span>
                       <button type="button" className="remove-coupon-btn" onClick={removeCouponCode}>
                         Remove

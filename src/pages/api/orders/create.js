@@ -1,5 +1,7 @@
 const WORDPRESS_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL || 'https://oliviers44.sg-host.com';
-const SOCIO_COUPON_CODE = 'SOCIO';
+const SOCIO_COUPON_CODE = 'X9YPYWYH';
+const SOCIO_DISCOUNT_RATE = 0.90;
+const SOCIO_DISCOUNT_PERCENT = Math.round(SOCIO_DISCOUNT_RATE * 100);
 const CHECKOUT_DEBUG = process.env.CHECKOUT_DEBUG === '1';
 
 const parseAmount = (value, fallback = 0) => {
@@ -10,10 +12,23 @@ const parseAmount = (value, fallback = 0) => {
 
 const isSocioCoupon = (value) => {
   const normalized = String(value ?? '').trim().toUpperCase();
-  return normalized === SOCIO_COUPON_CODE || normalized === `${SOCIO_COUPON_CODE}95`;
+  return normalized === SOCIO_COUPON_CODE;
 };
 
 const normalizeCouponCode = (value) => String(value ?? '').trim().toUpperCase();
+
+const normalizeMetaData = (metaData) => {
+  if (!Array.isArray(metaData)) {
+    return [];
+  }
+
+  return metaData
+    .filter((meta) => meta?.key && meta?.value !== undefined && meta?.value !== null && String(meta.value).trim() !== '')
+    .map((meta) => ({
+      key: String(meta.key),
+      value: String(meta.value),
+    }));
+};
 
 const normalizeBaseUrl = (value, fallback) => {
   try {
@@ -224,8 +239,11 @@ export default async function handler(req, res) {
       shipping,
       line_items: lineItems,
       customer_note: customerNote = '',
+      create_account: createAccount = false,
+      account_password: accountPassword = '',
       coupon_code: couponCode = '',
       coupon_discount_amount: couponDiscountAmount = 0,
+      meta_data: requestedMetaData = [],
     } = orderData;
 
     let token;
@@ -258,7 +276,7 @@ export default async function handler(req, res) {
         isSocioDiscountApplied = true;
       } catch (storeCouponError) {
         console.error('Store coupon apply warning:', storeCouponError);
-        couponSyncWarning = 'SOCIO coupon is active in the app but missing in WooCommerce coupons.';
+        couponSyncWarning = `${SOCIO_COUPON_CODE} coupon is active in the app but missing in WooCommerce coupons.`;
       }
     }
 
@@ -286,6 +304,8 @@ export default async function handler(req, res) {
       body: {
         payment_method: 'stripe',
         customer_note: customerNote,
+        create_account: Boolean(createAccount),
+        ...(createAccount && accountPassword ? { account_password: accountPassword } : {}),
       },
     }));
     if (CHECKOUT_DEBUG) {
@@ -304,6 +324,25 @@ export default async function handler(req, res) {
 
     if (!order?.order_id || !order?.order_key) {
       throw new Error('Unable to create WooCommerce checkout session.');
+    }
+
+    const orderMetaData = normalizeMetaData(requestedMetaData);
+
+    if (orderMetaData.length > 0) {
+      try {
+        const { default: wcApi } = await import('@/src/lib/woocommerce');
+        const { data: wcOrder } = await wcApi.get(`orders/${order.order_id}`);
+        const protectedMetaKeys = new Set(orderMetaData.map((meta) => meta.key));
+        const cleanedMetaData = Array.isArray(wcOrder?.meta_data)
+          ? wcOrder.meta_data.filter((meta) => !protectedMetaKeys.has(meta?.key))
+          : [];
+
+        await wcApi.put(`orders/${order.order_id}`, {
+          meta_data: [...cleanedMetaData, ...orderMetaData],
+        });
+      } catch (metaSyncError) {
+        console.error('Order private meta sync warning:', metaSyncError);
+      }
     }
 
     // Fallback: if Store API coupon could not be applied, try direct wc/v3 order edit.
@@ -331,14 +370,14 @@ export default async function handler(req, res) {
               : [];
 
             const cleanedMetaData = Array.isArray(wcOrder?.meta_data)
-              ? wcOrder.meta_data.filter((meta) => !['dosalga_coupon_code', 'dosalga_coupon_discount', 'dosalga_coupon_type'].includes(meta?.key))
+              ? wcOrder.meta_data.filter((meta) => !['dosalga_coupon_code', 'dosalga_coupon_discount', 'dosalga_coupon_type', 'dosalga_coupon_rate'].includes(meta?.key))
               : [];
 
             await wcApi.put(`orders/${order.order_id}`, {
               fee_lines: [
                 ...cleanedFeeLines,
                 {
-                  name: `${SOCIO_COUPON_CODE} -95%`,
+                  name: `${SOCIO_COUPON_CODE} -${SOCIO_DISCOUNT_PERCENT}%`,
                   total: (-appliedDiscount).toFixed(2),
                   taxable: false,
                 },
@@ -348,13 +387,14 @@ export default async function handler(req, res) {
                 { key: 'dosalga_coupon_code', value: SOCIO_COUPON_CODE },
                 { key: 'dosalga_coupon_discount', value: appliedDiscount.toFixed(2) },
                 { key: 'dosalga_coupon_type', value: 'percent' },
+                { key: 'dosalga_coupon_rate', value: String(SOCIO_DISCOUNT_RATE) },
               ],
             });
             isSocioDiscountApplied = true;
           }
         } catch (couponSyncError) {
-          console.error('SOCIO coupon sync warning:', couponSyncError);
-          couponSyncWarning = 'SOCIO coupon could not be synchronized on Woo order.';
+          console.error(`${SOCIO_COUPON_CODE} coupon sync warning:`, couponSyncError);
+          couponSyncWarning = `${SOCIO_COUPON_CODE} coupon could not be synchronized on Woo order.`;
         }
       }
     }
@@ -362,7 +402,7 @@ export default async function handler(req, res) {
     if (isSocioCoupon(normalizedCouponCode) && !isSocioDiscountApplied) {
       return res.status(422).json({
         success: false,
-        message: 'Le coupon SOCIO n’est pas configuré côté WooCommerce. Créez le coupon SOCIO dans WooCommerce > Marketing > Coupons.',
+        message: `Le coupon ${SOCIO_COUPON_CODE} n’est pas configuré côté WooCommerce. Créez le coupon ${SOCIO_COUPON_CODE} dans WooCommerce > Marketing > Coupons.`,
         debug_id: debugId,
       });
     }
@@ -371,6 +411,17 @@ export default async function handler(req, res) {
       order?.payment_url ||
       order?.checkout_payment_url ||
       buildPaymentUrl(order.order_id, order.order_key, req);
+    console.info(`[checkout:${debugId}] order_ready_for_payment`, {
+      orderId: order.order_id,
+      orderKey: order.order_key,
+      paymentUrl,
+      currency: order.currency_code || null,
+      total: order.totals?.total_price || null,
+      billingCountry: billing?.country || null,
+      billingState: billing?.state || null,
+      couponCode: normalizedCouponCode || null,
+      couponApplied: isSocioDiscountApplied,
+    });
     
     res.status(201).json({
       success: true,
@@ -379,7 +430,7 @@ export default async function handler(req, res) {
         id: order.order_id,
         payment_url: paymentUrl,
       },
-      coupon_applied: isSocioDiscountApplied,
+      coupon_applied: !isSocioCoupon(normalizedCouponCode) || isSocioDiscountApplied,
       warning: couponSyncWarning,
       message: 'Commande créée avec succès',
       debug_id: debugId,
