@@ -138,11 +138,7 @@ const Checkout = () => {
         toast.warn('Please select a shipping state and city for Mexico.');
         return;
       }
-      if (!shippingIdentityNumber.trim()) {
-        toast.warn(`Please enter shipping ${getIdentityLabel(shippingCountry)}.`);
-        return;
-      }
-      if (shippingCountry === 'MX' && !isValidMexicanCurp(shippingIdentityNumber)) {
+      if (shippingCountry === 'MX' && shippingIdentityNumber.trim() && !isValidMexicanCurp(shippingIdentityNumber)) {
         toast.warn('Please enter a valid shipping CURP (18 characters).');
         return;
       }
@@ -186,7 +182,7 @@ const Checkout = () => {
             postcode: shippingPostcode,
             country: shippingCountry === 'OTHER' ? '' : shippingCountry,
             phone: shippingPhone || billingPhone,
-            tax_id: normalizeIdentityValue(shippingIdentityNumber),
+            tax_id: shippingIdentityNumber.trim() ? normalizeIdentityValue(shippingIdentityNumber) : '',
           }
         : billingInfo;
 
@@ -237,19 +233,22 @@ const Checkout = () => {
           <div className="row gy-5">
             <div className="col-lg-7">
               <div className="form-wrap mb-30">
-                <h4>Billing Details</h4>
+                <h4>Payer / Card Billing Details</h4>
+                <p className="checkout-helper">
+                  Use the name and address of the person paying with the card. The delivery recipient can be different below.
+                </p>
                 <form>
                   <div className="row">
                     <div className="col-lg-6">
                       <div className="form-inner">
-                        <label>First Name</label>
-                        <input type="text" name="fname" placeholder="Your first name" value={billingFirstName} onChange={(event) => setBillingFirstName(event.target.value)} />
+                        <label>Payer First Name</label>
+                        <input type="text" name="fname" placeholder="Cardholder first name" value={billingFirstName} onChange={(event) => setBillingFirstName(event.target.value)} />
                       </div>
                     </div>
                     <div className="col-lg-6">
                       <div className="form-inner">
-                        <label>Last Name</label>
-                        <input type="text" name="lname" placeholder="Your last name" value={billingLastName} onChange={(event) => setBillingLastName(event.target.value)} />
+                        <label>Payer Last Name</label>
+                        <input type="text" name="lname" placeholder="Cardholder last name" value={billingLastName} onChange={(event) => setBillingLastName(event.target.value)} />
                       </div>
                     </div>
                     <div className="col-12">
@@ -275,8 +274,8 @@ const Checkout = () => {
                     </div>
                     <div className="col-12">
                       <div className="form-inner">
-                        <label>Street Address</label>
-                        <input type="text" name="address" placeholder="House and street name" value={billingAddress} onChange={(event) => setBillingAddress(event.target.value)} />
+                        <label>Billing Street Address</label>
+                        <input type="text" name="address" placeholder="Card billing street address" value={billingAddress} onChange={(event) => setBillingAddress(event.target.value)} />
                       </div>
                     </div>
                     <div className="col-12">
@@ -352,7 +351,7 @@ const Checkout = () => {
                     <div className="col-12">
                       <div className="form-inner">
                         <label>Additional Information</label>
-                        <input type="text" name="phone" placeholder="Your Phone Number" value={billingPhone} onChange={(event) => setBillingPhone(event.target.value)} />
+                        <input type="text" name="phone" placeholder="Payer phone number" value={billingPhone} onChange={(event) => setBillingPhone(event.target.value)} />
                       </div>
                     </div>
                     <div className="col-12">
@@ -361,7 +360,7 @@ const Checkout = () => {
                         <input
                           type="text"
                           name="identity_number"
-                          placeholder={billingCountry === 'MX' ? 'CURP (18 characters)' : 'Your Tax ID'}
+                          placeholder={billingCountry === 'MX' ? 'Payer CURP (18 characters)' : 'Payer Tax ID'}
                           value={billingIdentityNumber}
                           onChange={(event) => setBillingIdentityNumber(event.target.value)}
                         />
@@ -369,7 +368,7 @@ const Checkout = () => {
                     </div>
                     <div className="col-12">
                       <div className="form-inner">
-                        <input type="email" name="email" placeholder="Your Email Address" value={billingEmail} onChange={(event) => setBillingEmail(event.target.value)} />
+                        <input type="email" name="email" placeholder="Payer email address" value={billingEmail} onChange={(event) => setBillingEmail(event.target.value)} />
                       </div>
                     </div>
                     <div className="col-12">
@@ -383,14 +382,14 @@ const Checkout = () => {
 
               <div className="form-wrap box--shadow">
                 <div className="section-toggle">
-                  <h4>Ship to a Different Address?</h4>
+                  <h4>Delivery Recipient</h4>
                   <label className="inline-check">
                     <input
                       type="checkbox"
                       checked={shipToDifferentAddress}
                       onChange={(event) => setShipToDifferentAddress(event.target.checked)}
                     />
-                    <span>Use a separate delivery recipient</span>
+                    <span>Send the order to someone different from the payer</span>
                   </label>
                 </div>
                 {shipToDifferentAddress && (
@@ -514,11 +513,11 @@ const Checkout = () => {
                     </div>
                     <div className="col-12">
                       <div className="form-inner">
-                        <label>Shipping {getIdentityLabel(shippingCountry)}</label>
+                        <label>Shipping {getIdentityLabel(shippingCountry)} (optional)</label>
                         <input
                           type="text"
                           name="ship_identity_number"
-                          placeholder={shippingCountry === 'MX' ? 'CURP (18 characters)' : 'Recipient Tax ID'}
+                          placeholder={shippingCountry === 'MX' ? 'Recipient CURP (optional)' : 'Recipient Tax ID (optional)'}
                           value={shippingIdentityNumber}
                           onChange={(event) => setShippingIdentityNumber(event.target.value)}
                         />
@@ -875,6 +874,12 @@ const Checkout = () => {
         .coupon-feedback {
           margin-top: 10px;
           font-size: 14px;
+        }
+        .checkout-helper {
+          margin: -10px 0 24px;
+          color: var(--paragraph-color);
+          font-size: 14px;
+          line-height: 1.5;
         }
 
         .coupon-feedback.ok {
