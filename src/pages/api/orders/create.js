@@ -121,6 +121,18 @@ const normalizeVariationAttributes = (variationAttributes) => {
     }));
 };
 
+const isExistingAccountCheckoutError = (error) => {
+  const message = String(error?.message || '').toLowerCase();
+  const code = String(error?.code || '').toLowerCase();
+  return (
+    message.includes('already exists') ||
+    message.includes('email') && message.includes('exists') ||
+    message.includes('existing account') ||
+    code.includes('registration') ||
+    code.includes('invalid_customer')
+  );
+};
+
 const storeApiRequest = async ({ path, method = 'GET', token, body }) => {
   const headers = {
     Accept: 'application/json',
@@ -141,10 +153,22 @@ const storeApiRequest = async ({ path, method = 'GET', token, body }) => {
   });
 
   const text = await response.text();
-  const payload = text ? JSON.parse(text) : null;
+  let payload = null;
+  if (text) {
+    try {
+      payload = JSON.parse(text);
+    } catch {
+      payload = { raw: text };
+    }
+  }
 
   if (!response.ok) {
-    throw new Error(payload?.message || `WooCommerce Store API error (${response.status})`);
+    const error = new Error(payload?.message || `WooCommerce Store API error (${response.status})`);
+    error.status = response.status;
+    error.code = payload?.code || null;
+    error.details = payload?.data || null;
+    error.path = path;
+    throw error;
   }
 
   return {
@@ -297,17 +321,38 @@ export default async function handler(req, res) {
       });
     }
 
-    ({ token } = await storeApiRequest({
-      path: 'checkout?__experimental_calc_totals=true',
-      method: 'PUT',
-      token,
-      body: {
-        payment_method: 'stripe',
-        customer_note: customerNote,
-        create_account: Boolean(createAccount),
-        ...(createAccount && accountPassword ? { account_password: accountPassword } : {}),
-      },
-    }));
+    let accountCreationWarning = null;
+    const checkoutPayload = {
+      payment_method: 'stripe',
+      customer_note: customerNote,
+      create_account: Boolean(createAccount),
+      ...(createAccount && accountPassword ? { account_password: accountPassword } : {}),
+    };
+
+    try {
+      ({ token } = await storeApiRequest({
+        path: 'checkout?__experimental_calc_totals=true',
+        method: 'PUT',
+        token,
+        body: checkoutPayload,
+      }));
+    } catch (checkoutError) {
+      if (createAccount && isExistingAccountCheckoutError(checkoutError)) {
+        accountCreationWarning = 'Ce compte existe deja. Paiement continue sans creation de compte.';
+        ({ token } = await storeApiRequest({
+          path: 'checkout?__experimental_calc_totals=true',
+          method: 'PUT',
+          token,
+          body: {
+            payment_method: 'stripe',
+            customer_note: customerNote,
+            create_account: false,
+          },
+        }));
+      } else {
+        throw checkoutError;
+      }
+    }
     if (CHECKOUT_DEBUG) {
       console.info(`[checkout:${debugId}] checkout_totals_calculated`);
     }
@@ -431,16 +476,25 @@ export default async function handler(req, res) {
         payment_url: paymentUrl,
       },
       coupon_applied: !isSocioCoupon(normalizedCouponCode) || isSocioDiscountApplied,
-      warning: couponSyncWarning,
+      warning: [couponSyncWarning, accountCreationWarning].filter(Boolean).join(' ') || null,
       message: 'Commande créée avec succès',
       debug_id: debugId,
     });
   } catch (error) {
     console.error(`[checkout:${debugId}] error`, error);
+    const isAccountError =
+      /account|registration|email/i.test(String(error?.message || '')) ||
+      /woocommerce_rest_checkout_invalid_customer/i.test(String(error?.code || '')) ||
+      /registration-error/i.test(String(error?.code || ''));
+    const message = isAccountError
+      ? `Erreur de création de compte: ${error?.message || 'information manquante ou email déjà utilisé'}`
+      : 'Erreur lors de la création de la commande';
     res.status(500).json({ 
       success: false,
-      message: 'Erreur lors de la création de la commande',
+      message,
       error: error.message,
+      error_code: error?.code || null,
+      error_path: error?.path || null,
       debug_id: debugId,
     });
   }
