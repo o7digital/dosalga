@@ -10,3 +10,4 @@ dosalga-back/
 # WooCommerce WordPress
 dosalga-wp/wordpress/
 dosalga-wp/db_data/
+.vercel
