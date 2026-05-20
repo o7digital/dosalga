@@ -13,18 +13,110 @@ const COUNTRY_OPTIONS = [
   { value: 'OTHER', label: 'Other' },
 ];
 
-const MEXICO_STATES = [
-  { code: 'DF', label: 'Ciudad de Mexico', cities: ['Alvaro Obregon', 'Benito Juarez', 'Coyoacan', 'Cuauhtemoc', 'Iztapalapa', 'Miguel Hidalgo'] },
-  { code: 'MX', label: 'Estado de Mexico', cities: ['Ecatepec', 'Naucalpan', 'Nezahualcoyotl', 'Toluca', 'Tlalnepantla'] },
-  { code: 'JA', label: 'Jalisco', cities: ['Guadalajara', 'Zapopan', 'Tlaquepaque', 'Tonala', 'Puerto Vallarta'] },
-  { code: 'NL', label: 'Nuevo Leon', cities: ['Monterrey', 'San Nicolas', 'Guadalupe', 'Apodaca', 'Santa Catarina'] },
-  { code: 'PU', label: 'Puebla', cities: ['Puebla', 'Tehuacan', 'San Martin Texmelucan', 'Atlixco'] },
-  { code: 'QT', label: 'Queretaro', cities: ['Santiago de Queretaro', 'San Juan del Rio', 'El Marques'] },
-  { code: 'GT', label: 'Guanajuato', cities: ['Leon', 'Irapuato', 'Celaya', 'Salamanca', 'Guanajuato'] },
-  { code: 'VE', label: 'Veracruz', cities: ['Veracruz', 'Xalapa', 'Coatzacoalcos', 'Cordoba'] },
-  { code: 'YU', label: 'Yucatan', cities: ['Merida', 'Valladolid', 'Tizimin'] },
-  { code: 'QR', label: 'Quintana Roo', cities: ['Cancun', 'Playa del Carmen', 'Cozumel', 'Tulum'] },
-];
+const COUNTRY_STATES = {
+  MX: [
+    { code: 'AG', label: 'Aguascalientes' },
+    { code: 'BC', label: 'Baja California' },
+    { code: 'BS', label: 'Baja California Sur' },
+    { code: 'CM', label: 'Campeche' },
+    { code: 'CS', label: 'Chiapas' },
+    { code: 'CH', label: 'Chihuahua' },
+    { code: 'DF', label: 'Ciudad de Mexico' },
+    { code: 'CO', label: 'Coahuila' },
+    { code: 'CL', label: 'Colima' },
+    { code: 'DG', label: 'Durango' },
+    { code: 'GT', label: 'Guanajuato' },
+    { code: 'GR', label: 'Guerrero' },
+    { code: 'HG', label: 'Hidalgo' },
+    { code: 'JA', label: 'Jalisco' },
+    { code: 'MX', label: 'Estado de Mexico' },
+    { code: 'MI', label: 'Michoacan' },
+    { code: 'MO', label: 'Morelos' },
+    { code: 'NA', label: 'Nayarit' },
+    { code: 'NL', label: 'Nuevo Leon' },
+    { code: 'OA', label: 'Oaxaca' },
+    { code: 'PU', label: 'Puebla' },
+    { code: 'QT', label: 'Queretaro' },
+    { code: 'QR', label: 'Quintana Roo' },
+    { code: 'SL', label: 'San Luis Potosi' },
+    { code: 'SI', label: 'Sinaloa' },
+    { code: 'SO', label: 'Sonora' },
+    { code: 'TB', label: 'Tabasco' },
+    { code: 'TM', label: 'Tamaulipas' },
+    { code: 'TL', label: 'Tlaxcala' },
+    { code: 'VE', label: 'Veracruz' },
+    { code: 'YU', label: 'Yucatan' },
+    { code: 'ZA', label: 'Zacatecas' },
+  ],
+  US: [
+    { code: 'AL', label: 'Alabama' },
+    { code: 'AK', label: 'Alaska' },
+    { code: 'AZ', label: 'Arizona' },
+    { code: 'AR', label: 'Arkansas' },
+    { code: 'CA', label: 'California' },
+    { code: 'CO', label: 'Colorado' },
+    { code: 'CT', label: 'Connecticut' },
+    { code: 'DE', label: 'Delaware' },
+    { code: 'DC', label: 'District of Columbia' },
+    { code: 'FL', label: 'Florida' },
+    { code: 'GA', label: 'Georgia' },
+    { code: 'HI', label: 'Hawaii' },
+    { code: 'ID', label: 'Idaho' },
+    { code: 'IL', label: 'Illinois' },
+    { code: 'IN', label: 'Indiana' },
+    { code: 'IA', label: 'Iowa' },
+    { code: 'KS', label: 'Kansas' },
+    { code: 'KY', label: 'Kentucky' },
+    { code: 'LA', label: 'Louisiana' },
+    { code: 'ME', label: 'Maine' },
+    { code: 'MD', label: 'Maryland' },
+    { code: 'MA', label: 'Massachusetts' },
+    { code: 'MI', label: 'Michigan' },
+    { code: 'MN', label: 'Minnesota' },
+    { code: 'MS', label: 'Mississippi' },
+    { code: 'MO', label: 'Missouri' },
+    { code: 'MT', label: 'Montana' },
+    { code: 'NE', label: 'Nebraska' },
+    { code: 'NV', label: 'Nevada' },
+    { code: 'NH', label: 'New Hampshire' },
+    { code: 'NJ', label: 'New Jersey' },
+    { code: 'NM', label: 'New Mexico' },
+    { code: 'NY', label: 'New York' },
+    { code: 'NC', label: 'North Carolina' },
+    { code: 'ND', label: 'North Dakota' },
+    { code: 'OH', label: 'Ohio' },
+    { code: 'OK', label: 'Oklahoma' },
+    { code: 'OR', label: 'Oregon' },
+    { code: 'PA', label: 'Pennsylvania' },
+    { code: 'RI', label: 'Rhode Island' },
+    { code: 'SC', label: 'South Carolina' },
+    { code: 'SD', label: 'South Dakota' },
+    { code: 'TN', label: 'Tennessee' },
+    { code: 'TX', label: 'Texas' },
+    { code: 'UT', label: 'Utah' },
+    { code: 'VT', label: 'Vermont' },
+    { code: 'VA', label: 'Virginia' },
+    { code: 'WA', label: 'Washington' },
+    { code: 'WV', label: 'West Virginia' },
+    { code: 'WI', label: 'Wisconsin' },
+    { code: 'WY', label: 'Wyoming' },
+  ],
+  CA: [
+    { code: 'AB', label: 'Alberta' },
+    { code: 'BC', label: 'British Columbia' },
+    { code: 'MB', label: 'Manitoba' },
+    { code: 'NB', label: 'New Brunswick' },
+    { code: 'NL', label: 'Newfoundland and Labrador' },
+    { code: 'NT', label: 'Northwest Territories' },
+    { code: 'NS', label: 'Nova Scotia' },
+    { code: 'NU', label: 'Nunavut' },
+    { code: 'ON', label: 'Ontario' },
+    { code: 'PE', label: 'Prince Edward Island' },
+    { code: 'QC', label: 'Quebec' },
+    { code: 'SK', label: 'Saskatchewan' },
+    { code: 'YT', label: 'Yukon' },
+  ],
+};
 
 const CURP_REGEX = /^[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]\d$/;
 const SOCIO_COUPON_CODE = 'X9YPYWYH';
@@ -79,15 +171,10 @@ const Checkout = () => {
   const tax = 0;
   const total = getCartTotalAfterDiscount() + shipping + tax;
 
-  const mexicoStates = useMemo(() => MEXICO_STATES, []);
-  const mexicoCities = useMemo(() => {
-    if (!billingState) return [];
-    return MEXICO_STATES.find((state) => state.code === billingState)?.cities || [];
-  }, [billingState]);
-  const shippingMexicoCities = useMemo(() => {
-    if (!shippingState) return [];
-    return MEXICO_STATES.find((state) => state.code === shippingState)?.cities || [];
-  }, [shippingState]);
+  const billingStateOptions = useMemo(() => COUNTRY_STATES[billingCountry] || [], [billingCountry]);
+  const shippingStateOptions = useMemo(() => COUNTRY_STATES[shippingCountry] || [], [shippingCountry]);
+  const billingRequiresState = billingStateOptions.length > 0;
+  const shippingRequiresState = shippingStateOptions.length > 0;
   const localeSegment = router.pathname.split('/')[1];
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
   const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
@@ -123,8 +210,12 @@ const Checkout = () => {
       return;
     }
 
-    if (billingCountry === 'MX' && (!billingState || !billingCity)) {
-      toast.warn('Please select a state and city for Mexico.');
+    if (billingRequiresState && !billingState) {
+      toast.warn('Please select a state or province.');
+      return;
+    }
+    if (!billingCity.trim()) {
+      toast.warn('Please enter a town or city.');
       return;
     }
 
@@ -134,8 +225,12 @@ const Checkout = () => {
         return;
       }
 
-      if (shippingCountry === 'MX' && (!shippingState || !shippingCity)) {
-        toast.warn('Please select a shipping state and city for Mexico.');
+      if (shippingRequiresState && !shippingState) {
+        toast.warn('Please select a shipping state or province.');
+        return;
+      }
+      if (!shippingCity.trim()) {
+        toast.warn('Please enter a shipping town or city.');
         return;
       }
       if (shippingCountry === 'MX' && shippingIdentityNumber.trim() && !isValidMexicanCurp(shippingIdentityNumber)) {
@@ -284,65 +379,33 @@ const Checkout = () => {
                         <input type="text" name="colony" placeholder="Neighborhood / Colonia" value={billingColony} onChange={(event) => setBillingColony(event.target.value)} />
                       </div>
                     </div>
-                    {billingCountry === 'MX' ? (
-                      <>
-                        <div className="col-md-6">
-                          <div className="form-inner">
-                            <label>State</label>
-                            <select
-                              name="state"
-                              value={billingState}
-                              onChange={(event) => {
-                                setBillingState(event.target.value);
-                                setBillingCity('');
-                              }}
-                            >
-                              <option value="">Select a state</option>
-                              {mexicoStates.map((state) => (
-                                <option key={state.code} value={state.code}>
-                                  {state.label}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="form-inner">
-                            <label>Town / City</label>
-                            <select
-                              name="city"
-                              value={billingCity}
-                              onChange={(event) => setBillingCity(event.target.value)}
-                              disabled={!billingState}
-                            >
-                              <option value="">
-                                {billingState ? 'Select a city' : 'Select a state first'}
+                    <div className="col-md-6">
+                      <div className="form-inner">
+                        <label>State / Province</label>
+                        {billingRequiresState ? (
+                          <select
+                            name="state"
+                            value={billingState}
+                            onChange={(event) => setBillingState(event.target.value)}
+                          >
+                            <option value="">Select a state / province</option>
+                            {billingStateOptions.map((state) => (
+                              <option key={state.code} value={state.code}>
+                                {state.label}
                               </option>
-                              {mexicoCities.map((city) => (
-                                <option key={city} value={city}>
-                                  {city}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="col-md-6">
-                          <div className="form-inner">
-                            <label>State / Province</label>
-                            <input type="text" name="state" placeholder="State / Province" value={billingState} onChange={(event) => setBillingState(event.target.value)} />
-                          </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="form-inner">
-                            <label>Town / City</label>
-                            <input type="text" name="city" placeholder="Town / City" value={billingCity} onChange={(event) => setBillingCity(event.target.value)} />
-                          </div>
-                        </div>
-                      </>
-                    )}
+                            ))}
+                          </select>
+                        ) : (
+                          <input type="text" name="state" placeholder="State / Province" value={billingState} onChange={(event) => setBillingState(event.target.value)} />
+                        )}
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="form-inner">
+                        <label>Town / City</label>
+                        <input type="text" name="city" placeholder="Town / City" value={billingCity} onChange={(event) => setBillingCity(event.target.value)} />
+                      </div>
+                    </div>
                     <div className="col-12">
                       <div className="form-inner">
                         <input type="text" name="postcode" placeholder="Post Code" value={billingPostcode} onChange={(event) => setBillingPostcode(event.target.value)} />
@@ -440,65 +503,33 @@ const Checkout = () => {
                         <input type="text" name="ship_colony" placeholder="Neighborhood / Colonia" value={shippingColony} onChange={(event) => setShippingColony(event.target.value)} />
                       </div>
                     </div>
-                    {shippingCountry === 'MX' ? (
-                      <>
-                        <div className="col-md-6">
-                          <div className="form-inner">
-                            <label>State</label>
-                            <select
-                              name="ship_state"
-                              value={shippingState}
-                              onChange={(event) => {
-                                setShippingState(event.target.value);
-                                setShippingCity('');
-                              }}
-                            >
-                              <option value="">Select a state</option>
-                              {mexicoStates.map((state) => (
-                                <option key={state.code} value={state.code}>
-                                  {state.label}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="form-inner">
-                            <label>Town / City</label>
-                            <select
-                              name="ship_city"
-                              value={shippingCity}
-                              onChange={(event) => setShippingCity(event.target.value)}
-                              disabled={!shippingState}
-                            >
-                              <option value="">
-                                {shippingState ? 'Select a city' : 'Select a state first'}
+                    <div className="col-md-6">
+                      <div className="form-inner">
+                        <label>State / Province</label>
+                        {shippingRequiresState ? (
+                          <select
+                            name="ship_state"
+                            value={shippingState}
+                            onChange={(event) => setShippingState(event.target.value)}
+                          >
+                            <option value="">Select a state / province</option>
+                            {shippingStateOptions.map((state) => (
+                              <option key={state.code} value={state.code}>
+                                {state.label}
                               </option>
-                              {shippingMexicoCities.map((city) => (
-                                <option key={city} value={city}>
-                                  {city}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="col-md-6">
-                          <div className="form-inner">
-                            <label>State / Province</label>
-                            <input type="text" name="ship_state" placeholder="State / Province" value={shippingState} onChange={(event) => setShippingState(event.target.value)} />
-                          </div>
-                        </div>
-                        <div className="col-md-6">
-                          <div className="form-inner">
-                            <label>Town / City</label>
-                            <input type="text" name="ship_city" placeholder="Town / City" value={shippingCity} onChange={(event) => setShippingCity(event.target.value)} />
-                          </div>
-                        </div>
-                      </>
-                    )}
+                            ))}
+                          </select>
+                        ) : (
+                          <input type="text" name="ship_state" placeholder="State / Province" value={shippingState} onChange={(event) => setShippingState(event.target.value)} />
+                        )}
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="form-inner">
+                        <label>Town / City</label>
+                        <input type="text" name="ship_city" placeholder="Town / City" value={shippingCity} onChange={(event) => setShippingCity(event.target.value)} />
+                      </div>
+                    </div>
                     <div className="col-md-6">
                       <div className="form-inner">
                         <label>Post Code</label>
