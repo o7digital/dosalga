@@ -118,7 +118,6 @@ const COUNTRY_STATES = {
   ],
 };
 
-const CURP_REGEX = /^[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]\d$/;
 const SOCIO_COUPON_CODE = '2UP7NFF6';
 const SOCIO_DISCOUNT_PERCENT = 90;
 
@@ -185,9 +184,8 @@ const Checkout = () => {
 
     return null;
   };
-  const getIdentityLabel = (countryCode) => (countryCode === 'MX' ? 'CURP / RFC' : 'Tax ID');
+  const getIdentityLabel = (countryCode) => (countryCode === 'MX' ? 'CURP or TAX ID' : 'TAX ID');
   const normalizeIdentityValue = (value) => value.trim().toUpperCase();
-  const isValidMexicanCurp = (value) => CURP_REGEX.test(normalizeIdentityValue(value));
 
   const handlePlaceOrder = async (event) => {
     event.preventDefault();
@@ -205,11 +203,6 @@ const Checkout = () => {
       toast.warn(`Please enter ${getIdentityLabel(billingCountry)}.`);
       return;
     }
-    if (billingCountry === 'MX' && !isValidMexicanCurp(billingIdentityNumber)) {
-      toast.warn('Please enter a valid CURP (18 characters).');
-      return;
-    }
-
     if (billingRequiresState && !billingState) {
       toast.warn('Please select a state or province.');
       return;
@@ -231,10 +224,6 @@ const Checkout = () => {
       }
       if (!shippingCity.trim()) {
         toast.warn('Please enter a shipping town or city.');
-        return;
-      }
-      if (shippingCountry === 'MX' && shippingIdentityNumber.trim() && !isValidMexicanCurp(shippingIdentityNumber)) {
-        toast.warn('Please enter a valid shipping CURP (18 characters).');
         return;
       }
     }
@@ -423,7 +412,7 @@ const Checkout = () => {
                         <input
                           type="text"
                           name="identity_number"
-                          placeholder={billingCountry === 'MX' ? 'Payer CURP (18 characters)' : 'Payer Tax ID'}
+                          placeholder={billingCountry === 'MX' ? 'Payer CURP or TAX ID' : 'Payer TAX ID'}
                           value={billingIdentityNumber}
                           onChange={(event) => setBillingIdentityNumber(event.target.value)}
                         />
@@ -548,7 +537,7 @@ const Checkout = () => {
                         <input
                           type="text"
                           name="ship_identity_number"
-                          placeholder={shippingCountry === 'MX' ? 'Recipient CURP (optional)' : 'Recipient Tax ID (optional)'}
+                          placeholder={shippingCountry === 'MX' ? 'Recipient CURP or TAX ID (optional)' : 'Recipient TAX ID (optional)'}
                           value={shippingIdentityNumber}
                           onChange={(event) => setShippingIdentityNumber(event.target.value)}
                         />
