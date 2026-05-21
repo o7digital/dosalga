@@ -1,5 +1,5 @@
 const WORDPRESS_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL || 'https://oliviers44.sg-host.com';
-const SOCIO_COUPON_CODE = 'X9YPYWYH';
+const SOCIO_COUPON_CODE = '2UP7NFF6';
 const SOCIO_DISCOUNT_RATE = 0.90;
 const SOCIO_DISCOUNT_PERCENT = Math.round(SOCIO_DISCOUNT_RATE * 100);
 const CHECKOUT_DEBUG = process.env.CHECKOUT_DEBUG === '1';
