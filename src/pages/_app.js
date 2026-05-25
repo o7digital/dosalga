@@ -16,6 +16,7 @@ import "../../public/assets/css/style.css";
 import "../../public/assets/css/uomo-style.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import OliviaChatDosalga from "../components/common/OliviaChatDosalga";
 
 export default function App({ Component, pageProps }) {
   useEffect(() => {
@@ -44,6 +45,7 @@ export default function App({ Component, pageProps }) {
         <WishlistProvider>
           <MainLayoutUomo>
             <Component {...pageProps} />
+            <OliviaChatDosalga />
           </MainLayoutUomo>
         </WishlistProvider>
       </CartProvider>
