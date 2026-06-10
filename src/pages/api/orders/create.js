@@ -17,6 +17,8 @@ const isSocioCoupon = (value) => {
 
 const normalizeCouponCode = (value) => String(value ?? '').trim().toUpperCase();
 
+const normalizeEmail = (value) => String(value ?? '').trim().toLowerCase();
+
 const normalizeMetaData = (metaData) => {
   if (!Array.isArray(metaData)) {
     return [];
@@ -131,6 +133,97 @@ const isExistingAccountCheckoutError = (error) => {
     code.includes('registration') ||
     code.includes('invalid_customer')
   );
+};
+
+const buildCustomerPayload = ({ billing, shipping, accountPassword }) => ({
+  email: normalizeEmail(billing?.email),
+  first_name: String(billing?.first_name || '').trim(),
+  last_name: String(billing?.last_name || '').trim(),
+  username: normalizeEmail(billing?.email),
+  ...(accountPassword ? { password: accountPassword } : {}),
+  billing: {
+    first_name: billing?.first_name || '',
+    last_name: billing?.last_name || '',
+    company: billing?.company || '',
+    address_1: billing?.address_1 || '',
+    address_2: billing?.address_2 || '',
+    city: billing?.city || '',
+    state: billing?.state || '',
+    postcode: billing?.postcode || '',
+    country: billing?.country || '',
+    email: normalizeEmail(billing?.email),
+    phone: billing?.phone || '',
+  },
+  shipping: {
+    first_name: shipping?.first_name || billing?.first_name || '',
+    last_name: shipping?.last_name || billing?.last_name || '',
+    company: shipping?.company || '',
+    address_1: shipping?.address_1 || billing?.address_1 || '',
+    address_2: shipping?.address_2 || billing?.address_2 || '',
+    city: shipping?.city || billing?.city || '',
+    state: shipping?.state || billing?.state || '',
+    postcode: shipping?.postcode || billing?.postcode || '',
+    country: shipping?.country || billing?.country || '',
+  },
+});
+
+const findCustomerByEmail = async (wcApi, email) => {
+  const normalizedEmail = normalizeEmail(email);
+
+  if (!normalizedEmail) {
+    return null;
+  }
+
+  const { data: customers } = await wcApi.get('customers', {
+    email: normalizedEmail,
+    per_page: 1,
+  });
+
+  return Array.isArray(customers) && customers.length > 0 ? customers[0] : null;
+};
+
+const createOrFindCustomer = async ({ wcApi, billing, shipping, accountPassword }) => {
+  const email = normalizeEmail(billing?.email);
+
+  if (!email) {
+    throw new Error('Cannot create a WooCommerce customer without an email.');
+  }
+
+  const existingCustomer = await findCustomerByEmail(wcApi, email);
+
+  if (existingCustomer?.id) {
+    return {
+      customer: existingCustomer,
+      created: false,
+      warning: 'Un compte client existe deja pour cet email. La commande a ete rattachee au client existant.',
+    };
+  }
+
+  try {
+    const { data: createdCustomer } = await wcApi.post('customers', buildCustomerPayload({
+      billing,
+      shipping,
+      accountPassword,
+    }));
+
+    return {
+      customer: createdCustomer,
+      created: true,
+      warning: null,
+    };
+  } catch (error) {
+    const existingAfterCreateError = await findCustomerByEmail(wcApi, email);
+
+    if (existingAfterCreateError?.id) {
+      return {
+        customer: existingAfterCreateError,
+        created: false,
+        warning: 'Un compte client existe deja pour cet email. La commande a ete rattachee au client existant.',
+      };
+    }
+
+    throw error;
+  }
 };
 
 const storeApiRequest = async ({ path, method = 'GET', token, body }) => {
@@ -322,6 +415,7 @@ export default async function handler(req, res) {
     }
 
     let accountCreationWarning = null;
+    let customerSyncResult = null;
     const checkoutPayload = {
       payment_method: 'stripe',
       customer_note: customerNote,
@@ -369,6 +463,31 @@ export default async function handler(req, res) {
 
     if (!order?.order_id || !order?.order_key) {
       throw new Error('Unable to create WooCommerce checkout session.');
+    }
+
+    if (createAccount) {
+      try {
+        const { default: wcApi } = await import('@/src/lib/woocommerce');
+        customerSyncResult = await createOrFindCustomer({
+          wcApi,
+          billing,
+          shipping: shipping || billing,
+          accountPassword,
+        });
+
+        await wcApi.put(`orders/${order.order_id}`, {
+          customer_id: customerSyncResult.customer.id,
+          billing,
+          shipping: shipping || billing,
+        });
+
+        if (customerSyncResult.warning) {
+          accountCreationWarning = customerSyncResult.warning;
+        }
+      } catch (customerSyncError) {
+        console.error('Customer account sync warning:', customerSyncError);
+        accountCreationWarning = `La commande est creee, mais le compte client WooCommerce n'a pas pu etre cree ou rattache: ${customerSyncError.message}`;
+      }
     }
 
     const orderMetaData = normalizeMetaData(requestedMetaData);
@@ -466,6 +585,8 @@ export default async function handler(req, res) {
       billingState: billing?.state || null,
       couponCode: normalizedCouponCode || null,
       couponApplied: isSocioDiscountApplied,
+      customerId: customerSyncResult?.customer?.id || null,
+      customerCreated: customerSyncResult?.created ?? null,
     });
     
     res.status(201).json({
@@ -475,6 +596,8 @@ export default async function handler(req, res) {
         id: order.order_id,
         payment_url: paymentUrl,
       },
+      customer_id: customerSyncResult?.customer?.id || null,
+      customer_created: customerSyncResult?.created ?? null,
       coupon_applied: !isSocioCoupon(normalizedCouponCode) || isSocioDiscountApplied,
       warning: [couponSyncWarning, accountCreationWarning].filter(Boolean).join(' ') || null,
       message: 'Commande créée avec succès',

@@ -119,7 +119,7 @@ const COUNTRY_STATES = {
 };
 
 const SOCIO_COUPON_CODE = '2UP7NFF6';
-const SOCIO_DISCOUNT_PERCENT = 90;
+const SOCIO_DISCOUNT_PERCENT = 50;
 
 const Checkout = () => {
   const router = useRouter();
