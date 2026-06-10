@@ -5,7 +5,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const CartContext = createContext();
 const SOCIO_COUPON_CODE = '2UP7NFF6';
-const SOCIO_DISCOUNT_RATE = 0.90;
+const SOCIO_DISCOUNT_RATE = 0.50;
 const SOCIO_DISCOUNT_PERCENT = Math.round(SOCIO_DISCOUNT_RATE * 100);
 
 export const useCart = () => {
