@@ -4,7 +4,7 @@ import { useCart } from '@/src/contexts/CartContext';
 import { formatUSDPrice } from '@/src/lib/pricing';
 
 const SOCIO_COUPON_CODE = '2UP7NFF6';
-const SOCIO_DISCOUNT_PERCENT = 90;
+const SOCIO_DISCOUNT_PERCENT = 50;
 
 const Cart = () => {
   const {

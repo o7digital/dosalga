@@ -18,9 +18,10 @@ const SORT_PRESETS = {
 const ShopPage = () => {
   const router = useRouter();
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
-  const [activeColumn, setActiveColumn] = useState('column-4');
+  const [activeColumn] = useState('column-4');
   const [sortKey, setSortKey] = useState('newest');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
   const localeSegment = router.pathname.split('/')[1];
   const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
@@ -63,6 +64,37 @@ const ShopPage = () => {
 
   const { products, loading, error } = useProducts(productParams);
   const { categories } = useCategories({ per_page: 100, hide_empty: true });
+
+  const visibleProducts = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+
+    if (!query) {
+      return products;
+    }
+
+    return products.filter((product) => {
+      const haystack = [
+        product.name,
+        product.slug,
+        product.short_description,
+        product.description,
+        ...(product.categories || []).map((category) => category.name || category),
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+
+      return haystack.includes(query);
+    });
+  }, [products, searchQuery]);
+
+  const visibleCategories = useMemo(() => {
+    return categories.filter((category) => Number(category.count || 0) > 0).slice(0, 8);
+  }, [categories]);
+
+  const totalCategoryCount = useMemo(() => {
+    return visibleCategories.reduce((total, category) => total + Number(category.count || 0), 0);
+  }, [visibleCategories]);
 
   const topProducts = useMemo(() => products.slice(0, 3), [products]);
 
@@ -139,51 +171,67 @@ const ShopPage = () => {
 
       <div className="shop-list-section mt-110 mb-110">
         <div className="container-lg container-fluid">
-          <div className="shop-columns-title-section mb-40">
-            <p>
+          <div className="dosalga-filter-bar mb-40">
+            <p className="dosalga-filter-count">
               {loading
-                ? 'Loading products...'
-                : `Showing ${products.length} product${products.length > 1 ? 's' : ''}`}
+                ? 'Cargando productos...'
+                : `Mostrando ${visibleProducts.length} producto${visibleProducts.length === 1 ? '' : 's'}`}
             </p>
 
-            <div className="filter-selector">
-              <div
-                className="filter"
-                ref={sidebarBtnRef}
-                onClick={() => setIsOpenSidebar((prev) => !prev)}
-              >
-                <div className="filter-icon">
-                  <i className="bi bi-sliders" />
-                </div>
-                <span>Filters</span>
-              </div>
+            <div className="dosalga-filter-tools">
+              <input
+                type="search"
+                className="dosalga-search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Buscar producto, categoría..."
+                aria-label="Buscar productos"
+              />
 
-              <div className="selector">
+              <div className="selector mb-0">
                 <select
                   className="shop-sort-select"
                   value={sortKey}
                   onChange={(e) => setSortKey(e.target.value)}
                 >
-                  <option value="newest">Newest</option>
-                  <option value="oldest">Oldest</option>
-                  <option value="price_low">Price Low to High</option>
-                  <option value="price_high">Price High to Low</option>
-                  <option value="popular">Most Popular</option>
+                  <option value="newest">Más reciente</option>
+                  <option value="oldest">Más antiguo</option>
+                  <option value="price_low">Precio: menor a mayor</option>
+                  <option value="price_high">Precio: mayor a menor</option>
+                  <option value="popular">Más populares</option>
                 </select>
               </div>
-
-              <ul className="grid-view">
-                <li className={activeColumn === 'column-2' ? 'active' : ''} onClick={() => setActiveColumn('column-2')}>
-                  2
-                </li>
-                <li className={activeColumn === 'column-3' ? 'active' : ''} onClick={() => setActiveColumn('column-3')}>
-                  3
-                </li>
-                <li className={activeColumn === 'column-4' ? 'active' : ''} onClick={() => setActiveColumn('column-4')}>
-                  4
-                </li>
-              </ul>
             </div>
+          </div>
+
+          <div className="dosalga-category-row mb-35">
+            <button
+              type="button"
+              className={`dosalga-chip ${selectedCategory ? '' : 'is-active'}`}
+              onClick={() => setSelectedCategory('')}
+            >
+              Todos ({totalCategoryCount || products.length})
+            </button>
+
+            {visibleCategories.map((category) => (
+              <button
+                key={category.id}
+                type="button"
+                className={`dosalga-chip ${String(category.id) === selectedCategory ? 'is-active' : ''}`}
+                onClick={() => setSelectedCategory(String(category.id))}
+              >
+                {category.name} ({category.count})
+              </button>
+            ))}
+
+            <button
+              type="button"
+              className="dosalga-chip dosalga-chip--filter"
+              ref={sidebarBtnRef}
+              onClick={() => setIsOpenSidebar((prev) => !prev)}
+            >
+              <i className="bi bi-sliders" /> Filtros
+            </button>
           </div>
 
           {error && (
@@ -200,13 +248,13 @@ const ShopPage = () => {
                 </div>
               )}
 
-              {!loading && !error && products.length === 0 && (
+              {!loading && !error && visibleProducts.length === 0 && (
                 <div className="col-12 text-center py-5">
-                  <p>No products available.</p>
+                  <p>No hay productos disponibles.</p>
                 </div>
               )}
 
-              {!loading && !error && products.map((product, index) => (
+              {!loading && !error && visibleProducts.map((product, index) => (
                 <div key={product.id} className={`${gridColumnClass} d-flex`}>
                   <ProductCard product={product} showCountdown={index === 0} />
                 </div>
@@ -219,14 +267,76 @@ const ShopPage = () => {
       <ProductViewModal />
 
       <style jsx>{`
+        .dosalga-filter-bar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 24px;
+        }
+
+        .dosalga-filter-count {
+          margin: 0;
+          color: #8a8a8a;
+          font-size: 16px;
+          font-weight: 600;
+        }
+
+        .dosalga-filter-tools {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 16px;
+          flex: 1;
+        }
+
+        .dosalga-search {
+          width: min(360px, 100%);
+          height: 52px;
+          border: 1px solid #ddd;
+          border-radius: 10px;
+          padding: 0 18px;
+          font-size: 15px;
+          outline: none;
+        }
+
         .shop-sort-select {
           border: 1px solid #ddd;
-          border-radius: 6px;
-          padding: 8px 10px;
-          font-size: 14px;
+          border-radius: 10px;
+          padding: 0 16px;
+          font-size: 15px;
           min-width: 180px;
+          height: 52px;
           background: #fff;
           cursor: pointer;
+        }
+
+        .dosalga-category-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+        }
+
+        .dosalga-chip {
+          border: 1px solid #ddd;
+          border-radius: 999px;
+          background: #fff;
+          color: #454545;
+          padding: 12px 20px;
+          font-weight: 700;
+          line-height: 1;
+          transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        }
+
+        .dosalga-chip.is-active {
+          background: #151515;
+          border-color: #151515;
+          color: #fff;
+        }
+
+        .dosalga-chip--filter {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
         }
 
         .grid-view li {
@@ -245,6 +355,23 @@ const ShopPage = () => {
           background: #111;
           border-color: #111;
           color: #fff;
+        }
+
+        @media (max-width: 767px) {
+          .dosalga-filter-bar {
+            align-items: stretch;
+            flex-direction: column;
+          }
+
+          .dosalga-filter-tools {
+            flex-direction: column;
+            align-items: stretch;
+          }
+
+          .dosalga-search,
+          .shop-sort-select {
+            width: 100%;
+          }
         }
       `}</style>
     </>
