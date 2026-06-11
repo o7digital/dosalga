@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useProduct, useProducts } from '@/src/hooks/useProducts';
 import { useCart } from '@/src/contexts/CartContext';
-import { formatMXNPrice } from '@/src/lib/pricing';
+import { formatLocalizedPrice } from '@/src/lib/pricing';
 import { toast } from 'react-toastify';
 
 const htmlToPlainText = (html = '') => {
@@ -46,6 +46,7 @@ const ProductDefaultPage = () => {
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
   const localeSegment = router.pathname.split('/')[1];
   const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
+  const formatPrice = (value) => formatLocalizedPrice(value, { pathname: router.pathname });
 
   const queryId = Array.isArray(router.query.id) ? router.query.id[0] : router.query.id;
   const { products: fallbackProducts } = useProducts({ per_page: 1, orderby: 'date', order: 'desc' });
@@ -321,10 +322,10 @@ const ProductDefaultPage = () => {
                   <p className="price">
                     {product.on_sale && product.sale_price ? (
                       <>
-                        {formatMXNPrice(product.sale_price)} <del>{formatMXNPrice(product.regular_price)}</del>
+                        {formatPrice(product.sale_price)} <del>{formatPrice(product.regular_price)}</del>
                       </>
                     ) : (
-                      formatMXNPrice(product.price)
+                      formatPrice(product.price)
                     )}
                   </p>
                 </div>

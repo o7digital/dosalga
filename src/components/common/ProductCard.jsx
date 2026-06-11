@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useCountdownTimer } from '@/src/hooks/useCountdownTimer';
 import { useWishlist } from '@/src/contexts/WishlistContext';
 import { useCart } from '@/src/contexts/CartContext';
-import { formatMXNPrice } from '@/src/lib/pricing';
+import { formatLocalizedPrice } from '@/src/lib/pricing';
 import { toast } from 'react-toastify';
 
 /**
@@ -19,6 +19,7 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
   const localeSegment = router.pathname.split('/')[1];
   const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
   const isSpanish = localeSegment === 'es';
+  const formatPrice = (value) => formatLocalizedPrice(value, { pathname: router.pathname });
 
   // Extraire les données du produit WooCommerce
   const {
@@ -262,11 +263,11 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
         <p className="price">
           {on_sale && sale_price ? (
             <>
-              {formatMXNPrice(sale_price)}
-              <del>{formatMXNPrice(regular_price)}</del>
+              {formatPrice(sale_price)}
+              <del>{formatPrice(regular_price)}</del>
             </>
           ) : (
-            formatMXNPrice(price)
+            formatPrice(price)
           )}
         </p>
 

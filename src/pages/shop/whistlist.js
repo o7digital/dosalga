@@ -2,12 +2,13 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useWishlist } from '@/src/contexts/WishlistContext';
-import { formatMXNPrice } from '@/src/lib/pricing';
+import { formatLocalizedPrice } from '@/src/lib/pricing';
 
 const Whistlist = () => {
   const { items, remove } = useWishlist();
   const router = useRouter();
   const lang = router.pathname.split('/')[1];
+  const formatPrice = (value) => formatLocalizedPrice(value, { pathname: router.pathname });
   const t = (en, es, de, fr, it, pt) => {
     if (lang === 'es') return es;
     if (lang === 'de') return de;
@@ -62,11 +63,11 @@ const Whistlist = () => {
                       const priceDisplay = item.sale_price
                         ? (
                           <>
-                            <del>{formatMXNPrice(item.regular_price ?? item.price)}</del>
-                            {formatMXNPrice(item.sale_price)}
+                            <del>{formatPrice(item.regular_price ?? item.price)}</del>
+                            {formatPrice(item.sale_price)}
                           </>
                         )
-                        : formatMXNPrice(item.price ?? item.regular_price);
+                        : formatPrice(item.price ?? item.regular_price);
 
                       return (
                         <tr key={item.id}>

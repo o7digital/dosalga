@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useCart } from "../../contexts/CartContext";
-import { formatMXNPrice } from "../../lib/pricing";
+import { formatLocalizedPrice } from "../../lib/pricing";
 
 const CartUomo = () => {
+  const router = useRouter();
   const [showCart, setShowCart] = useState(false);
   const [mounted, setMounted] = useState(false);
   const {
@@ -48,6 +50,7 @@ const CartUomo = () => {
 
   const itemCount = mounted ? getCartItemsCount() : 0;
   const totalPrice = mounted ? getCartTotal() : 0;
+  const formatPrice = (value) => formatLocalizedPrice(value, { pathname: router.pathname });
 
   return (
     <>
@@ -91,7 +94,7 @@ const CartUomo = () => {
               <div className="item-details">
                 <h6>{item.name}</h6>
                 <div className="item-price">
-                  <span className="price">{formatMXNPrice(item.price || 0)}</span>
+                  <span className="price">{formatPrice(item.price || 0)}</span>
                 </div>
                 <div className="item-quantity">
                   <button className="qty-btn" onClick={() => updateQuantity(item.id, item.quantity - 1, item.variation)}>-</button>
@@ -108,11 +111,11 @@ const CartUomo = () => {
           <div className="cart-totals">
             <div className="subtotal">
               <span>Sub Total</span>
-              <span>{formatMXNPrice(totalPrice)}</span>
+              <span>{formatPrice(totalPrice)}</span>
             </div>
             <div className="total">
               <span>Total</span>
-              <span>{formatMXNPrice(totalPrice)}</span>
+              <span>{formatPrice(totalPrice)}</span>
             </div>
           </div>
           

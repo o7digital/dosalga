@@ -5,7 +5,7 @@ import ProductViewModal from '@/src/components/common/ProductViewModal';
 import ProductCard from '@/src/components/common/ProductCard';
 import { useProducts } from '@/src/hooks/useProducts';
 import { useCategories } from '@/src/hooks/useCategories';
-import { formatMXNPrice } from '@/src/lib/pricing';
+import { formatLocalizedPrice } from '@/src/lib/pricing';
 
 const SORT_PRESETS = {
   newest: { orderby: 'date', order: 'desc' },
@@ -25,6 +25,7 @@ const ShopPage = () => {
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
   const localeSegment = router.pathname.split('/')[1];
   const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
+  const formatPrice = (value) => formatLocalizedPrice(value, { pathname: router.pathname });
 
   const sidebarRef = useRef(null);
   const sidebarBtnRef = useRef(null);
@@ -160,7 +161,7 @@ const ShopPage = () => {
                         <a>{product.name}</a>
                       </Link>
                     </h6>
-                    <span>{formatMXNPrice(product.price)}</span>
+                    <span>{formatPrice(product.price)}</span>
                   </div>
                 </div>
               );

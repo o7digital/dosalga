@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useCart } from '@/src/contexts/CartContext';
-import { formatMXNPrice } from '@/src/lib/pricing';
+import { formatLocalizedPrice } from '@/src/lib/pricing';
 
 const SOCIO_COUPON_CODE = '2UP7NFF6';
 const SOCIO_DISCOUNT_PERCENT = 50;
 
 const Cart = () => {
+  const router = useRouter();
   const {
     cart,
     removeFromCart,
@@ -25,6 +27,7 @@ const Cart = () => {
   const discount = getDiscountAmount();
   const shipping = 0;
   const total = getCartTotalAfterDiscount() + shipping;
+  const formatPrice = (value) => formatLocalizedPrice(value, { pathname: router.pathname });
 
   const handleApplyCoupon = (event) => {
     event.preventDefault();
@@ -88,7 +91,7 @@ const Cart = () => {
                           </td>
 
                           <td data-label="Price">
-                            <p className="price">{formatMXNPrice(itemPrice)}</p>
+                            <p className="price">{formatPrice(itemPrice)}</p>
                           </td>
 
                           <td data-label="Quantity">
@@ -111,7 +114,7 @@ const Cart = () => {
                             </div>
                           </td>
 
-                          <td data-label="Total">{formatMXNPrice(lineTotal)}</td>
+                          <td data-label="Total">{formatPrice(lineTotal)}</td>
                         </tr>
                       );
                     })}
@@ -162,7 +165,7 @@ const Cart = () => {
                   <tr>
                     <th>Cart Totals</th>
                     <th />
-                    <th>{formatMXNPrice(total)}</th>
+                    <th>{formatPrice(total)}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -177,31 +180,26 @@ const Cart = () => {
                     </td>
                     <td>
                       <ul className="single-cost text-center">
-                        <li>{formatMXNPrice(shipping)}</li>
-                        <li>{formatMXNPrice(subtotal)}</li>
-                        <li>{formatMXNPrice(total)}</li>
+                        <li>{formatPrice(shipping)}</li>
+                        <li>{formatPrice(subtotal)}</li>
+                        <li>{formatPrice(total)}</li>
                       </ul>
                     </td>
                   </tr>
                   <tr>
                     <td>Discount</td>
                     <td>{appliedCoupon ? `${appliedCoupon.code} (${SOCIO_DISCOUNT_PERCENT}%)` : '—'}</td>
-                    <td>-${discount.toFixed(2)}</td>
+                    <td>-{formatPrice(discount)}</td>
                   </tr>
                   <tr>
                     <td>Subtotal</td>
                     <td />
-                    <td>{formatMXNPrice(subtotal)}</td>
+                    <td>{formatPrice(subtotal)}</td>
                   </tr>
                   <tr>
                     <td>Total after discount</td>
                     <td />
-                    <td>${total.toFixed(2)}</td>
-                  </tr>
-                  <tr>
-                    <td>Total after discount</td>
-                    <td />
-                    <td>${total.toFixed(2)}</td>
+                    <td>{formatPrice(total)}</td>
                   </tr>
                 </tbody>
               </table>

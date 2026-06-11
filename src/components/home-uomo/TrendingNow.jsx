@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useProducts } from '../../hooks/useProducts';
 import { useRouter } from 'next/router';
-import { formatMXNPrice, parsePriceValue } from '../../lib/pricing';
+import { formatLocalizedPrice, parsePriceValue } from '../../lib/pricing';
 
 const TrendingNow = () => {
     const { products, loading, error } = useProducts({ all: true });
@@ -15,6 +15,7 @@ const TrendingNow = () => {
 
     const [sortOption, setSortOption] = useState('most-expensive');
     const [selectedCategory, setSelectedCategory] = useState('all');
+    const formatPrice = (value) => formatLocalizedPrice(value, { locale: lang });
 
     const sortLabels = {
         en: { most: 'Most expensive', least: 'Least expensive', top: 'Top rated' },
@@ -257,11 +258,11 @@ const TrendingNow = () => {
                                             <div className="product-price">
                                                 {product.on_sale ? (
                                                     <>
-                                                        <span className="regular-price">{formatMXNPrice(product.regular_price)}</span>
-                                                        <span className="sale-price">{formatMXNPrice(product.sale_price)}</span>
+                                                        <span className="regular-price">{formatPrice(product.regular_price)}</span>
+                                                        <span className="sale-price">{formatPrice(product.sale_price)}</span>
                                                     </>
                                                 ) : (
-                                                    <span className="price">{formatMXNPrice(product.price)}</span>
+                                                    <span className="price">{formatPrice(product.price)}</span>
                                                 )}
                                             </div>
                                         </div>
