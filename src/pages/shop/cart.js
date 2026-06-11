@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/src/contexts/CartContext';
-import { formatUSDPrice } from '@/src/lib/pricing';
+import { formatMXNPrice } from '@/src/lib/pricing';
 
 const SOCIO_COUPON_CODE = '2UP7NFF6';
 const SOCIO_DISCOUNT_PERCENT = 50;
@@ -88,7 +88,7 @@ const Cart = () => {
                           </td>
 
                           <td data-label="Price">
-                            <p className="price">{formatUSDPrice(itemPrice)}</p>
+                            <p className="price">{formatMXNPrice(itemPrice)}</p>
                           </td>
 
                           <td data-label="Quantity">
@@ -111,7 +111,7 @@ const Cart = () => {
                             </div>
                           </td>
 
-                          <td data-label="Total">{formatUSDPrice(lineTotal)}</td>
+                          <td data-label="Total">{formatMXNPrice(lineTotal)}</td>
                         </tr>
                       );
                     })}
@@ -162,7 +162,7 @@ const Cart = () => {
                   <tr>
                     <th>Cart Totals</th>
                     <th />
-                    <th>{formatUSDPrice(total)}</th>
+                    <th>{formatMXNPrice(total)}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -177,9 +177,9 @@ const Cart = () => {
                     </td>
                     <td>
                       <ul className="single-cost text-center">
-                        <li>{formatUSDPrice(shipping)}</li>
-                        <li>{formatUSDPrice(subtotal)}</li>
-                        <li>{formatUSDPrice(total)}</li>
+                        <li>{formatMXNPrice(shipping)}</li>
+                        <li>{formatMXNPrice(subtotal)}</li>
+                        <li>{formatMXNPrice(total)}</li>
                       </ul>
                     </td>
                   </tr>
@@ -191,7 +191,7 @@ const Cart = () => {
                   <tr>
                     <td>Subtotal</td>
                     <td />
-                    <td>{formatUSDPrice(subtotal)}</td>
+                    <td>{formatMXNPrice(subtotal)}</td>
                   </tr>
                   <tr>
                     <td>Total after discount</td>

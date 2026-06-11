@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useCountdownTimer } from '@/src/hooks/useCountdownTimer';
 import { useWishlist } from '@/src/contexts/WishlistContext';
 import { useCart } from '@/src/contexts/CartContext';
-import { formatUSDPrice } from '@/src/lib/pricing';
+import { formatMXNPrice } from '@/src/lib/pricing';
 import { toast } from 'react-toastify';
 
 /**
@@ -262,11 +262,11 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
         <p className="price">
           {on_sale && sale_price ? (
             <>
-              {formatUSDPrice(sale_price)}
-              <del>{formatUSDPrice(regular_price)}</del>
+              {formatMXNPrice(sale_price)}
+              <del>{formatMXNPrice(regular_price)}</del>
             </>
           ) : (
-            formatUSDPrice(price)
+            formatMXNPrice(price)
           )}
         </p>
 

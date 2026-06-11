@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useCart } from "../../contexts/CartContext";
-import { formatUSDPrice } from "../../lib/pricing";
+import { formatMXNPrice } from "../../lib/pricing";
 
 const CartUomo = () => {
   const [showCart, setShowCart] = useState(false);
@@ -91,7 +91,7 @@ const CartUomo = () => {
               <div className="item-details">
                 <h6>{item.name}</h6>
                 <div className="item-price">
-                  <span className="price">{formatUSDPrice(item.price || 0)}</span>
+                  <span className="price">{formatMXNPrice(item.price || 0)}</span>
                 </div>
                 <div className="item-quantity">
                   <button className="qty-btn" onClick={() => updateQuantity(item.id, item.quantity - 1, item.variation)}>-</button>
@@ -108,11 +108,11 @@ const CartUomo = () => {
           <div className="cart-totals">
             <div className="subtotal">
               <span>Sub Total</span>
-              <span>{formatUSDPrice(totalPrice)}</span>
+              <span>{formatMXNPrice(totalPrice)}</span>
             </div>
             <div className="total">
               <span>Total</span>
-              <span>{formatUSDPrice(totalPrice)}</span>
+              <span>{formatMXNPrice(totalPrice)}</span>
             </div>
           </div>
           

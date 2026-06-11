@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useWishlist } from '@/src/contexts/WishlistContext';
-import { formatUSDPrice } from '@/src/lib/pricing';
+import { formatMXNPrice } from '@/src/lib/pricing';
 
 const Whistlist = () => {
   const { items, remove } = useWishlist();
@@ -62,11 +62,11 @@ const Whistlist = () => {
                       const priceDisplay = item.sale_price
                         ? (
                           <>
-                            <del>{formatUSDPrice(item.regular_price ?? item.price)}</del>
-                            {formatUSDPrice(item.sale_price)}
+                            <del>{formatMXNPrice(item.regular_price ?? item.price)}</del>
+                            {formatMXNPrice(item.sale_price)}
                           </>
                         )
-                        : formatUSDPrice(item.price ?? item.regular_price);
+                        : formatMXNPrice(item.price ?? item.regular_price);
 
                       return (
                         <tr key={item.id}>

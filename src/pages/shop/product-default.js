@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useProduct, useProducts } from '@/src/hooks/useProducts';
 import { useCart } from '@/src/contexts/CartContext';
-import { formatUSDPrice } from '@/src/lib/pricing';
+import { formatMXNPrice } from '@/src/lib/pricing';
 import { toast } from 'react-toastify';
 
 const htmlToPlainText = (html = '') => {
@@ -321,10 +321,10 @@ const ProductDefaultPage = () => {
                   <p className="price">
                     {product.on_sale && product.sale_price ? (
                       <>
-                        {formatUSDPrice(product.sale_price)} <del>{formatUSDPrice(product.regular_price)}</del>
+                        {formatMXNPrice(product.sale_price)} <del>{formatMXNPrice(product.regular_price)}</del>
                       </>
                     ) : (
-                      formatUSDPrice(product.price)
+                      formatMXNPrice(product.price)
                     )}
                   </p>
                 </div>

@@ -10,22 +10,22 @@ export const parsePriceValue = (value) => {
   return Number.isFinite(numeric) ? numeric : null;
 };
 
-export const convertStorePriceToUSD = (value) => {
+export const normalizeStorePrice = (value) => {
   const numeric = parsePriceValue(value);
   if (numeric === null) return null;
   return numeric;
 };
 
-export const formatUSDPrice = (value, options = {}) => {
-  const { includeCode = true, fallback = includeCode ? '$0.00 USD' : '$0.00' } = options;
-  const usd = convertStorePriceToUSD(value);
+export const formatMXNPrice = (value, options = {}) => {
+  const { includeCode = true, fallback = includeCode ? '$0.00 MXN' : '$0.00' } = options;
+  const mxn = normalizeStorePrice(value);
 
-  if (usd === null) return fallback;
+  if (mxn === null) return fallback;
 
-  const formatted = `$${usd.toLocaleString('en-US', {
+  const formatted = `$${mxn.toLocaleString('en-US', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
 
-  return includeCode ? `${formatted} USD` : formatted;
+  return includeCode ? `${formatted} MXN` : formatted;
 };

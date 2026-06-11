@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCart } from '@/src/contexts/CartContext';
-import { formatUSDPrice } from '@/src/lib/pricing';
+import { formatMXNPrice } from '@/src/lib/pricing';
 import { toast } from 'react-toastify';
 
 const COUNTRY_OPTIONS = [
@@ -616,7 +616,7 @@ const Checkout = () => {
                               </div>
                               <strong>
                                 <i className="bi bi-x-lg px-2" />
-                                <span className="product-price">{formatUSDPrice(itemPrice)}</span>
+                                <span className="product-price">{formatMXNPrice(itemPrice)}</span>
                               </strong>
                             </div>
                           </div>
@@ -672,25 +672,25 @@ const Checkout = () => {
                   <thead>
                     <tr>
                       <th>Subtotal</th>
-                      <th>{formatUSDPrice(subtotal)}</th>
+                      <th>{formatMXNPrice(subtotal)}</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
                       <td className="tax">Tax</td>
-                      <td>{formatUSDPrice(tax)}</td>
+                      <td>{formatMXNPrice(tax)}</td>
                     </tr>
                     <tr>
                       <td>Total (tax excl.)</td>
-                      <td>{formatUSDPrice(subtotal + shipping)}</td>
+                      <td>{formatMXNPrice(subtotal + shipping)}</td>
                     </tr>
                     <tr>
                       <td>Total (tax incl.)</td>
-                      <td>{formatUSDPrice(total)}</td>
+                      <td>{formatMXNPrice(total)}</td>
                     </tr>
                     <tr>
                       <td>Discount</td>
-                      <td>{appliedCoupon ? `-${formatUSDPrice(discount)}` : '—'}</td>
+                      <td>{appliedCoupon ? `-${formatMXNPrice(discount)}` : '—'}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -701,7 +701,7 @@ const Checkout = () => {
                   <thead>
                     <tr>
                       <th>Total</th>
-                      <th>{formatUSDPrice(total)}</th>
+                      <th>{formatMXNPrice(total)}</th>
                     </tr>
                   </thead>
                 </table>

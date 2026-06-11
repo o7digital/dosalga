@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useProducts } from '../../hooks/useProducts';
 import { useRouter } from 'next/router';
-import { formatUSDPrice, parsePriceValue } from '../../lib/pricing';
+import { formatMXNPrice, parsePriceValue } from '../../lib/pricing';
 
 const TrendingNow = () => {
     const { products, loading, error } = useProducts({ all: true });
@@ -257,11 +257,11 @@ const TrendingNow = () => {
                                             <div className="product-price">
                                                 {product.on_sale ? (
                                                     <>
-                                                        <span className="regular-price">{formatUSDPrice(product.regular_price)}</span>
-                                                        <span className="sale-price">{formatUSDPrice(product.sale_price)}</span>
+                                                        <span className="regular-price">{formatMXNPrice(product.regular_price)}</span>
+                                                        <span className="sale-price">{formatMXNPrice(product.sale_price)}</span>
                                                     </>
                                                 ) : (
-                                                    <span className="price">{formatUSDPrice(product.price)}</span>
+                                                    <span className="price">{formatMXNPrice(product.price)}</span>
                                                 )}
                                             </div>
                                         </div>
