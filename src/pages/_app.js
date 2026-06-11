@@ -18,7 +18,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import OliviaChatDosalga from "../components/common/OliviaChatDosalga";
 
-const SHOW_UNDER_CONSTRUCTION = false;
+const SHOW_UNDER_CONSTRUCTION =
+  process.env.NEXT_PUBLIC_SHOW_UNDER_CONSTRUCTION === "1" ||
+  process.env.VERCEL_GIT_COMMIT_REF === "main";
 
 function UnderConstructionPage() {
   return (
