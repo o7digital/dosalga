@@ -10,22 +10,85 @@ export const parsePriceValue = (value) => {
   return Number.isFinite(numeric) ? numeric : null;
 };
 
-export const convertStorePriceToUSD = (value) => {
+export const normalizeStorePrice = (value) => {
   const numeric = parsePriceValue(value);
   if (numeric === null) return null;
   return numeric;
 };
 
-export const formatUSDPrice = (value, options = {}) => {
+const DEFAULT_MXN_PER_USD = 18.5;
+const MIN_VISIBLE_PRODUCT_USD = 10;
+
+export const getStoreLocaleFromPath = (pathname = '') => {
+  const segment = String(pathname || '').split('/')[1];
+  return segment === 'es' ? 'es' : 'en';
+};
+
+export const getDisplayCurrencyForLocale = (locale = 'en') => (
+  locale === 'es' ? 'MXN' : 'USD'
+);
+
+export const getMxnPerUsdRate = () => {
+  const configuredRate = Number.parseFloat(process.env.NEXT_PUBLIC_MXN_PER_USD || '');
+  return Number.isFinite(configuredRate) && configuredRate > 0
+    ? configuredRate
+    : DEFAULT_MXN_PER_USD;
+};
+
+export const formatMXNPrice = (value, options = {}) => {
+  const { includeCode = true, fallback = includeCode ? '$0.00 MXN' : '$0.00' } = options;
+  const mxn = normalizeStorePrice(value);
+
+  if (mxn === null) return fallback;
+
+  const formatted = `$${mxn.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+
+  return includeCode ? `${formatted} MXN` : formatted;
+};
+
+export const formatUSDPriceFromMXN = (value, options = {}) => {
   const { includeCode = true, fallback = includeCode ? '$0.00 USD' : '$0.00' } = options;
-  const usd = convertStorePriceToUSD(value);
+  const mxn = normalizeStorePrice(value);
 
-  if (usd === null) return fallback;
+  if (mxn === null) return fallback;
 
+  const usd = mxn / getMxnPerUsdRate();
   const formatted = `$${usd.toLocaleString('en-US', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
 
   return includeCode ? `${formatted} USD` : formatted;
+};
+
+export const getUSDPriceFromMXN = (value) => {
+  const mxn = normalizeStorePrice(value);
+  if (mxn === null) return null;
+
+  return mxn / getMxnPerUsdRate();
+};
+
+export const isProductVisibleByMinimumUSD = (product, minimumUSD = MIN_VISIBLE_PRODUCT_USD) => {
+  // Product visibility must match the USD price shown in ProductCard.
+  const usdPrice = getUSDPriceFromMXN(product?.price);
+
+  if (usdPrice === null) {
+    return false;
+  }
+
+  return usdPrice >= minimumUSD;
+};
+
+export const formatLocalizedPrice = (value, options = {}) => {
+  const locale = options.locale || getStoreLocaleFromPath(options.pathname);
+  const currency = options.currency || getDisplayCurrencyForLocale(locale);
+
+  if (currency === 'MXN') {
+    return formatMXNPrice(value, options);
+  }
+
+  return formatUSDPriceFromMXN(value, options);
 };

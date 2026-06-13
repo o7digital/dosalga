@@ -3,8 +3,13 @@
  * Récupère un produit par ID depuis WooCommerce
  */
 import { getProduct, getProductVariations } from '@/src/lib/woocommerce';
+import { isProductVisible } from '@/src/lib/productVisibility';
 
 export default async function handler(req, res) {
+  res.setHeader('Cache-Control', 'no-store, max-age=0');
+  res.setHeader('CDN-Cache-Control', 'no-store');
+  res.setHeader('Vercel-CDN-Cache-Control', 'no-store');
+
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
@@ -17,6 +22,13 @@ export default async function handler(req, res) {
     // Guard contre les réponses HTML/captcha
     if (!product || typeof product !== 'object' || Array.isArray(product)) {
       throw new Error('Réponse produit invalide (captcha ou HTML).');
+    }
+
+    if (!isProductVisible(product)) {
+      return res.status(404).json({
+        success: false,
+        message: 'Produit indisponible',
+      });
     }
     
     // Si le produit a des variations, les récupérer aussi

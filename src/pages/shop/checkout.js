@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCart } from '@/src/contexts/CartContext';
-import { formatUSDPrice } from '@/src/lib/pricing';
+import { formatLocalizedPrice } from '@/src/lib/pricing';
 import { toast } from 'react-toastify';
 
 const COUNTRY_OPTIONS = [
@@ -178,6 +178,7 @@ const Checkout = () => {
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
   const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
   const termsPath = `${localePrefix}/terms-and-conditions`;
+  const formatPrice = (value) => formatLocalizedPrice(value, { pathname: router.pathname });
   const getOrderPaymentUrl = (order) => {
     if (order?.payment_url) return order.payment_url;
     if (order?.checkout_payment_url) return order.checkout_payment_url;
@@ -616,7 +617,7 @@ const Checkout = () => {
                               </div>
                               <strong>
                                 <i className="bi bi-x-lg px-2" />
-                                <span className="product-price">{formatUSDPrice(itemPrice)}</span>
+                                <span className="product-price">{formatPrice(itemPrice)}</span>
                               </strong>
                             </div>
                           </div>
@@ -672,25 +673,25 @@ const Checkout = () => {
                   <thead>
                     <tr>
                       <th>Subtotal</th>
-                      <th>{formatUSDPrice(subtotal)}</th>
+                      <th>{formatPrice(subtotal)}</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
                       <td className="tax">Tax</td>
-                      <td>{formatUSDPrice(tax)}</td>
+                      <td>{formatPrice(tax)}</td>
                     </tr>
                     <tr>
                       <td>Total (tax excl.)</td>
-                      <td>{formatUSDPrice(subtotal + shipping)}</td>
+                      <td>{formatPrice(subtotal + shipping)}</td>
                     </tr>
                     <tr>
                       <td>Total (tax incl.)</td>
-                      <td>{formatUSDPrice(total)}</td>
+                      <td>{formatPrice(total)}</td>
                     </tr>
                     <tr>
                       <td>Discount</td>
-                      <td>{appliedCoupon ? `-${formatUSDPrice(discount)}` : '—'}</td>
+                      <td>{appliedCoupon ? `-${formatPrice(discount)}` : '—'}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -701,7 +702,7 @@ const Checkout = () => {
                   <thead>
                     <tr>
                       <th>Total</th>
-                      <th>{formatUSDPrice(total)}</th>
+                      <th>{formatPrice(total)}</th>
                     </tr>
                   </thead>
                 </table>

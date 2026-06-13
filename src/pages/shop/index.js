@@ -5,7 +5,8 @@ import ProductViewModal from '@/src/components/common/ProductViewModal';
 import ProductCard from '@/src/components/common/ProductCard';
 import { useProducts } from '@/src/hooks/useProducts';
 import { useCategories } from '@/src/hooks/useCategories';
-import { formatUSDPrice } from '@/src/lib/pricing';
+import { formatLocalizedPrice } from '@/src/lib/pricing';
+import { getPrimaryProductImageSrc } from '@/src/lib/productVisibility';
 
 const SORT_PRESETS = {
   newest: { orderby: 'date', order: 'desc' },
@@ -22,9 +23,11 @@ const ShopPage = () => {
   const [sortKey, setSortKey] = useState('newest');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [hiddenImageProductIds, setHiddenImageProductIds] = useState([]);
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
   const localeSegment = router.pathname.split('/')[1];
   const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
+  const formatPrice = (value) => formatLocalizedPrice(value, { pathname: router.pathname });
 
   const sidebarRef = useRef(null);
   const sidebarBtnRef = useRef(null);
@@ -65,14 +68,22 @@ const ShopPage = () => {
   const { products, loading, error } = useProducts(productParams);
   const { categories } = useCategories({ per_page: 100, hide_empty: true });
 
+  useEffect(() => {
+    setHiddenImageProductIds([]);
+  }, [productParams]);
+
   const visibleProducts = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
+    const source = products.filter((product) => (
+      getPrimaryProductImageSrc(product)
+      && !hiddenImageProductIds.includes(product.id)
+    ));
 
     if (!query) {
-      return products;
+      return source;
     }
 
-    return products.filter((product) => {
+    return source.filter((product) => {
       const haystack = [
         product.name,
         product.slug,
@@ -86,7 +97,7 @@ const ShopPage = () => {
 
       return haystack.includes(query);
     });
-  }, [products, searchQuery]);
+  }, [hiddenImageProductIds, products, searchQuery]);
 
   const visibleCategories = useMemo(() => {
     return categories.filter((category) => Number(category.count || 0) > 0).slice(0, 8);
@@ -96,7 +107,17 @@ const ShopPage = () => {
     return visibleCategories.reduce((total, category) => total + Number(category.count || 0), 0);
   }, [visibleCategories]);
 
-  const topProducts = useMemo(() => products.slice(0, 3), [products]);
+  const topProducts = useMemo(() => (
+    products
+      .filter((product) => getPrimaryProductImageSrc(product))
+      .slice(0, 3)
+  ), [products]);
+
+  const hideProductWithInvalidImage = (productId) => {
+    setHiddenImageProductIds((currentIds) => (
+      currentIds.includes(productId) ? currentIds : [...currentIds, productId]
+    ));
+  };
 
   const gridColumnClass =
     activeColumn === 'column-2'
@@ -144,13 +165,18 @@ const ShopPage = () => {
           <div className="shop-widget">
             <h5 className="shop-widget-title">Top Products</h5>
             {topProducts.map((product) => {
-              const image = product.images?.[0]?.src || '/assets/img/placeholder.png';
+              const image = getPrimaryProductImageSrc(product);
+
+              if (!image) {
+                return null;
+              }
+
               return (
                 <div className="top-product-widget mb-20" key={product.id}>
                   <div className="top-product-img">
                     <Link legacyBehavior href={`${localePrefix}/shop/product/${product.id}`}>
                       <a>
-                        <img src={image} alt={product.name} />
+                        <img src={image} alt={product.name} loading="lazy" decoding="async" />
                       </a>
                     </Link>
                   </div>
@@ -160,7 +186,7 @@ const ShopPage = () => {
                         <a>{product.name}</a>
                       </Link>
                     </h6>
-                    <span>{formatUSDPrice(product.price)}</span>
+                    <span>{formatPrice(product.price)}</span>
                   </div>
                 </div>
               );
@@ -256,7 +282,11 @@ const ShopPage = () => {
 
               {!loading && !error && visibleProducts.map((product, index) => (
                 <div key={product.id} className={`${gridColumnClass} d-flex`}>
-                  <ProductCard product={product} showCountdown={index === 0} />
+                  <ProductCard
+                    product={product}
+                    showCountdown={index === 0}
+                    onImageInvalid={hideProductWithInvalidImage}
+                  />
                 </div>
               ))}
             </div>

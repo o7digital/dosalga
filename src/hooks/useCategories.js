@@ -2,29 +2,32 @@
  * Hook personnalisé pour gérer les catégories WooCommerce
  */
 import { useState, useEffect } from 'react';
+import { getWooCommerceRefreshIntervalMs } from '@/src/lib/liveRefresh';
 
 /**
  * Hook pour récupérer toutes les catégories
  * @param {Object} params - Paramètres (per_page, hide_empty, etc.)
  */
-export const useCategories = (params = {}) => {
+export const useCategories = (params = {}, options = {}) => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const paramsKey = JSON.stringify(params);
+  const refreshIntervalMs = options.refreshIntervalMs ?? getWooCommerceRefreshIntervalMs();
 
-  useEffect(() => {
-    fetchCategories();
-  }, [JSON.stringify(params)]);
+  const fetchCategories = async (fetchOptions = {}) => {
+    const { silent = false } = fetchOptions;
 
-  const fetchCategories = async () => {
     try {
-      setLoading(true);
+      if (!silent) {
+        setLoading(true);
+      }
       setError(null);
       
       const queryParams = new URLSearchParams(params).toString();
       const url = `/api/categories${queryParams ? `?${queryParams}` : ''}`;
       
-      const response = await fetch(url);
+      const response = await fetch(url, { cache: 'no-store' });
       const result = await response.json();
       
       if (!response.ok) {
@@ -37,9 +40,25 @@ export const useCategories = (params = {}) => {
       setError(err.message);
       setCategories([]);
     } finally {
-      setLoading(false);
+      if (!silent) {
+        setLoading(false);
+      }
     }
   };
+
+  useEffect(() => {
+    fetchCategories();
+
+    if (!refreshIntervalMs) {
+      return undefined;
+    }
+
+    const intervalId = window.setInterval(() => {
+      fetchCategories({ silent: true });
+    }, refreshIntervalMs);
+
+    return () => window.clearInterval(intervalId);
+  }, [paramsKey, refreshIntervalMs]);
 
   const refetch = () => {
     fetchCategories();
