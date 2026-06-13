@@ -78,3 +78,26 @@ add_action('woocommerce_process_product_meta', function($post_id) {
     $custom_field = isset($_POST['_dosalga_custom_field']) ? sanitize_text_field($_POST['_dosalga_custom_field']) : '';
     update_post_meta($post_id, '_dosalga_custom_field', $custom_field);
 });
+
+// Afficher la devise dans la liste admin des produits WooCommerce.
+add_filter('manage_edit-product_columns', function($columns) {
+    $updated_columns = array();
+
+    foreach ($columns as $key => $label) {
+        $updated_columns[$key] = $label;
+
+        if ($key === 'price') {
+            $updated_columns['dosalga_currency'] = __('Currency', 'woocommerce');
+        }
+    }
+
+    return $updated_columns;
+}, 20);
+
+add_action('manage_product_posts_custom_column', function($column, $post_id) {
+    if ($column !== 'dosalga_currency') {
+        return;
+    }
+
+    echo esc_html(get_woocommerce_currency());
+}, 10, 2);

@@ -10,62 +10,37 @@ export const parsePriceValue = (value) => {
   return Number.isFinite(numeric) ? numeric : null;
 };
 
-export const normalizeStorePrice = (value) => {
+export const getStoreMXNPrice = (value) => {
   const numeric = parsePriceValue(value);
   if (numeric === null) return null;
   return numeric;
 };
 
-export const getStoreUSDPrice = normalizeStorePrice;
-
-export const getUSDToMXNRate = () => {
-  const configuredRate = parsePriceValue(process.env.NEXT_PUBLIC_USD_TO_MXN_RATE);
-  return configuredRate && configuredRate > 0 ? configuredRate : 20;
-};
-
-export const getMXNPriceFromUSD = (value) => {
-  const usd = getStoreUSDPrice(value);
-  if (usd === null) return null;
-  return usd * getUSDToMXNRate();
-};
+export const normalizeStorePrice = getStoreMXNPrice;
 
 export const getStoreLocaleFromPath = (pathname = '') => {
   const segment = String(pathname || '').split('/')[1];
   return segment === 'en' ? 'en' : 'es';
 };
 
-export const formatUSDPrice = (value, options = {}) => {
-  const { includeCode = true, fallback = includeCode ? '$0.00 USD' : '$0.00' } = options;
-  const usd = getStoreUSDPrice(value);
+export const formatMXNPrice = (value, options = {}) => {
+  const { includeCode = true, fallback = includeCode ? '$0.00 MXN' : '$0.00' } = options;
+  const mxn = getStoreMXNPrice(value);
 
-  if (usd === null) return fallback;
+  if (mxn === null) return fallback;
 
-  const formatted = `$${usd.toLocaleString('en-US', {
+  const formatted = `$${mxn.toLocaleString('en-US', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
 
-  return includeCode ? `${formatted} USD` : formatted;
-};
-
-export const formatMXNPrice = (value, options = {}) => {
-  const { includeCode = true, fallback = includeCode ? '$0.00 MXN' : '$0.00' } = options;
-  const mxn = getMXNPriceFromUSD(value);
-
-  if (mxn === null) return fallback;
-
-  const formatted = mxn.toLocaleString('es-MX', {
-    style: 'currency',
-    currency: 'MXN',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-
   return includeCode ? `${formatted} MXN` : formatted;
 };
 
-export const formatUSDPriceFromMXN = formatUSDPrice;
-export const getUSDPriceFromMXN = getStoreUSDPrice;
+export const getStoreUSDPrice = getStoreMXNPrice;
+export const formatUSDPrice = formatMXNPrice;
+export const formatUSDPriceFromMXN = formatMXNPrice;
+export const getUSDPriceFromMXN = normalizeStorePrice;
 
 export const formatLocalizedPrice = (value, options = {}) => {
   return formatMXNPrice(value, options);
