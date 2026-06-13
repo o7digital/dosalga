@@ -16,14 +16,27 @@ export const normalizeStorePrice = (value) => {
   return numeric;
 };
 
+export const getStoreUSDPrice = normalizeStorePrice;
+
+export const getUSDToMXNRate = () => {
+  const configuredRate = parsePriceValue(process.env.NEXT_PUBLIC_USD_TO_MXN_RATE);
+  return configuredRate && configuredRate > 0 ? configuredRate : 20;
+};
+
+export const getMXNPriceFromUSD = (value) => {
+  const usd = getStoreUSDPrice(value);
+  if (usd === null) return null;
+  return usd * getUSDToMXNRate();
+};
+
 export const getStoreLocaleFromPath = (pathname = '') => {
   const segment = String(pathname || '').split('/')[1];
-  return segment === 'es' ? 'es' : 'en';
+  return segment === 'en' ? 'en' : 'es';
 };
 
 export const formatUSDPrice = (value, options = {}) => {
   const { includeCode = true, fallback = includeCode ? '$0.00 USD' : '$0.00' } = options;
-  const usd = normalizeStorePrice(value);
+  const usd = getStoreUSDPrice(value);
 
   if (usd === null) return fallback;
 
@@ -35,10 +48,25 @@ export const formatUSDPrice = (value, options = {}) => {
   return includeCode ? `${formatted} USD` : formatted;
 };
 
+export const formatMXNPrice = (value, options = {}) => {
+  const { includeCode = true, fallback = includeCode ? '$0.00 MXN' : '$0.00' } = options;
+  const mxn = getMXNPriceFromUSD(value);
+
+  if (mxn === null) return fallback;
+
+  const formatted = mxn.toLocaleString('es-MX', {
+    style: 'currency',
+    currency: 'MXN',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  return includeCode ? `${formatted} MXN` : formatted;
+};
+
 export const formatUSDPriceFromMXN = formatUSDPrice;
-export const formatMXNPrice = formatUSDPrice;
-export const getUSDPriceFromMXN = normalizeStorePrice;
+export const getUSDPriceFromMXN = getStoreUSDPrice;
 
 export const formatLocalizedPrice = (value, options = {}) => {
-  return formatUSDPrice(value, options);
+  return formatMXNPrice(value, options);
 };

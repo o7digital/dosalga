@@ -173,7 +173,7 @@ const Checkout = () => {
   const shippingRequiresState = shippingStateOptions.length > 0;
   const localeSegment = router.pathname.split('/')[1];
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
-  const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
+  const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '/es';
   const termsPath = `${localePrefix}/terms-and-conditions`;
   const formatPrice = (value) => formatLocalizedPrice(value, { pathname: router.pathname });
   const getOrderPaymentUrl = (order) => {

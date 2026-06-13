@@ -19,8 +19,8 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null, onImag
   const [imageFailed, setImageFailed] = useState(false);
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
   const localeSegment = router.pathname.split('/')[1];
-  const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
-  const isSpanish = localeSegment === 'es';
+  const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '/es';
+  const isSpanish = localeSegment !== 'en';
   const formatPrice = (value) => formatLocalizedPrice(value, { pathname: router.pathname });
 
   // Extraire les données du produit WooCommerce

@@ -45,7 +45,7 @@ const ProductDefaultPage = () => {
   const { addToCart } = useCart();
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
   const localeSegment = router.pathname.split('/')[1];
-  const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
+  const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '/es';
   const formatPrice = (value) => formatLocalizedPrice(value, { pathname: router.pathname });
 
   const queryId = Array.isArray(router.query.id) ? router.query.id[0] : router.query.id;

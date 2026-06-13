@@ -10,14 +10,16 @@ const LanguageSwitcher = () => {
 
   const currentLang = (() => {
     const seg = router.pathname.split('/')[1];
-    return ALL_LANGUAGES.includes(seg) ? seg : 'en';
+    return ALL_LANGUAGES.includes(seg) ? seg : 'es';
   })();
 
   const buildPath = (targetLang) => {
     const segments = router.asPath.split('/');
     if (ALL_LANGUAGES.includes(segments[1])) {
       segments[1] = targetLang === 'en' ? '' : targetLang;
-    } else if (targetLang !== 'en') {
+    } else if (targetLang !== 'es') {
+      return router.asPath || '/';
+    } else {
       segments.splice(1, 0, targetLang);
     }
     const path = segments.filter(Boolean).join('/');
