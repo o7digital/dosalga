@@ -4,6 +4,7 @@
  */
 import { getAllProducts, getProducts } from '@/src/lib/woocommerce';
 import { normalizeWooProductsPricesToMXN } from '@/src/lib/pricing';
+import { translateWooProductsDescriptionsToSpanish } from '@/src/lib/productText';
 import { isProductVisible } from '@/src/lib/productVisibility';
 
 const parsePositiveInteger = (value, fallback) => {
@@ -74,8 +75,10 @@ export default async function handler(req, res) {
       throw new Error('WooCommerce API returned unexpected payload (possibly captcha).');
     }
 
-    const visibleProducts = normalizeWooProductsPricesToMXN(
-      products.filter((product) => isProductVisible(product))
+    const visibleProducts = translateWooProductsDescriptionsToSpanish(
+      normalizeWooProductsPricesToMXN(
+        products.filter((product) => isProductVisible(product))
+      )
     );
 
     res.status(200).json({

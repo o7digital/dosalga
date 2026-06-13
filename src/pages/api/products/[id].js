@@ -4,6 +4,7 @@
  */
 import { getProduct, getProductVariations } from '@/src/lib/woocommerce';
 import { normalizeWooProductPricesToMXN, normalizeWooProductsPricesToMXN } from '@/src/lib/pricing';
+import { translateWooProductDescriptionsToSpanish } from '@/src/lib/productText';
 import { isProductVisible } from '@/src/lib/productVisibility';
 
 export default async function handler(req, res) {
@@ -38,7 +39,9 @@ export default async function handler(req, res) {
       variations = await getProductVariations(id);
     }
 
-    const normalizedProduct = normalizeWooProductPricesToMXN(product);
+    const normalizedProduct = translateWooProductDescriptionsToSpanish(
+      normalizeWooProductPricesToMXN(product)
+    );
     const normalizedVariations = normalizeWooProductsPricesToMXN(variations);
 
     res.status(200).json({

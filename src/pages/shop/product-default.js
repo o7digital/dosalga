@@ -196,6 +196,9 @@ const ProductDefaultPage = () => {
     if (!text) return '';
     return text.length > 260 ? `${text.slice(0, 260).trim()}...` : text;
   }, [product?.description, product?.short_description]);
+  const productDescription = useMemo(() => {
+    return product?.description || product?.short_description || '';
+  }, [product?.description, product?.short_description]);
 
   const renderStars = () => {
     const stars = [];
@@ -399,6 +402,24 @@ const ProductDefaultPage = () => {
         </div>
       </div>
 
+      {productDescription && (
+        <div className="shop-details-description mb-110">
+          <div className="container-xl container-fluid-lg container">
+            <div className="shop-details-description-nav mb-30">
+              <ul className="nav nav-tabs">
+                <li className="nav-item" role="presentation">
+                  <button className="nav-link active" type="button">Descripcion</button>
+                </li>
+              </ul>
+            </div>
+            <div
+              className="product-description"
+              dangerouslySetInnerHTML={{ __html: productDescription }}
+            />
+          </div>
+        </div>
+      )}
+
       <style jsx>{`
         .shop-details-img {
           display: grid;
@@ -502,6 +523,29 @@ const ProductDefaultPage = () => {
           margin: 10px 0 18px;
           color: #666;
           line-height: 1.7;
+        }
+
+        .product-description {
+          color: #555;
+          line-height: 1.75;
+        }
+
+        .product-description :global(p),
+        .product-description :global(li) {
+          margin-bottom: 10px;
+        }
+
+        .product-description :global(table) {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 16px 0;
+        }
+
+        .product-description :global(td),
+        .product-description :global(th) {
+          border: 1px solid #e5e5e5;
+          padding: 10px;
+          vertical-align: top;
         }
 
         .qty-btn {
