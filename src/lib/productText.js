@@ -1,6 +1,79 @@
 const DESCRIPTION_FIELDS = ['description', 'short_description'];
+const TEXT_FIELDS = ['name', ...DESCRIPTION_FIELDS];
 
 const SPANISH_REPLACEMENTS = [
+  ['cross-border', 'importacion'],
+  ['mens business', 'hombre ejecutivo'],
+  ["men's business", 'hombre ejecutivo'],
+  ['business large-capacity', 'ejecutivo de gran capacidad'],
+  ['large-capacity', 'gran capacidad'],
+  ['shouldercrossbody', 'de hombro y cruzado'],
+  ['shoulder crossbody', 'de hombro y cruzado'],
+  ['crossbody', 'cruzado'],
+  ['simple briefcase', 'maletin sencillo'],
+  ['briefcase', 'maletin'],
+  ['laptop bag', 'bolsa para laptop'],
+  ['laptop', 'laptop'],
+  ['computer', 'computadora'],
+  ['messenger bag', 'bolso mensajero'],
+  ['handbag', 'bolso de mano'],
+  ['cowhide', 'cuero vacuno'],
+  ['oily leather', 'cuero engrasado'],
+  ['leather', 'cuero'],
+  ['first layer', 'primera capa'],
+  ['high-end', 'alta gama'],
+  ['high end', 'alta gama'],
+  ['wide-width', 'ancho'],
+  ['wide width', 'ancho'],
+  ['vintage style', 'estilo vintage'],
+  ['shoulder liner', 'forro de hombro'],
+  ['shoulder', 'hombro'],
+  ['portable', 'portatil'],
+  ['clutch casual business', 'bolso clutch casual ejecutivo'],
+  ['clutch large', 'clutch grande'],
+  ['clutch', 'bolso clutch'],
+  ['casual business', 'casual ejecutivo'],
+  ['shoulder bag', 'bolso de hombro'],
+  ['polyester jacquard', 'jacquard de poliester'],
+  ['polyester', 'poliester'],
+  ['yarn-dyed', 'tenido en hilo'],
+  ['yarn dyed', 'tenido en hilo'],
+  ['direct-supply', 'venta directa'],
+  ['direct supply', 'venta directa'],
+  ['jacquard', 'jacquard'],
+  ['striped tie', 'corbata a rayas'],
+  ['tie', 'corbata'],
+  ['formal', 'formal'],
+  ['sportswear fitness', 'ropa deportiva fitness'],
+  ['sportswear', 'ropa deportiva'],
+  ['fitness', 'fitness'],
+  ['short-sleeve', 'manga corta'],
+  ['short sleeve', 'manga corta'],
+  ['t-shirt', 'camiseta'],
+  ['tshirt', 'camiseta'],
+  ['mesh-textured', 'textura de malla'],
+  ['mesh textured', 'textura de malla'],
+  ['breathable mesh', 'malla transpirable'],
+  ['breathable', 'transpirable'],
+  ['patchwork design', 'diseno patchwork'],
+  ['patchwork', 'patchwork'],
+  ['summer mens wear', 'ropa de verano para hombre'],
+  ["summer men's wear", 'ropa de verano para hombre'],
+  ['mens wear', 'ropa para hombre'],
+  ["men's wear", 'ropa para hombre'],
+  ['mens tshirts', 'camisetas para hombre'],
+  ["men's tshirts", 'camisetas para hombre'],
+  ['mens t-shirts', 'camisetas para hombre'],
+  ["men's t-shirts", 'camisetas para hombre'],
+  ['mens', 'hombre'],
+  ["men's", 'hombre'],
+  ['men', 'hombre'],
+  ['summer', 'verano'],
+  ['business', 'ejecutivo'],
+  ['capacity', 'capacidad'],
+  ['large', 'grande'],
+  ['small', 'pequeno'],
+  ['new', 'nuevo'],
   ['purchase notes', 'notas de compra'],
   ['this product does not have abe', 'este producto no cuenta con ABE'],
   ['if it is returned because there is no abe', 'si se devuelve porque no cuenta con ABE'],
@@ -83,6 +156,7 @@ const SPANISH_REPLACEMENTS = [
   ['white', 'blanco'],
   ['red', 'rojo'],
   ['blue', 'azul'],
+  ['brown', 'marron'],
   ['green', 'verde'],
   ['gray', 'gris'],
   ['grey', 'gris'],
@@ -117,6 +191,7 @@ const SPANISH_REPLACEMENTS = [
   ['included', 'incluido'],
   ['includes', 'incluye'],
   ['for adults', 'para adultos'],
+  ['for', 'para'],
   ['for city travel', 'para trayectos urbanos'],
   ['for daily commuting', 'para traslados diarios'],
   ['easy to carry', 'facil de transportar'],
@@ -161,13 +236,71 @@ export const translateProductTextToSpanish = (value) => {
     .join('');
 };
 
-export const translateWooProductDescriptionsToSpanish = (product) => {
+const translateCategoriesToSpanish = (categories) => {
+  if (!Array.isArray(categories)) {
+    return categories;
+  }
+
+  return categories.map((category) => {
+    if (!category || typeof category !== 'object' || !category.name) {
+      return category;
+    }
+
+    return {
+      ...category,
+      name: translateProductTextToSpanish(category.name),
+    };
+  });
+};
+
+export const translateWooProductTextToSpanish = (product) => {
   if (!product || typeof product !== 'object' || Array.isArray(product)) {
     return product;
   }
 
   const sourceLanguage = String(process.env.NEXT_PUBLIC_WP_DESCRIPTION_SOURCE_LANGUAGE || 'EN').trim().toUpperCase();
   if (sourceLanguage !== 'EN') {
+    return product;
+  }
+
+  const translatedProduct = TEXT_FIELDS.reduce((nextProduct, field) => {
+    const value = nextProduct[field];
+    if (value === null || value === undefined || value === '') {
+      return nextProduct;
+    }
+
+    return {
+      ...nextProduct,
+      [field]: translateProductTextToSpanish(value),
+    };
+  }, product);
+
+  return {
+    ...translatedProduct,
+    categories: translateCategoriesToSpanish(translatedProduct.categories),
+  };
+};
+
+export const translateWooProductDescriptionsToSpanish = translateWooProductTextToSpanish;
+
+export const translateWooProductsTextToSpanish = (products) => {
+  if (!Array.isArray(products)) {
+    return products;
+  }
+
+  return products.map(translateWooProductTextToSpanish);
+};
+
+export const translateWooProductsDescriptionsToSpanish = (products) => {
+  if (!Array.isArray(products)) {
+    return products;
+  }
+
+  return products.map(translateWooProductTextToSpanish);
+};
+
+export const translateWooProductDescriptionsFieldsToSpanish = (product) => {
+  if (!product || typeof product !== 'object' || Array.isArray(product)) {
     return product;
   }
 
@@ -182,12 +315,4 @@ export const translateWooProductDescriptionsToSpanish = (product) => {
       [field]: translateProductTextToSpanish(value),
     };
   }, product);
-};
-
-export const translateWooProductsDescriptionsToSpanish = (products) => {
-  if (!Array.isArray(products)) {
-    return products;
-  }
-
-  return products.map(translateWooProductDescriptionsToSpanish);
 };
