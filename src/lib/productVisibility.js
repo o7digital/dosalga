@@ -1,5 +1,3 @@
-import { isProductVisibleByMinimumUSD } from '@/src/lib/pricing';
-
 const HIDDEN_PRODUCT_TERMS = ['cream', 'creme', 'crema'];
 
 const normalizeVisibilityText = (value) => (
@@ -90,7 +88,6 @@ export const isHiddenCreamCategory = (category) => {
 };
 
 export const isProductVisible = (product) => (
-  isProductVisibleByMinimumUSD(product)
-  && hasVisibleProductImage(product)
+  hasVisibleProductImage(product)
   && !isBlockedCreamProduct(product)
 );
