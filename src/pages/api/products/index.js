@@ -3,6 +3,7 @@
  * Récupère tous les produits depuis WooCommerce
  */
 import { getAllProducts, getProducts } from '@/src/lib/woocommerce';
+import { normalizeWooProductsPricesToMXN } from '@/src/lib/pricing';
 import { isProductVisible } from '@/src/lib/productVisibility';
 
 const parsePositiveInteger = (value, fallback) => {
@@ -73,7 +74,9 @@ export default async function handler(req, res) {
       throw new Error('WooCommerce API returned unexpected payload (possibly captcha).');
     }
 
-    const visibleProducts = products.filter((product) => isProductVisible(product));
+    const visibleProducts = normalizeWooProductsPricesToMXN(
+      products.filter((product) => isProductVisible(product))
+    );
 
     res.status(200).json({
       success: true,

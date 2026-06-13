@@ -3,6 +3,7 @@
  * Récupère un produit par ID depuis WooCommerce
  */
 import { getProduct, getProductVariations } from '@/src/lib/woocommerce';
+import { normalizeWooProductPricesToMXN, normalizeWooProductsPricesToMXN } from '@/src/lib/pricing';
 import { isProductVisible } from '@/src/lib/productVisibility';
 
 export default async function handler(req, res) {
@@ -37,11 +38,14 @@ export default async function handler(req, res) {
       variations = await getProductVariations(id);
     }
 
+    const normalizedProduct = normalizeWooProductPricesToMXN(product);
+    const normalizedVariations = normalizeWooProductsPricesToMXN(variations);
+
     res.status(200).json({
       success: true,
       data: {
-        ...product,
-        variations
+        ...normalizedProduct,
+        variations: normalizedVariations
       }
     });
   } catch (error) {
