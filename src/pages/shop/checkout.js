@@ -118,9 +118,6 @@ const COUNTRY_STATES = {
   ],
 };
 
-const SOCIO_COUPON_CODE = '2UP7NFF6';
-const SOCIO_DISCOUNT_PERCENT = 50;
-
 const Checkout = () => {
   const router = useRouter();
   const {
@@ -276,8 +273,8 @@ const Checkout = () => {
         accountPassword: createAccount ? accountPassword : '',
       });
 
-      if (appliedCoupon?.code === SOCIO_COUPON_CODE && order?.coupon_applied === false) {
-        throw new Error(order?.warning || `${SOCIO_COUPON_CODE} is not configured in WooCommerce coupons. Payment has been stopped.`);
+      if (appliedCoupon && order?.coupon_applied === false) {
+        throw new Error(order?.warning || 'The coupon could not be applied. Payment has been stopped.');
       }
 
       if (order?.warning) {
@@ -305,9 +302,9 @@ const Checkout = () => {
     }
   };
 
-  const handleApplyCoupon = (event) => {
+  const handleApplyCoupon = async (event) => {
     event.preventDefault();
-    const result = applyCouponCode(couponInput);
+    const result = await applyCouponCode(couponInput);
     setCouponFeedback(result);
   };
 
@@ -643,7 +640,7 @@ const Checkout = () => {
                     <div className="form-inner">
                       <input
                         type="text"
-                        placeholder={`Coupon Code (${SOCIO_COUPON_CODE})`}
+                        placeholder="Coupon Code"
                         value={couponInput}
                         onChange={(event) => setCouponInput(event.target.value)}
                       />
@@ -658,7 +655,7 @@ const Checkout = () => {
                   {appliedCoupon && (
                     <div className="active-coupon">
                       <span>
-                        Code actif: <strong>{appliedCoupon.code}</strong> (-{SOCIO_DISCOUNT_PERCENT}%)
+                        Code actif: <strong>{appliedCoupon.label || 'Coupon'}</strong>
                       </span>
                       <button type="button" className="remove-coupon-btn" onClick={removeCouponCode}>
                         Remove

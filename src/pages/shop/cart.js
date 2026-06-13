@@ -4,9 +4,6 @@ import { useRouter } from 'next/router';
 import { useCart } from '@/src/contexts/CartContext';
 import { formatLocalizedPrice } from '@/src/lib/pricing';
 
-const SOCIO_COUPON_CODE = '2UP7NFF6';
-const SOCIO_DISCOUNT_PERCENT = 50;
-
 const Cart = () => {
   const router = useRouter();
   const {
@@ -29,9 +26,9 @@ const Cart = () => {
   const total = getCartTotalAfterDiscount() + shipping;
   const formatPrice = (value) => formatLocalizedPrice(value, { pathname: router.pathname });
 
-  const handleApplyCoupon = (event) => {
+  const handleApplyCoupon = async (event) => {
     event.preventDefault();
-    const result = applyCouponCode(couponInput);
+    const result = await applyCouponCode(couponInput);
     setCouponFeedback(result);
   };
 
@@ -133,7 +130,7 @@ const Cart = () => {
                     <div className="form-inner">
                       <input
                         type="text"
-                        placeholder={`Coupon Code (${SOCIO_COUPON_CODE})`}
+                        placeholder="Coupon Code"
                         value={couponInput}
                         onChange={(e) => setCouponInput(e.target.value)}
                       />
@@ -148,7 +145,7 @@ const Cart = () => {
                   {appliedCoupon && (
                     <div className="active-coupon">
                       <span>
-                        Code actif: <strong>{appliedCoupon.code}</strong> ({SOCIO_DISCOUNT_PERCENT}% off)
+                        Code actif: <strong>{appliedCoupon.label || 'Coupon'}</strong>
                       </span>
                       <button type="button" className="remove-coupon-btn" onClick={removeCouponCode}>
                         Remove
@@ -188,7 +185,7 @@ const Cart = () => {
                   </tr>
                   <tr>
                     <td>Discount</td>
-                    <td>{appliedCoupon ? `${appliedCoupon.code} (${SOCIO_DISCOUNT_PERCENT}%)` : '—'}</td>
+                    <td>{appliedCoupon ? (appliedCoupon.label || 'Coupon') : '—'}</td>
                     <td>-{formatPrice(discount)}</td>
                   </tr>
                   <tr>
@@ -204,9 +201,9 @@ const Cart = () => {
                 </tbody>
               </table>
 
-              {appliedCoupon?.code === SOCIO_COUPON_CODE && (
+              {appliedCoupon && (
                 <p className="cost-note">
-                  Coupon {SOCIO_COUPON_CODE} actif: remise de {SOCIO_DISCOUNT_PERCENT}% appliquée.
+                  Coupon actif: remise appliquee.
                 </p>
               )}
 

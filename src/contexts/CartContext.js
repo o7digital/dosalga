@@ -4,9 +4,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const CartContext = createContext();
-const SOCIO_COUPON_CODE = '2UP7NFF6';
-const SOCIO_DISCOUNT_RATE = 0.50;
-const SOCIO_DISCOUNT_PERCENT = Math.round(SOCIO_DISCOUNT_RATE * 100);
+const DEFAULT_COUPON_LABEL = 'Remise socios';
 
 export const useCart = () => {
   const context = useContext(CartContext);
@@ -37,7 +35,7 @@ export const CartProvider = ({ children }) => {
     if (savedCoupon) {
       try {
         const parsedCoupon = JSON.parse(savedCoupon);
-        if (parsedCoupon?.code === SOCIO_COUPON_CODE) {
+        if (parsedCoupon?.code && parsedCoupon?.type === 'percent') {
           setAppliedCoupon(parsedCoupon);
         } else {
           localStorage.removeItem('dosalga_coupon');
@@ -133,24 +131,38 @@ export const CartProvider = ({ children }) => {
     setAppliedCoupon(null);
   };
 
-  const applyCouponCode = (rawCode = '') => {
+  const applyCouponCode = async (rawCode = '') => {
     const normalizedCode = rawCode.trim().toUpperCase();
 
     if (!normalizedCode) {
       return { success: false, message: 'Veuillez saisir un code promo.' };
     }
 
-    if (normalizedCode === SOCIO_COUPON_CODE) {
-      setAppliedCoupon({
-        code: SOCIO_COUPON_CODE,
-        label: 'Remise socios',
-        type: 'percent',
-        rate: SOCIO_DISCOUNT_RATE,
+    try {
+      const response = await fetch('/api/coupons/validate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code: normalizedCode }),
       });
-      return { success: true, message: `Code ${SOCIO_COUPON_CODE} appliqué: -${SOCIO_DISCOUNT_PERCENT}% sur le total.` };
-    }
+      const result = await response.json();
 
-    return { success: false, message: 'Code promo invalide.' };
+      if (!response.ok || !result?.success) {
+        return { success: false, message: result?.message || 'Code promo invalide.' };
+      }
+
+      setAppliedCoupon({
+        code: result.code,
+        label: result.label || DEFAULT_COUPON_LABEL,
+        type: result.type || 'percent',
+        rate: Number(result.rate || 0),
+      });
+      return { success: true, message: 'Code promo applique.' };
+    } catch (error) {
+      console.error('Error validating coupon:', error);
+      return { success: false, message: 'Impossible de valider le code promo.' };
+    }
   };
 
   const removeCouponCode = () => {
@@ -167,8 +179,13 @@ export const CartProvider = ({ children }) => {
       return 0;
     }
 
+    const rate = Number(appliedCoupon.rate || 0);
+    if (!Number.isFinite(rate) || rate <= 0) {
+      return 0;
+    }
+
     const subtotal = getCartTotal();
-    return subtotal * appliedCoupon.rate;
+    return subtotal * rate;
   };
 
   const getCartTotalAfterDiscount = () => {
@@ -197,6 +214,7 @@ export const CartProvider = ({ children }) => {
       }
 
       const orderData = {
+        currency: 'USD',
         billing: billingInfo,
         shipping: shippingInfo || billingInfo,
         customer_note: billingInfo.customer_note || '',
@@ -204,19 +222,19 @@ export const CartProvider = ({ children }) => {
         account_password: checkoutOptions.accountPassword || '',
         coupon_code: appliedCoupon?.code || '',
         coupon_discount_amount: getDiscountAmount(),
-        fee_lines: appliedCoupon?.code === SOCIO_COUPON_CODE
+        fee_lines: appliedCoupon?.code
           ? [{
-              name: `${SOCIO_COUPON_CODE} -${SOCIO_DISCOUNT_PERCENT}%`,
+              name: appliedCoupon.label || DEFAULT_COUPON_LABEL,
               total: `-${getDiscountAmount().toFixed(2)}`,
               taxable: false,
             }]
           : [],
         meta_data: [
-          ...(appliedCoupon?.code === SOCIO_COUPON_CODE
+          ...(appliedCoupon?.code
             ? [
-                { key: 'dosalga_coupon_code', value: SOCIO_COUPON_CODE },
+                { key: 'dosalga_coupon_code', value: appliedCoupon.code },
                 { key: 'dosalga_coupon_type', value: 'percent' },
-                { key: 'dosalga_coupon_rate', value: String(SOCIO_DISCOUNT_RATE) },
+                { key: 'dosalga_coupon_rate', value: String(appliedCoupon.rate || '') },
               ]
             : []),
           ...(billingInfo.tax_id

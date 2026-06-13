@@ -1,7 +1,8 @@
 const WORDPRESS_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL || 'https://oliviers44.sg-host.com';
-const SOCIO_COUPON_CODE = '2UP7NFF6';
+const SOCIO_COUPON_CODE = String(process.env.SOCIO_COUPON_CODE ?? '').trim().toUpperCase();
 const SOCIO_DISCOUNT_RATE = 0.50;
 const SOCIO_DISCOUNT_PERCENT = Math.round(SOCIO_DISCOUNT_RATE * 100);
+const STORE_CURRENCY = 'USD';
 const CHECKOUT_DEBUG = process.env.CHECKOUT_DEBUG === '1';
 
 const parseAmount = (value, fallback = 0) => {
@@ -12,10 +13,15 @@ const parseAmount = (value, fallback = 0) => {
 
 const isSocioCoupon = (value) => {
   const normalized = String(value ?? '').trim().toUpperCase();
-  return normalized === SOCIO_COUPON_CODE;
+  return Boolean(SOCIO_COUPON_CODE) && normalized === SOCIO_COUPON_CODE;
 };
 
 const normalizeCouponCode = (value) => String(value ?? '').trim().toUpperCase();
+
+const normalizeCurrencyCode = (value) => {
+  const normalized = String(value ?? '').trim().toUpperCase();
+  return normalized || STORE_CURRENCY;
+};
 
 const normalizeEmail = (value) => String(value ?? '').trim().toLowerCase();
 
@@ -226,6 +232,19 @@ const createOrFindCustomer = async ({ wcApi, billing, shipping, accountPassword 
   }
 };
 
+const enforceOrderCurrency = async ({ orderId, requestedCurrency }) => {
+  const currency = normalizeCurrencyCode(requestedCurrency);
+  const { default: wcApi } = await import('@/src/lib/woocommerce');
+  const { data: updatedOrder } = await wcApi.put(`orders/${orderId}`, {
+    currency,
+    meta_data: [
+      { key: '_dosalga_store_currency', value: currency },
+    ],
+  });
+
+  return updatedOrder;
+};
+
 const storeApiRequest = async ({ path, method = 'GET', token, body }) => {
   const headers = {
     Accept: 'application/json',
@@ -320,6 +339,114 @@ const addStoreCartItem = async ({ item, token }) => {
   throw lastError || new Error('Unable to add item to WooCommerce cart.');
 };
 
+const buildRestOrderLineItems = (lineItems = []) => (
+  lineItems.map((item) => {
+    const productId = Number.parseInt(item?.product_id, 10);
+    const variationId = Number.parseInt(item?.variation_id, 10);
+    const quantity = Number.parseInt(item?.quantity, 10);
+
+    return {
+      product_id: productId,
+      quantity,
+      ...(Number.isFinite(variationId) && variationId > 0 ? { variation_id: variationId } : {}),
+    };
+  }).filter((item) => (
+    Number.isFinite(item.product_id)
+    && item.product_id > 0
+    && Number.isFinite(item.quantity)
+    && item.quantity > 0
+  ))
+);
+
+const createUsdRestOrder = async ({
+  req,
+  billing,
+  shipping,
+  lineItems,
+  requestedCurrency,
+  customerNote,
+  createAccount,
+  accountPassword,
+  couponCode,
+  couponDiscountAmount,
+  requestedMetaData,
+}) => {
+  const { default: wcApi } = await import('@/src/lib/woocommerce');
+  const currency = normalizeCurrencyCode(requestedCurrency);
+  const normalizedCouponCode = normalizeCouponCode(couponCode);
+  const orderLineItems = buildRestOrderLineItems(lineItems);
+
+  if (orderLineItems.length === 0) {
+    throw new Error('Le panier ne contient aucun produit valide.');
+  }
+
+  let customerSyncResult = null;
+  let accountCreationWarning = null;
+
+  if (createAccount) {
+    try {
+      customerSyncResult = await createOrFindCustomer({
+        wcApi,
+        billing,
+        shipping: shipping || billing,
+        accountPassword,
+      });
+      accountCreationWarning = customerSyncResult.warning || null;
+    } catch (customerSyncError) {
+      console.error('Customer account sync warning:', customerSyncError);
+      accountCreationWarning = `La commande est creee, mais le compte client WooCommerce n'a pas pu etre cree ou rattache: ${customerSyncError.message}`;
+    }
+  }
+
+  const discountAmount = parseAmount(couponDiscountAmount, 0);
+  const shouldApplySocioDiscount = isSocioCoupon(normalizedCouponCode) && discountAmount > 0;
+  const orderMetaData = normalizeMetaData([
+    ...normalizeMetaData(requestedMetaData),
+    { key: '_dosalga_store_currency', value: currency },
+    ...(shouldApplySocioDiscount
+      ? [
+          { key: 'dosalga_coupon_code', value: normalizedCouponCode },
+          { key: 'dosalga_coupon_discount', value: discountAmount.toFixed(2) },
+          { key: 'dosalga_coupon_type', value: 'percent' },
+          { key: 'dosalga_coupon_rate', value: String(SOCIO_DISCOUNT_RATE) },
+        ]
+      : []),
+  ]);
+
+  const { data: order } = await wcApi.post('orders', {
+    status: 'pending',
+    currency,
+    payment_method: 'stripe',
+    payment_method_title: 'Credit card',
+    set_paid: false,
+    customer_id: customerSyncResult?.customer?.id || 0,
+    billing,
+    shipping: shipping || billing,
+    customer_note: customerNote,
+    line_items: orderLineItems,
+    fee_lines: shouldApplySocioDiscount
+      ? [{
+          name: `Socio coupon -${SOCIO_DISCOUNT_PERCENT}%`,
+          total: (-discountAmount).toFixed(2),
+          taxable: false,
+        }]
+      : [],
+    meta_data: orderMetaData,
+  });
+
+  if (normalizeCurrencyCode(order?.currency) !== currency) {
+    throw new Error(`La commande n'est pas en ${currency}. Paiement stoppe.`);
+  }
+
+  return {
+    order,
+    paymentUrl: buildPaymentUrl(order.id, order.order_key, req),
+    customerSyncResult,
+    warning: accountCreationWarning,
+    couponApplied: !isSocioCoupon(normalizedCouponCode) || shouldApplySocioDiscount,
+  };
+};
+
 export default async function handler(req, res) {
   const debugId = `co_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
@@ -355,6 +482,7 @@ export default async function handler(req, res) {
       billing,
       shipping,
       line_items: lineItems,
+      currency: requestedCurrency = STORE_CURRENCY,
       customer_note: customerNote = '',
       create_account: createAccount = false,
       account_password: accountPassword = '',
@@ -362,6 +490,47 @@ export default async function handler(req, res) {
       coupon_discount_amount: couponDiscountAmount = 0,
       meta_data: requestedMetaData = [],
     } = orderData;
+
+    const directOrder = await createUsdRestOrder({
+      req,
+      billing,
+      shipping,
+      lineItems,
+      requestedCurrency,
+      customerNote,
+      createAccount,
+      accountPassword,
+      couponCode,
+      couponDiscountAmount,
+      requestedMetaData,
+    });
+
+    console.info(`[checkout:${debugId}] usd_order_ready_for_payment`, {
+      orderId: directOrder.order.id,
+      orderKey: directOrder.order.order_key,
+      paymentUrl: directOrder.paymentUrl,
+      currency: directOrder.order.currency || null,
+      total: directOrder.order.total || null,
+      billingCountry: billing?.country || null,
+      billingState: billing?.state || null,
+      couponApplied: directOrder.couponApplied,
+      customerId: directOrder.customerSyncResult?.customer?.id || null,
+      customerCreated: directOrder.customerSyncResult?.created ?? null,
+    });
+
+    return res.status(201).json({
+      success: true,
+      data: {
+        ...directOrder.order,
+        payment_url: directOrder.paymentUrl,
+      },
+      customer_id: directOrder.customerSyncResult?.customer?.id || null,
+      customer_created: directOrder.customerSyncResult?.created ?? null,
+      coupon_applied: directOrder.couponApplied,
+      warning: directOrder.warning || null,
+      message: 'Commande créée avec succès',
+      debug_id: debugId,
+    });
 
     let token;
     ({ token } = await storeApiRequest({ path: 'cart' }));
@@ -388,12 +557,12 @@ export default async function handler(req, res) {
           path: 'cart/apply-coupon',
           method: 'POST',
           token,
-          body: { code: SOCIO_COUPON_CODE },
+          body: { code: normalizedCouponCode },
         }));
         isSocioDiscountApplied = true;
       } catch (storeCouponError) {
         console.error('Store coupon apply warning:', storeCouponError);
-        couponSyncWarning = `${SOCIO_COUPON_CODE} coupon is active in the app but missing in WooCommerce coupons.`;
+        couponSyncWarning = 'Coupon is active in the app but missing in WooCommerce coupons.';
       }
     }
 
@@ -463,6 +632,34 @@ export default async function handler(req, res) {
 
     if (!order?.order_id || !order?.order_key) {
       throw new Error('Unable to create WooCommerce checkout session.');
+    }
+
+    let currencySyncWarning = null;
+    let syncedOrderCurrency = order.currency_code || order.currency || null;
+
+    try {
+      const syncedOrder = await enforceOrderCurrency({
+        orderId: order.order_id,
+        requestedCurrency,
+      });
+      syncedOrderCurrency = syncedOrder?.currency || syncedOrderCurrency;
+      if (CHECKOUT_DEBUG) {
+        console.info(`[checkout:${debugId}] order_currency_synced`, {
+          orderId: order.order_id,
+          currency: syncedOrderCurrency,
+        });
+      }
+    } catch (currencySyncError) {
+      console.error('Order currency sync warning:', currencySyncError);
+      currencySyncWarning = `La commande a ete creee, mais la devise n'a pas pu etre forcee en ${STORE_CURRENCY}. Paiement stoppe.`;
+    }
+
+    if (normalizeCurrencyCode(syncedOrderCurrency) !== normalizeCurrencyCode(requestedCurrency)) {
+      return res.status(422).json({
+        success: false,
+        message: currencySyncWarning || `La commande n'est pas en ${STORE_CURRENCY}. Paiement stoppe.`,
+        debug_id: debugId,
+      });
     }
 
     if (createAccount) {
@@ -541,7 +738,7 @@ export default async function handler(req, res) {
               fee_lines: [
                 ...cleanedFeeLines,
                 {
-                  name: `${SOCIO_COUPON_CODE} -${SOCIO_DISCOUNT_PERCENT}%`,
+                  name: `Socio coupon -${SOCIO_DISCOUNT_PERCENT}%`,
                   total: (-appliedDiscount).toFixed(2),
                   taxable: false,
                 },
@@ -557,8 +754,8 @@ export default async function handler(req, res) {
             isSocioDiscountApplied = true;
           }
         } catch (couponSyncError) {
-          console.error(`${SOCIO_COUPON_CODE} coupon sync warning:`, couponSyncError);
-          couponSyncWarning = `${SOCIO_COUPON_CODE} coupon could not be synchronized on Woo order.`;
+          console.error('Coupon sync warning:', couponSyncError);
+          couponSyncWarning = 'Coupon could not be synchronized on Woo order.';
         }
       }
     }
@@ -566,7 +763,7 @@ export default async function handler(req, res) {
     if (isSocioCoupon(normalizedCouponCode) && !isSocioDiscountApplied) {
       return res.status(422).json({
         success: false,
-        message: `Le coupon ${SOCIO_COUPON_CODE} n’est pas configuré côté WooCommerce. Créez le coupon ${SOCIO_COUPON_CODE} dans WooCommerce > Marketing > Coupons.`,
+        message: 'Le coupon n’est pas configuré côté WooCommerce.',
         debug_id: debugId,
       });
     }
@@ -579,7 +776,7 @@ export default async function handler(req, res) {
       orderId: order.order_id,
       orderKey: order.order_key,
       paymentUrl,
-      currency: order.currency_code || null,
+      currency: syncedOrderCurrency || order.currency_code || null,
       total: order.totals?.total_price || null,
       billingCountry: billing?.country || null,
       billingState: billing?.state || null,
