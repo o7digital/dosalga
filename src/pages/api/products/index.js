@@ -3,6 +3,7 @@
  * Récupère tous les produits depuis WooCommerce
  */
 import { getAllProducts, getProducts } from '@/src/lib/woocommerce';
+import { isProductVisible } from '@/src/lib/productVisibility';
 
 const parsePositiveInteger = (value, fallback) => {
   const parsedValue = Number.parseInt(value, 10);
@@ -21,6 +22,10 @@ const normalizePerPage = (value, fallback) => {
 const isTrue = (value) => value === true || value === 'true';
 
 export default async function handler(req, res) {
+  res.setHeader('Cache-Control', 'no-store, max-age=0');
+  res.setHeader('CDN-Cache-Control', 'no-store');
+  res.setHeader('Vercel-CDN-Cache-Control', 'no-store');
+
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
@@ -68,10 +73,12 @@ export default async function handler(req, res) {
       throw new Error('WooCommerce API returned unexpected payload (possibly captcha).');
     }
 
+    const visibleProducts = products.filter((product) => isProductVisible(product));
+
     res.status(200).json({
       success: true,
-      data: products,
-      count: products.length,
+      data: visibleProducts,
+      count: visibleProducts.length,
       all: fetchAllProducts,
     });
   } catch (error) {

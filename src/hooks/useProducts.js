@@ -2,6 +2,7 @@
  * Hook personnalisé pour gérer les produits WooCommerce via les routes API
  */
 import { useState, useEffect } from 'react';
+import { getWooCommerceRefreshIntervalMs } from '@/src/lib/liveRefresh';
 
 const buildQueryString = (params = {}) => {
   const queryParams = new URLSearchParams();
@@ -21,25 +22,27 @@ const buildQueryString = (params = {}) => {
  * Hook pour récupérer plusieurs produits
  * @param {Object} initialParams - Paramètres initiaux (page, per_page, category, etc.)
  */
-export const useProducts = (initialParams = {}) => {
+export const useProducts = (initialParams = {}, options = {}) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const paramsKey = JSON.stringify(initialParams);
+  const refreshIntervalMs = options.refreshIntervalMs ?? getWooCommerceRefreshIntervalMs();
 
-  useEffect(() => {
-    fetchProducts(initialParams);
-  }, [JSON.stringify(initialParams)]);
+  const fetchProducts = async (params = {}, fetchOptions = {}) => {
+    const { silent = false } = fetchOptions;
 
-  const fetchProducts = async (params = {}) => {
     try {
-      setLoading(true);
+      if (!silent) {
+        setLoading(true);
+      }
       setError(null);
       
       // Construire l'URL avec les paramètres
       const queryParams = buildQueryString(params);
       const url = `/api/products${queryParams ? `?${queryParams}` : ''}`;
       
-      const response = await fetch(url);
+      const response = await fetch(url, { cache: 'no-store' });
       const result = await response.json();
       
       if (!response.ok) {
@@ -52,9 +55,25 @@ export const useProducts = (initialParams = {}) => {
       setError(err.message);
       setProducts([]);
     } finally {
-      setLoading(false);
+      if (!silent) {
+        setLoading(false);
+      }
     }
   };
+
+  useEffect(() => {
+    fetchProducts(initialParams);
+
+    if (!refreshIntervalMs) {
+      return undefined;
+    }
+
+    const intervalId = window.setInterval(() => {
+      fetchProducts(initialParams, { silent: true });
+    }, refreshIntervalMs);
+
+    return () => window.clearInterval(intervalId);
+  }, [paramsKey, refreshIntervalMs]);
 
   const refetch = (params = {}) => {
     fetchProducts(params);
@@ -67,10 +86,11 @@ export const useProducts = (initialParams = {}) => {
  * Hook pour récupérer un produit spécifique
  * @param {number|string} productId - ID du produit
  */
-export const useProduct = (productId) => {
+export const useProduct = (productId, options = {}) => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const refreshIntervalMs = options.refreshIntervalMs ?? getWooCommerceRefreshIntervalMs();
 
   useEffect(() => {
     if (!productId) {
@@ -78,12 +98,16 @@ export const useProduct = (productId) => {
       return;
     }
 
-    const fetchProduct = async () => {
+    const fetchProduct = async (fetchOptions = {}) => {
+      const { silent = false } = fetchOptions;
+
       try {
-        setLoading(true);
+        if (!silent) {
+          setLoading(true);
+        }
         setError(null);
         
-        const response = await fetch(`/api/products/${productId}`);
+        const response = await fetch(`/api/products/${productId}`, { cache: 'no-store' });
         let result;
         try {
           result = await response.json();
@@ -101,12 +125,24 @@ export const useProduct = (productId) => {
         setError(err.message);
         setProduct(null);
       } finally {
-        setLoading(false);
+        if (!silent) {
+          setLoading(false);
+        }
       }
     };
 
     fetchProduct();
-  }, [productId]);
+
+    if (!refreshIntervalMs) {
+      return undefined;
+    }
+
+    const intervalId = window.setInterval(() => {
+      fetchProduct({ silent: true });
+    }, refreshIntervalMs);
+
+    return () => window.clearInterval(intervalId);
+  }, [productId, refreshIntervalMs]);
 
   return { product, loading, error };
 };
@@ -134,7 +170,7 @@ export const useProductSearch = () => {
         ...params
       });
       
-      const response = await fetch(`/api/products?${queryParams}`);
+      const response = await fetch(`/api/products?${queryParams}`, { cache: 'no-store' });
       const result = await response.json();
       
       if (!response.ok) {

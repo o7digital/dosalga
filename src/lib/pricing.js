@@ -17,6 +17,7 @@ export const normalizeStorePrice = (value) => {
 };
 
 const DEFAULT_MXN_PER_USD = 18.5;
+const MIN_VISIBLE_PRODUCT_USD = 10;
 
 export const getStoreLocaleFromPath = (pathname = '') => {
   const segment = String(pathname || '').split('/')[1];
@@ -61,6 +62,24 @@ export const formatUSDPriceFromMXN = (value, options = {}) => {
   })}`;
 
   return includeCode ? `${formatted} USD` : formatted;
+};
+
+export const getUSDPriceFromMXN = (value) => {
+  const mxn = normalizeStorePrice(value);
+  if (mxn === null) return null;
+
+  return mxn / getMxnPerUsdRate();
+};
+
+export const isProductVisibleByMinimumUSD = (product, minimumUSD = MIN_VISIBLE_PRODUCT_USD) => {
+  // Product visibility must match the USD price shown in ProductCard.
+  const usdPrice = getUSDPriceFromMXN(product?.price);
+
+  if (usdPrice === null) {
+    return false;
+  }
+
+  return usdPrice >= minimumUSD;
 };
 
 export const formatLocalizedPrice = (value, options = {}) => {

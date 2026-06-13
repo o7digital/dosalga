@@ -19,7 +19,7 @@ import { ToastContainer } from "react-toastify";
 import OliviaChatDosalga from "../components/common/OliviaChatDosalga";
 
 const SHOW_UNDER_CONSTRUCTION =
-  process.env.NEXT_PUBLIC_SHOW_UNDER_CONSTRUCTION !== "0";
+  process.env.NEXT_PUBLIC_SHOW_UNDER_CONSTRUCTION === "1";
 
 function UnderConstructionPage() {
   return (

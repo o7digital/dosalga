@@ -5,16 +5,18 @@ import { useCountdownTimer } from '@/src/hooks/useCountdownTimer';
 import { useWishlist } from '@/src/contexts/WishlistContext';
 import { useCart } from '@/src/contexts/CartContext';
 import { formatLocalizedPrice } from '@/src/lib/pricing';
+import { getPrimaryProductImageSrc, getVisibleProductImages } from '@/src/lib/productVisibility';
 import { toast } from 'react-toastify';
 
 /**
  * Composant carte produit pour afficher un produit WooCommerce
  */
-const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
+const ProductCard = ({ product, showCountdown = false, detailHref = null, onImageInvalid = null }) => {
   const { toggle, isInWishlist } = useWishlist();
   const { addToCart } = useCart();
   const router = useRouter();
   const [rating, setRating] = useState(0);
+  const [imageFailed, setImageFailed] = useState(false);
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
   const localeSegment = router.pathname.split('/')[1];
   const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
@@ -40,9 +42,9 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
   } = product;
   const productLink = detailHref || `${localePrefix}/shop/product/${id}`;
 
-  // Utiliser la première image ou une image par défaut
-  const mainImage = images[0]?.src || '/assets/img/placeholder.png';
-  const hoverImage = images[1]?.src || mainImage;
+  const visibleImages = getVisibleProductImages(product);
+  const mainImage = getPrimaryProductImageSrc(product);
+  const hoverImage = visibleImages[1]?.src || visibleImages[1] || mainImage;
 
   // Extraire le nom de la première catégorie
   const categoryName = categories[0]?.name || 'Produit';
@@ -64,6 +66,10 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
     const stored = window.localStorage.getItem(`dosalga_rating_${id}`);
     if (stored) setRating(Number(stored));
   }, [id]);
+
+  useEffect(() => {
+    setImageFailed(false);
+  }, [mainImage]);
 
   const handleRate = (value) => {
     setRating(value);
@@ -123,15 +129,39 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
     toast.success(isSpanish ? 'Producto anadido al carrito' : 'Product added to cart');
   };
 
+  const handleMainImageError = () => {
+    setImageFailed(true);
+    if (typeof onImageInvalid === 'function') {
+      onImageInvalid(id);
+    }
+  };
+
+  if (!mainImage || imageFailed) {
+    return null;
+  }
+
   return (
     <>
     <div className="product-card hover-btn">
       <div className="product-card-img double-img">
         <Link legacyBehavior href={productLink}>
           <a>
-            <img src={mainImage} alt={name} className="img1" />
-            {images.length > 1 && (
-              <img src={hoverImage} alt={name} className="img2" />
+            <img
+              src={mainImage}
+              alt={name}
+              className="img1"
+              loading={showCountdown ? 'eager' : 'lazy'}
+              decoding="async"
+              onError={handleMainImageError}
+            />
+            {visibleImages.length > 1 && hoverImage && (
+              <img
+                src={hoverImage}
+                alt={name}
+                className="img2"
+                loading="lazy"
+                decoding="async"
+              />
             )}
             
             {/* Countdown Timer */}
@@ -299,6 +329,21 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
           flex-direction: column;
           width: 100%;
           height: 100%;
+        }
+        .product-card-img {
+          aspect-ratio: 1 / 1;
+          background: #fff;
+          width: 100%;
+        }
+        .product-card-img :global(a) {
+          width: 100%;
+          height: 100%;
+        }
+        .product-card-img :global(img) {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
         }
         .product-card-content {
           display: flex;
