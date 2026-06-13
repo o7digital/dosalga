@@ -10,35 +10,38 @@ export const parsePriceValue = (value) => {
   return Number.isFinite(numeric) ? numeric : null;
 };
 
-export const normalizeStorePrice = (value) => {
+export const getStoreMXNPrice = (value) => {
   const numeric = parsePriceValue(value);
   if (numeric === null) return null;
   return numeric;
 };
+
+export const normalizeStorePrice = getStoreMXNPrice;
 
 export const getStoreLocaleFromPath = (pathname = '') => {
   const segment = String(pathname || '').split('/')[1];
   return segment === 'es' ? 'es' : 'en';
 };
 
-export const formatUSDPrice = (value, options = {}) => {
-  const { includeCode = true, fallback = includeCode ? '$0.00 USD' : '$0.00' } = options;
-  const usd = normalizeStorePrice(value);
+export const formatMXNPrice = (value, options = {}) => {
+  const { includeCode = true, fallback = includeCode ? '$0.00 MXN' : '$0.00' } = options;
+  const mxn = getStoreMXNPrice(value);
 
-  if (usd === null) return fallback;
+  if (mxn === null) return fallback;
 
-  const formatted = `$${usd.toLocaleString('en-US', {
+  const formatted = `$${mxn.toLocaleString('en-US', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
 
-  return includeCode ? `${formatted} USD` : formatted;
+  return includeCode ? `${formatted} MXN` : formatted;
 };
 
-export const formatUSDPriceFromMXN = formatUSDPrice;
-export const formatMXNPrice = formatUSDPrice;
+export const getStoreUSDPrice = getStoreMXNPrice;
+export const formatUSDPrice = formatMXNPrice;
+export const formatUSDPriceFromMXN = formatMXNPrice;
 export const getUSDPriceFromMXN = normalizeStorePrice;
 
 export const formatLocalizedPrice = (value, options = {}) => {
-  return formatUSDPrice(value, options);
+  return formatMXNPrice(value, options);
 };
