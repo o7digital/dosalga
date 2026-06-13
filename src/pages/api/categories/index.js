@@ -4,6 +4,7 @@
  */
 import { getCategories } from '@/src/lib/woocommerce';
 import { isHiddenCreamCategory } from '@/src/lib/productVisibility';
+import { translateCategoriesToSpanish } from '@/src/lib/productText';
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store, max-age=0');
@@ -24,7 +25,7 @@ export default async function handler(req, res) {
 
     const categories = await getCategories(params);
     const visibleCategories = Array.isArray(categories)
-      ? categories.filter((category) => !isHiddenCreamCategory(category))
+      ? translateCategoriesToSpanish(categories.filter((category) => !isHiddenCreamCategory(category)))
       : [];
     
     res.status(200).json({

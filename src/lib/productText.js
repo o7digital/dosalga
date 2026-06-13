@@ -1,8 +1,38 @@
 const DESCRIPTION_FIELDS = ['description', 'short_description'];
 const TEXT_FIELDS = ['name', ...DESCRIPTION_FIELDS];
+const CATEGORY_NAME_OVERRIDES = {
+  bags: 'Bolsos',
+  briefcase: 'Maletines',
+  corbatas: 'Corbatas',
+  electronics: 'Electronica',
+  garden: 'Jardin',
+  'mens tshirts': 'Camisetas para hombre',
+  'mens t-shirts': 'Camisetas para hombre',
+  scooters: 'Scooters',
+  shoes: 'Zapatos',
+  'travel bags': 'Bolsos de viaje',
+  watches: 'Relojes',
+  'womens jackets': 'Chaquetas para mujer',
+  "women's jackets": 'Chaquetas para mujer',
+};
 
 const SPANISH_REPLACEMENTS = [
   ['cross-border', 'importacion'],
+  ['briefcases', 'maletines'],
+  ['briefcase', 'maletin'],
+  ['electronics', 'electronica'],
+  ['electronic', 'electronico'],
+  ['garden', 'jardin'],
+  ['travel bags', 'bolsos de viaje'],
+  ['travel bag', 'bolso de viaje'],
+  ['womens jackets', 'chaquetas para mujer'],
+  ["women's jackets", 'chaquetas para mujer'],
+  ['watches', 'relojes'],
+  ['watch', 'reloj'],
+  ['scooters', 'scooters'],
+  ['scooter', 'scooter'],
+  ['shoes', 'zapatos'],
+  ['shoe', 'zapato'],
   ['mens business', 'hombre ejecutivo'],
   ["men's business", 'hombre ejecutivo'],
   ['business large-capacity', 'ejecutivo de gran capacidad'],
@@ -11,8 +41,9 @@ const SPANISH_REPLACEMENTS = [
   ['shoulder crossbody', 'de hombro y cruzado'],
   ['crossbody', 'cruzado'],
   ['simple briefcase', 'maletin sencillo'],
-  ['briefcase', 'maletin'],
   ['laptop bag', 'bolsa para laptop'],
+  ['bags', 'bolsos'],
+  ['bag', 'bolso'],
   ['laptop', 'laptop'],
   ['computer', 'computadora'],
   ['messenger bag', 'bolso mensajero'],
@@ -236,21 +267,25 @@ export const translateProductTextToSpanish = (value) => {
     .join('');
 };
 
-const translateCategoriesToSpanish = (categories) => {
+export const translateCategoryToSpanish = (category) => {
+  if (!category || typeof category !== 'object' || !category.name) {
+    return category;
+  }
+
+  const override = CATEGORY_NAME_OVERRIDES[String(category.name).trim().toLowerCase()];
+
+  return {
+    ...category,
+    name: override || translateProductTextToSpanish(category.name),
+  };
+};
+
+export const translateCategoriesToSpanish = (categories) => {
   if (!Array.isArray(categories)) {
     return categories;
   }
 
-  return categories.map((category) => {
-    if (!category || typeof category !== 'object' || !category.name) {
-      return category;
-    }
-
-    return {
-      ...category,
-      name: translateProductTextToSpanish(category.name),
-    };
-  });
+  return categories.map(translateCategoryToSpanish);
 };
 
 export const translateWooProductTextToSpanish = (product) => {
