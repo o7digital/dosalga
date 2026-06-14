@@ -141,6 +141,21 @@ const isExistingAccountCheckoutError = (error) => {
   );
 };
 
+const isWooWritePermissionError = (error) => {
+  const status = Number(error?.response?.status || error?.status || error?.details?.status || 0);
+  const code = String(error?.response?.data?.code || error?.code || '').toLowerCase();
+  const message = String(error?.response?.data?.message || error?.message || '').toLowerCase();
+
+  return (
+    status === 401
+    && (
+      code.includes('authentication')
+      || message.includes('write permissions')
+      || message.includes('does not have write')
+    )
+  );
+};
+
 const buildCustomerPayload = ({ billing, shipping, accountPassword }) => ({
   email: normalizeEmail(billing?.email),
   first_name: String(billing?.first_name || '').trim(),
@@ -491,46 +506,58 @@ export default async function handler(req, res) {
       meta_data: requestedMetaData = [],
     } = orderData;
 
-    const directOrder = await createUsdRestOrder({
-      req,
-      billing,
-      shipping,
-      lineItems,
-      requestedCurrency,
-      customerNote,
-      createAccount,
-      accountPassword,
-      couponCode,
-      couponDiscountAmount,
-      requestedMetaData,
-    });
+    try {
+      const directOrder = await createUsdRestOrder({
+        req,
+        billing,
+        shipping,
+        lineItems,
+        requestedCurrency,
+        customerNote,
+        createAccount,
+        accountPassword,
+        couponCode,
+        couponDiscountAmount,
+        requestedMetaData,
+      });
 
-    console.info(`[checkout:${debugId}] usd_order_ready_for_payment`, {
-      orderId: directOrder.order.id,
-      orderKey: directOrder.order.order_key,
-      paymentUrl: directOrder.paymentUrl,
-      currency: directOrder.order.currency || null,
-      total: directOrder.order.total || null,
-      billingCountry: billing?.country || null,
-      billingState: billing?.state || null,
-      couponApplied: directOrder.couponApplied,
-      customerId: directOrder.customerSyncResult?.customer?.id || null,
-      customerCreated: directOrder.customerSyncResult?.created ?? null,
-    });
+      console.info(`[checkout:${debugId}] usd_order_ready_for_payment`, {
+        orderId: directOrder.order.id,
+        orderKey: directOrder.order.order_key,
+        paymentUrl: directOrder.paymentUrl,
+        currency: directOrder.order.currency || null,
+        total: directOrder.order.total || null,
+        billingCountry: billing?.country || null,
+        billingState: billing?.state || null,
+        couponApplied: directOrder.couponApplied,
+        customerId: directOrder.customerSyncResult?.customer?.id || null,
+        customerCreated: directOrder.customerSyncResult?.created ?? null,
+      });
 
-    return res.status(201).json({
-      success: true,
-      data: {
-        ...directOrder.order,
-        payment_url: directOrder.paymentUrl,
-      },
-      customer_id: directOrder.customerSyncResult?.customer?.id || null,
-      customer_created: directOrder.customerSyncResult?.created ?? null,
-      coupon_applied: directOrder.couponApplied,
-      warning: directOrder.warning || null,
-      message: 'Commande créée avec succès',
-      debug_id: debugId,
-    });
+      return res.status(201).json({
+        success: true,
+        data: {
+          ...directOrder.order,
+          payment_url: directOrder.paymentUrl,
+        },
+        customer_id: directOrder.customerSyncResult?.customer?.id || null,
+        customer_created: directOrder.customerSyncResult?.created ?? null,
+        coupon_applied: directOrder.couponApplied,
+        warning: directOrder.warning || null,
+        message: 'Commande créée avec succès',
+        debug_id: debugId,
+      });
+    } catch (directOrderError) {
+      if (!isWooWritePermissionError(directOrderError)) {
+        throw directOrderError;
+      }
+
+      console.warn(`[checkout:${debugId}] rest_order_write_denied_falling_back_to_store_api`, {
+        status: directOrderError?.response?.status || directOrderError?.status || null,
+        code: directOrderError?.response?.data?.code || directOrderError?.code || null,
+        message: directOrderError?.response?.data?.message || directOrderError?.message || null,
+      });
+    }
 
     let token;
     ({ token } = await storeApiRequest({ path: 'cart' }));
