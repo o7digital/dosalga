@@ -252,6 +252,7 @@ export const CartProvider = ({ children }) => {
         line_items: cart.map((item) => ({
           product_id: item.id,
           quantity: item.quantity,
+          unit_price: item.price,
           variation_id: item.variation?.id || 0,
           variation_attributes: Array.isArray(item.variation?.attributesRaw)
             ? item.variation.attributesRaw

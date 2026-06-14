@@ -11,6 +11,14 @@ const parseAmount = (value, fallback = 0) => {
   return Number.isFinite(parsed) ? parsed : fallback;
 };
 
+const parseMinorUnitAmount = (value, minorUnit = 2) => {
+  const amount = parseAmount(value, NaN);
+  const unit = Number.parseInt(minorUnit, 10);
+  if (!Number.isFinite(amount)) return null;
+  if (!Number.isFinite(unit) || unit < 0) return amount;
+  return amount / (10 ** unit);
+};
+
 const isSocioCoupon = (value) => {
   const normalized = String(value ?? '').trim().toUpperCase();
   return Boolean(SOCIO_COUPON_CODE) && normalized === SOCIO_COUPON_CODE;
@@ -74,11 +82,6 @@ const resolveCheckoutBaseUrl = (req) => {
     return normalizeBaseUrl(configuredBaseUrl, WORDPRESS_URL);
   }
 
-  const requestOrigin = resolveRequestOrigin(req);
-  if (requestOrigin) {
-    return requestOrigin;
-  }
-
   return WORDPRESS_URL;
 };
 
@@ -127,6 +130,36 @@ const normalizeVariationAttributes = (variationAttributes) => {
       attribute: String(attribute.attribute),
       value: String(attribute.value),
     }));
+};
+
+const getExpectedLineItemsSubtotal = (lineItems = []) => {
+  const subtotal = lineItems.reduce((total, item) => {
+    const unitPrice = parseAmount(item?.unit_price, NaN);
+    const quantity = Number.parseInt(item?.quantity, 10);
+
+    if (!Number.isFinite(unitPrice) || unitPrice <= 0 || !Number.isFinite(quantity) || quantity <= 0) {
+      return total;
+    }
+
+    return total + unitPrice * quantity;
+  }, 0);
+
+  return subtotal > 0 ? subtotal : null;
+};
+
+const assertStoreSubtotalMatchesExpected = ({ storeOrder, lineItems }) => {
+  const expectedSubtotal = getExpectedLineItemsSubtotal(lineItems);
+  if (expectedSubtotal === null) return;
+
+  const minorUnit = storeOrder?.totals?.currency_minor_unit ?? 2;
+  const storeSubtotal = parseMinorUnitAmount(storeOrder?.totals?.total_items, minorUnit);
+  if (storeSubtotal === null) return;
+
+  if (Math.abs(storeSubtotal - expectedSubtotal) > 0.05) {
+    throw new Error(
+      `Prix WooCommerce non synchronises en ${STORE_CURRENCY}: sous-total Woo ${storeSubtotal.toFixed(2)}, sous-total attendu ${expectedSubtotal.toFixed(2)}. Paiement stoppe.`
+    );
+  }
 };
 
 const isExistingAccountCheckoutError = (error) => {
@@ -302,6 +335,19 @@ const storeApiRequest = async ({ path, method = 'GET', token, body }) => {
     data: payload,
     token: response.headers.get('cart-token') || token,
   };
+};
+
+const fetchStoreOrder = async ({ orderId, orderKey, billingEmail }) => {
+  const params = new URLSearchParams({
+    key: orderKey,
+    billing_email: normalizeEmail(billingEmail),
+  });
+
+  const { data } = await storeApiRequest({
+    path: `order/${orderId}?${params.toString()}`,
+  });
+
+  return data;
 };
 
 const addStoreCartItem = async ({ item, token }) => {
@@ -681,7 +727,48 @@ export default async function handler(req, res) {
       currencySyncWarning = `La commande a ete creee, mais la devise n'a pas pu etre forcee en ${STORE_CURRENCY}. Paiement stoppe.`;
     }
 
-    if (normalizeCurrencyCode(syncedOrderCurrency) !== normalizeCurrencyCode(requestedCurrency)) {
+    let checkedStoreOrder = null;
+
+    if (!syncedOrderCurrency) {
+      try {
+        checkedStoreOrder = await fetchStoreOrder({
+          orderId: order.order_id,
+          orderKey: order.order_key,
+          billingEmail: billing?.email,
+        });
+        syncedOrderCurrency =
+          checkedStoreOrder?.totals?.currency_code ||
+          checkedStoreOrder?.currency_code ||
+          checkedStoreOrder?.currency ||
+          syncedOrderCurrency;
+        if (CHECKOUT_DEBUG) {
+          console.info(`[checkout:${debugId}] store_order_currency_checked`, {
+            orderId: order.order_id,
+            currency: syncedOrderCurrency,
+          });
+        }
+      } catch (storeOrderError) {
+        console.error('Store order currency check warning:', storeOrderError);
+      }
+    }
+
+    if (!checkedStoreOrder) {
+      try {
+        checkedStoreOrder = await fetchStoreOrder({
+          orderId: order.order_id,
+          orderKey: order.order_key,
+          billingEmail: billing?.email,
+        });
+      } catch (storeOrderError) {
+        console.error('Store order total check warning:', storeOrderError);
+      }
+    }
+
+    if (checkedStoreOrder) {
+      assertStoreSubtotalMatchesExpected({ storeOrder: checkedStoreOrder, lineItems });
+    }
+
+    if (!syncedOrderCurrency || normalizeCurrencyCode(syncedOrderCurrency) !== normalizeCurrencyCode(requestedCurrency)) {
       return res.status(422).json({
         success: false,
         message: currencySyncWarning || `La commande n'est pas en ${STORE_CURRENCY}. Paiement stoppe.`,
@@ -795,10 +882,7 @@ export default async function handler(req, res) {
       });
     }
 
-    const paymentUrl =
-      order?.payment_url ||
-      order?.checkout_payment_url ||
-      buildPaymentUrl(order.order_id, order.order_key, req);
+    const paymentUrl = buildPaymentUrl(order.order_id, order.order_key, req);
     console.info(`[checkout:${debugId}] order_ready_for_payment`, {
       orderId: order.order_id,
       orderKey: order.order_key,
@@ -818,6 +902,8 @@ export default async function handler(req, res) {
       data: {
         ...order,
         id: order.order_id,
+        currency: syncedOrderCurrency,
+        currency_code: syncedOrderCurrency,
         payment_url: paymentUrl,
       },
       customer_id: customerSyncResult?.customer?.id || null,
