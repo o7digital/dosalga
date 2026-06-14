@@ -19,8 +19,9 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null, onImag
   const [imageFailed, setImageFailed] = useState(false);
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
   const localeSegment = router.pathname.split('/')[1];
-  const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '/es';
-  const isSpanish = localeSegment !== 'en';
+  const currentLang = supportedLocales.includes(localeSegment) ? localeSegment : 'en';
+  const localePrefix = currentLang === 'en' ? '' : `/${currentLang}`;
+  const isSpanish = currentLang === 'es';
   const formatPrice = (value) => formatLocalizedPrice(value, { pathname: router.pathname });
 
   // Extraire les données du produit WooCommerce
@@ -182,7 +183,7 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null, onImag
             {/* Badges */}
             {(on_sale || stock_status === 'outofstock') && (
               <div className="batch">
-                {stock_status === 'outofstock' && <span className="new">Rupture</span>}
+                {stock_status === 'outofstock' && <span className="new">{isSpanish ? 'Agotado' : 'Out of stock'}</span>}
                 {on_sale && discountPercentage > 0 && <span>-{discountPercentage}%</span>}
               </div>
             )}
@@ -205,13 +206,13 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null, onImag
                   className="hover-btn3 add-cart-btn"
                   onClick={handleAddToCart}
                 >
-                  <i className="bi bi-bag-check" /> Ajouter au panier
+                  <i className="bi bi-bag-check" /> {isSpanish ? 'Agregar al carrito' : 'Add to cart'}
                 </a>
               )
             ) : (
               <Link legacyBehavior href={productLink}>
                 <a className="hover-btn3 add-cart-btn">
-                  Me notifier
+                  {isSpanish ? 'Notificarme' : 'Notify me'}
                 </a>
               </Link>
             )}
@@ -271,7 +272,7 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null, onImag
         {/* Stock status overlay */}
         {stock_status === 'outofstock' && (
           <div className="out-of-stock">
-            <span>Rupture de stock</span>
+            <span>{isSpanish ? 'Agotado' : 'Out of stock'}</span>
           </div>
         )}
       </div>
@@ -306,7 +307,7 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null, onImag
           <ul>{renderStars()}</ul>
           <span>
             {rating
-              ? `Your rating: ${rating}/5`
+              ? isSpanish ? `Tu calificacion: ${rating}/5` : `Your rating: ${rating}/5`
               : rating_count > 0
                 ? `(${rating_count})`
                 : ''}

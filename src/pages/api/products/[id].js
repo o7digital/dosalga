@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { id } = req.query;
+  const { id, lang = 'es' } = req.query;
 
   try {
     const product = await getProduct(id);
@@ -39,9 +39,10 @@ export default async function handler(req, res) {
       variations = await getProductVariations(id);
     }
 
-    const normalizedProduct = translateWooProductDescriptionsToSpanish(
-      normalizeWooProductPricesToMXN(product)
-    );
+    const productWithMxnPrices = normalizeWooProductPricesToMXN(product);
+    const normalizedProduct = String(lang).toLowerCase() === 'en'
+      ? productWithMxnPrices
+      : translateWooProductDescriptionsToSpanish(productWithMxnPrices);
     const normalizedVariations = normalizeWooProductsPricesToMXN(variations);
 
     res.status(200).json({

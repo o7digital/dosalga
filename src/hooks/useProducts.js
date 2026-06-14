@@ -91,6 +91,7 @@ export const useProduct = (productId, options = {}) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const refreshIntervalMs = options.refreshIntervalMs ?? getWooCommerceRefreshIntervalMs();
+  const lang = options.lang;
 
   useEffect(() => {
     if (!productId) {
@@ -107,7 +108,8 @@ export const useProduct = (productId, options = {}) => {
         }
         setError(null);
         
-        const response = await fetch(`/api/products/${productId}`, { cache: 'no-store' });
+        const queryParams = buildQueryString({ lang });
+        const response = await fetch(`/api/products/${productId}${queryParams ? `?${queryParams}` : ''}`, { cache: 'no-store' });
         let result;
         try {
           result = await response.json();
@@ -142,7 +144,7 @@ export const useProduct = (productId, options = {}) => {
     }, refreshIntervalMs);
 
     return () => window.clearInterval(intervalId);
-  }, [productId, refreshIntervalMs]);
+  }, [productId, refreshIntervalMs, lang]);
 
   return { product, loading, error };
 };

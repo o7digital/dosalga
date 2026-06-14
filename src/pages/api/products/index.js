@@ -33,7 +33,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { 
+    const {
       page = 1, 
       per_page = 10, 
       limit,
@@ -44,6 +44,7 @@ export default async function handler(req, res) {
       on_sale,
       featured,
       all = false,
+      lang = 'es',
     } = req.query;
 
     const fetchAllProducts = isTrue(all);
@@ -75,11 +76,12 @@ export default async function handler(req, res) {
       throw new Error('WooCommerce API returned unexpected payload (possibly captcha).');
     }
 
-    const visibleProducts = translateWooProductsDescriptionsToSpanish(
-      normalizeWooProductsPricesToMXN(
-        products.filter((product) => isProductVisible(product))
-      )
+    const normalizedProducts = normalizeWooProductsPricesToMXN(
+      products.filter((product) => isProductVisible(product))
     );
+    const visibleProducts = String(lang).toLowerCase() === 'en'
+      ? normalizedProducts
+      : translateWooProductsDescriptionsToSpanish(normalizedProducts);
 
     res.status(200).json({
       success: true,

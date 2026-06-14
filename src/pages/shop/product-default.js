@@ -45,14 +45,16 @@ const ProductDefaultPage = () => {
   const { addToCart } = useCart();
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
   const localeSegment = router.pathname.split('/')[1];
-  const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '/es';
+  const currentLang = supportedLocales.includes(localeSegment) ? localeSegment : 'en';
+  const isSpanish = currentLang === 'es';
+  const localePrefix = currentLang === 'en' ? '' : `/${currentLang}`;
   const formatPrice = (value) => formatLocalizedPrice(value, { pathname: router.pathname });
 
   const queryId = Array.isArray(router.query.id) ? router.query.id[0] : router.query.id;
-  const { products: fallbackProducts } = useProducts({ per_page: 1, orderby: 'date', order: 'desc' });
+  const { products: fallbackProducts } = useProducts({ per_page: 1, orderby: 'date', order: 'desc', lang: currentLang });
   const resolvedId = queryId || fallbackProducts[0]?.id;
 
-  const { product, loading, error } = useProduct(resolvedId);
+  const { product, loading, error } = useProduct(resolvedId, { lang: currentLang });
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -213,7 +215,7 @@ const ProductDefaultPage = () => {
     if (!product) return false;
 
     if (!product.purchasable || !product.price) {
-      toast.warn('This product is not available for purchase yet.');
+      toast.warn(isSpanish ? 'Este producto aun no esta disponible para compra.' : 'This product is not available for purchase yet.');
       return false;
     }
 
@@ -223,12 +225,12 @@ const ProductDefaultPage = () => {
         .map((attribute) => attribute.name);
 
       if (missingAttributes.length > 0) {
-        toast.warn(`Please select: ${missingAttributes.join(', ')}.`);
+        toast.warn(`${isSpanish ? 'Selecciona' : 'Please select'}: ${missingAttributes.join(', ')}.`);
         return false;
       }
 
       if (!selectedVariation) {
-        toast.warn('The selected variation is unavailable.');
+        toast.warn(isSpanish ? 'La variacion seleccionada no esta disponible.' : 'The selected variation is unavailable.');
         return false;
       }
     }
@@ -246,7 +248,7 @@ const ProductDefaultPage = () => {
       size: selectedVariation.attributes.find(isSizeAttribute)?.option || null,
     } : null;
     addToCart(product, quantity, variation);
-    toast.success('Product added to cart.');
+    toast.success(isSpanish ? 'Producto anadido al carrito.' : 'Product added to cart.');
     return true;
   };
 
@@ -313,7 +315,11 @@ const ProductDefaultPage = () => {
                 <div className="rating-review">
                   <div className="rating">
                     <div className="star">{renderStars()}</div>
-                    <p>({ratingCount} customer review{ratingCount > 1 ? 's' : ''})</p>
+                    <p>
+                      {isSpanish
+                        ? `(${ratingCount} resena${ratingCount === 1 ? '' : 's'})`
+                        : `(${ratingCount} customer review${ratingCount > 1 ? 's' : ''})`}
+                    </p>
                   </div>
                 </div>
 
@@ -335,7 +341,7 @@ const ProductDefaultPage = () => {
 
                 <div className="quantity-color-area">
                   <div className="quantity-color">
-                    <h6 className="widget-title">Quantity</h6>
+                    <h6 className="widget-title">{isSpanish ? 'Cantidad' : 'Quantity'}</h6>
                     <div className="qty-wrap">
                       <button type="button" className="qty-btn" onClick={() => setQuantity((q) => Math.max(1, q - 1))}>-</button>
                       <span>{quantity}</span>
@@ -374,8 +380,8 @@ const ProductDefaultPage = () => {
                 </div>
 
                 <div className="shop-details-btn">
-                  <button type="button" onClick={handleAddToCart} className="primary-btn1 hover-btn3">Add to Cart</button>
-                  <button type="button" onClick={handleBuyNow} className="primary-btn1 style-3 hover-btn4">Buy Now</button>
+                  <button type="button" onClick={handleAddToCart} className="primary-btn1 hover-btn3">{isSpanish ? 'Agregar al carrito' : 'Add to Cart'}</button>
+                  <button type="button" onClick={handleBuyNow} className="primary-btn1 style-3 hover-btn4">{isSpanish ? 'Comprar ahora' : 'Buy Now'}</button>
                 </div>
 
                 <div className="product-info">
@@ -383,7 +389,7 @@ const ProductDefaultPage = () => {
                     {product.sku && <li><span>SKU:</span> {product.sku}</li>}
                     {Array.isArray(product.categories) && product.categories.length > 0 && (
                       <li>
-                        <span>Category:</span>{' '}
+                        <span>{isSpanish ? 'Categoria:' : 'Category:'}</span>{' '}
                         {product.categories.map((category, index) => (
                             <React.Fragment key={category.id || category.slug || index}>
                             <Link legacyBehavior href={`${localePrefix}/shop`}>
@@ -408,7 +414,7 @@ const ProductDefaultPage = () => {
             <div className="shop-details-description-nav mb-30">
               <ul className="nav nav-tabs">
                 <li className="nav-item" role="presentation">
-                  <button className="nav-link active" type="button">Descripcion</button>
+                  <button className="nav-link active" type="button">{isSpanish ? 'Descripcion' : 'Description'}</button>
                 </li>
               </ul>
             </div>

@@ -10,17 +10,17 @@ const LanguageSwitcher = () => {
 
   const currentLang = (() => {
     const seg = router.pathname.split('/')[1];
-    return ALL_LANGUAGES.includes(seg) ? seg : 'es';
+    return ALL_LANGUAGES.includes(seg) ? seg : 'en';
   })();
 
   const buildPath = (targetLang) => {
     const segments = router.asPath.split('/');
     if (ALL_LANGUAGES.includes(segments[1])) {
       segments[1] = targetLang === 'en' ? '' : targetLang;
-    } else if (targetLang !== 'es') {
-      return router.asPath || '/';
-    } else {
+    } else if (targetLang !== 'en') {
       segments.splice(1, 0, targetLang);
+    } else {
+      return router.asPath || '/';
     }
     const path = segments.filter(Boolean).join('/');
     return `/${path}`;

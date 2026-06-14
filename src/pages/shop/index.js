@@ -26,7 +26,9 @@ const ShopPage = () => {
   const [hiddenImageProductIds, setHiddenImageProductIds] = useState([]);
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
   const localeSegment = router.pathname.split('/')[1];
-  const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '/es';
+  const currentLang = supportedLocales.includes(localeSegment) ? localeSegment : 'en';
+  const isSpanish = currentLang === 'es';
+  const localePrefix = currentLang === 'en' ? '' : `/${currentLang}`;
   const formatPrice = (value) => formatLocalizedPrice(value, { pathname: router.pathname });
 
   const sidebarRef = useRef(null);
@@ -56,6 +58,7 @@ const ShopPage = () => {
       all: true,
       orderby: sortPreset.orderby,
       order: sortPreset.order,
+      lang: currentLang,
     };
 
     if (selectedCategory) {
@@ -63,10 +66,10 @@ const ShopPage = () => {
     }
 
     return params;
-  }, [selectedCategory, sortPreset.order, sortPreset.orderby]);
+  }, [currentLang, selectedCategory, sortPreset.order, sortPreset.orderby]);
 
   const { products, loading, error } = useProducts(productParams);
-  const { categories } = useCategories({ per_page: 100, hide_empty: true });
+  const { categories } = useCategories({ per_page: 100, hide_empty: true, lang: currentLang });
 
   useEffect(() => {
     setHiddenImageProductIds([]);
@@ -132,7 +135,7 @@ const ShopPage = () => {
         <div className="sidebar-area">
           <div className="shop-widget mb-30">
             <div className="check-box-item">
-              <h5 className="shop-widget-title">Categories</h5>
+              <h5 className="shop-widget-title">{isSpanish ? 'Categorias' : 'Categories'}</h5>
               <ul className="shop-item">
                 <li>
                     <a
@@ -142,7 +145,7 @@ const ShopPage = () => {
                         setSelectedCategory('');
                     }}
                   >
-                    All Products
+                    {isSpanish ? 'Todos los productos' : 'All Products'}
                   </a>
                 </li>
                 {categories.map((category) => (
@@ -163,7 +166,7 @@ const ShopPage = () => {
           </div>
 
           <div className="shop-widget">
-            <h5 className="shop-widget-title">Top Products</h5>
+            <h5 className="shop-widget-title">{isSpanish ? 'Productos destacados' : 'Top Products'}</h5>
             {topProducts.map((product) => {
               const image = getPrimaryProductImageSrc(product);
 
@@ -200,8 +203,10 @@ const ShopPage = () => {
           <div className="dosalga-filter-bar mb-40">
             <p className="dosalga-filter-count">
               {loading
-                ? 'Cargando productos...'
-                : `Mostrando ${visibleProducts.length} producto${visibleProducts.length === 1 ? '' : 's'}`}
+                ? isSpanish ? 'Cargando productos...' : 'Loading products...'
+                : isSpanish
+                  ? `Mostrando ${visibleProducts.length} producto${visibleProducts.length === 1 ? '' : 's'}`
+                  : `Showing ${visibleProducts.length} product${visibleProducts.length === 1 ? '' : 's'}`}
             </p>
 
             <div className="dosalga-filter-tools">
@@ -210,8 +215,8 @@ const ShopPage = () => {
                 className="dosalga-search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar producto, categoría..."
-                aria-label="Buscar productos"
+                placeholder={isSpanish ? 'Buscar producto, categoria...' : 'Search product, category...'}
+                aria-label={isSpanish ? 'Buscar productos' : 'Search products'}
               />
 
               <div className="selector mb-0">
@@ -220,11 +225,11 @@ const ShopPage = () => {
                   value={sortKey}
                   onChange={(e) => setSortKey(e.target.value)}
                 >
-                  <option value="newest">Más reciente</option>
-                  <option value="oldest">Más antiguo</option>
-                  <option value="price_low">Precio: menor a mayor</option>
-                  <option value="price_high">Precio: mayor a menor</option>
-                  <option value="popular">Más populares</option>
+                  <option value="newest">{isSpanish ? 'Mas reciente' : 'Newest'}</option>
+                  <option value="oldest">{isSpanish ? 'Mas antiguo' : 'Oldest'}</option>
+                  <option value="price_low">{isSpanish ? 'Precio: menor a mayor' : 'Price: low to high'}</option>
+                  <option value="price_high">{isSpanish ? 'Precio: mayor a menor' : 'Price: high to low'}</option>
+                  <option value="popular">{isSpanish ? 'Mas populares' : 'Most popular'}</option>
                 </select>
               </div>
             </div>
@@ -236,7 +241,7 @@ const ShopPage = () => {
               className={`dosalga-chip ${selectedCategory ? '' : 'is-active'}`}
               onClick={() => setSelectedCategory('')}
             >
-              Todos ({totalCategoryCount || products.length})
+              {isSpanish ? 'Todos' : 'All'} ({totalCategoryCount || products.length})
             </button>
 
             {visibleCategories.map((category) => (
@@ -256,7 +261,7 @@ const ShopPage = () => {
               ref={sidebarBtnRef}
               onClick={() => setIsOpenSidebar((prev) => !prev)}
             >
-              <i className="bi bi-sliders" /> Filtros
+              <i className="bi bi-sliders" /> {isSpanish ? 'Filtros' : 'Filters'}
             </button>
           </div>
 
@@ -276,7 +281,7 @@ const ShopPage = () => {
 
               {!loading && !error && visibleProducts.length === 0 && (
                 <div className="col-12 text-center py-5">
-                  <p>No hay productos disponibles.</p>
+                  <p>{isSpanish ? 'No hay productos disponibles.' : 'No products available.'}</p>
                 </div>
               )}
 

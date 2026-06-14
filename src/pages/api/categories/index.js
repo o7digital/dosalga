@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { per_page = 100, hide_empty = true } = req.query;
+    const { per_page = 100, hide_empty = true, lang = 'es' } = req.query;
 
     const params = {
       per_page: parseInt(per_page),
@@ -24,9 +24,12 @@ export default async function handler(req, res) {
     };
 
     const categories = await getCategories(params);
-    const visibleCategories = Array.isArray(categories)
-      ? translateCategoriesToSpanish(categories.filter((category) => !isHiddenCreamCategory(category)))
+    const filteredCategories = Array.isArray(categories)
+      ? categories.filter((category) => !isHiddenCreamCategory(category))
       : [];
+    const visibleCategories = String(lang).toLowerCase() === 'en'
+      ? filteredCategories
+      : translateCategoriesToSpanish(filteredCategories);
     
     res.status(200).json({
       success: true,
