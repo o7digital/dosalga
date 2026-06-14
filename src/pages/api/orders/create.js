@@ -405,11 +405,16 @@ const buildRestOrderLineItems = (lineItems = []) => (
     const productId = Number.parseInt(item?.product_id, 10);
     const variationId = Number.parseInt(item?.variation_id, 10);
     const quantity = Number.parseInt(item?.quantity, 10);
+    const unitPrice = parseAmount(item?.unit_price, NaN);
+    const lineTotal = Number.isFinite(unitPrice) && Number.isFinite(quantity)
+      ? (unitPrice * quantity).toFixed(2)
+      : null;
 
     return {
       product_id: productId,
       quantity,
       ...(Number.isFinite(variationId) && variationId > 0 ? { variation_id: variationId } : {}),
+      ...(lineTotal ? { subtotal: lineTotal, total: lineTotal } : {}),
     };
   }).filter((item) => (
     Number.isFinite(item.product_id)
