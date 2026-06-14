@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server'
 
 export function middleware(request) {
-  const maintenance = process.env.MAINTENANCE === '1' || process.env.NEXT_PUBLIC_MAINTENANCE === '1'
-  if (!maintenance) return NextResponse.next()
-
   const host = request.headers.get('host') || ''
   const productionHosts = new Set(['dosalga.store', 'www.dosalga.store'])
   if (!productionHosts.has(host)) return NextResponse.next()
+
+  const maintenanceValue = String(process.env.MAINTENANCE || process.env.NEXT_PUBLIC_MAINTENANCE || '').toLowerCase()
+  const maintenanceDisabled = maintenanceValue === '0' || maintenanceValue === 'false' || maintenanceValue === 'off'
+  if (maintenanceDisabled) return NextResponse.next()
 
   const { pathname } = request.nextUrl
   // Allow the maintenance page itself and Next.js internals
