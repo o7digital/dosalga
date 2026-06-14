@@ -13,7 +13,7 @@ const HeaderUomo = () => {
     const lang = (() => {
         const code = router.pathname.split('/')[1];
         const supported = ['en', 'es', 'de', 'fr', 'it', 'pt'];
-        return supported.includes(code) ? code : 'es';
+        return supported.includes(code) ? code : 'en';
     })();
 
     const navLabels = {
@@ -22,7 +22,7 @@ const HeaderUomo = () => {
         contact: { en: 'CONTACT', es: 'CONTACTO', de: 'KONTAKT', fr: 'CONTACT', it: 'CONTATTI', pt: 'CONTATO' },
     };
 
-    const localizedPath = (slug) => (lang === 'es' ? `/es/${slug}` : `/${lang}/${slug}`);
+    const localizedPath = (slug) => (lang === 'en' ? `/${slug}` : `/${lang}/${slug}`);
 
     useEffect(() => {
         const handleScroll = () => {

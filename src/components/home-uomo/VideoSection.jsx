@@ -9,7 +9,7 @@ const VideoSection = () => {
     const lang = (() => {
         const code = pathname.split('/')[1];
         const supported = ['en', 'es', 'de', 'fr', 'it', 'pt'];
-        return supported.includes(code) ? code : 'es';
+        return supported.includes(code) ? code : 'en';
     })();
     const text = {
         en: { title: 'Studio Collection', subtitle: 'Low impact for the high powered.', cta: 'Shop Now' },

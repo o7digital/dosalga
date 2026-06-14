@@ -8,7 +8,7 @@ const HeroSlider = () => {
     const lang = (() => {
         const code = router.pathname.split('/')[1];
         const supported = ['en', 'es', 'de', 'fr', 'it', 'pt'];
-        return supported.includes(code) ? code : 'es';
+        return supported.includes(code) ? code : 'en';
     })();
 
     const slidesByLang = {
