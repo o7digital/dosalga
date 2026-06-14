@@ -5,6 +5,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const CartContext = createContext();
 const DEFAULT_COUPON_LABEL = 'Remise socios';
+const CART_STORAGE_KEY = 'dosalga_cart_mxn_v2';
 
 export const useCart = () => {
   const context = useContext(CartContext);
@@ -21,15 +22,16 @@ export const CartProvider = ({ children }) => {
 
   // Charger le panier depuis localStorage au démarrage
   useEffect(() => {
-    const savedCart = localStorage.getItem('dosalga_cart');
+    const savedCart = localStorage.getItem(CART_STORAGE_KEY);
     if (savedCart) {
       try {
         setCart(JSON.parse(savedCart));
       } catch (error) {
         console.error('Error loading cart:', error);
-        localStorage.removeItem('dosalga_cart');
+        localStorage.removeItem(CART_STORAGE_KEY);
       }
     }
+    localStorage.removeItem('dosalga_cart');
 
     const savedCoupon = localStorage.getItem('dosalga_coupon');
     if (savedCoupon) {
@@ -50,9 +52,9 @@ export const CartProvider = ({ children }) => {
   // Sauvegarder le panier dans localStorage à chaque modification
   useEffect(() => {
     if (cart.length > 0) {
-      localStorage.setItem('dosalga_cart', JSON.stringify(cart));
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
     } else {
-      localStorage.removeItem('dosalga_cart');
+      localStorage.removeItem(CART_STORAGE_KEY);
     }
   }, [cart]);
 

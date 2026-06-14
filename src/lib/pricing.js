@@ -91,10 +91,6 @@ export const normalizeWooProductPricesToMXN = (product) => {
     return product;
   }
 
-  if (getWordPressPriceSourceCurrency() !== 'USD') {
-    return product;
-  }
-
   const normalizedProduct = PRICE_FIELDS.reduce(normalizePriceField, product);
 
   return {
