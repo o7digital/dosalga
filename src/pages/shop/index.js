@@ -102,6 +102,7 @@ const ShopPage = () => {
     const query = searchQuery.trim().toLowerCase();
     const source = loadedProducts.filter((product) => (
       getPrimaryProductImageSrc(product)
+      && product.stock_status !== 'outofstock'
       && !hiddenImageProductIds.includes(product.id)
     ));
 
