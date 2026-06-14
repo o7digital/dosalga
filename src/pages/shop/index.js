@@ -16,6 +16,8 @@ const SORT_PRESETS = {
   popular: { orderby: 'popularity', order: 'desc' },
 };
 
+const PRODUCTS_PER_PAGE = 24;
+
 const ShopPage = () => {
   const router = useRouter();
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
@@ -23,6 +25,8 @@ const ShopPage = () => {
   const [sortKey, setSortKey] = useState('newest');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [page, setPage] = useState(1);
+  const [loadedProducts, setLoadedProducts] = useState([]);
   const [hiddenImageProductIds, setHiddenImageProductIds] = useState([]);
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
   const localeSegment = router.pathname.split('/')[1];
@@ -55,7 +59,8 @@ const ShopPage = () => {
 
   const productParams = useMemo(() => {
     const params = {
-      all: true,
+      page,
+      per_page: PRODUCTS_PER_PAGE,
       orderby: sortPreset.orderby,
       order: sortPreset.order,
       lang: currentLang,
@@ -66,18 +71,36 @@ const ShopPage = () => {
     }
 
     return params;
-  }, [currentLang, selectedCategory, sortPreset.order, sortPreset.orderby]);
+  }, [currentLang, page, selectedCategory, sortPreset.order, sortPreset.orderby]);
 
   const { products, loading, error } = useProducts(productParams);
   const { categories } = useCategories({ per_page: 100, hide_empty: true, lang: currentLang });
 
   useEffect(() => {
+    setLoadedProducts((currentProducts) => {
+      if (page === 1) {
+        return products;
+      }
+
+      const existingIds = new Set(currentProducts.map((product) => product.id));
+      return [
+        ...currentProducts,
+        ...products.filter((product) => !existingIds.has(product.id)),
+      ];
+    });
+  }, [page, products]);
+
+  useEffect(() => {
     setHiddenImageProductIds([]);
   }, [productParams]);
 
+  useEffect(() => {
+    setPage(1);
+  }, [currentLang, selectedCategory, sortKey]);
+
   const visibleProducts = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
-    const source = products.filter((product) => (
+    const source = loadedProducts.filter((product) => (
       getPrimaryProductImageSrc(product)
       && !hiddenImageProductIds.includes(product.id)
     ));
@@ -100,7 +123,7 @@ const ShopPage = () => {
 
       return haystack.includes(query);
     });
-  }, [hiddenImageProductIds, products, searchQuery]);
+  }, [hiddenImageProductIds, loadedProducts, searchQuery]);
 
   const visibleCategories = useMemo(() => {
     return categories.filter((category) => Number(category.count || 0) > 0).slice(0, 8);
@@ -111,10 +134,10 @@ const ShopPage = () => {
   }, [visibleCategories]);
 
   const topProducts = useMemo(() => (
-    products
+    loadedProducts
       .filter((product) => getPrimaryProductImageSrc(product))
       .slice(0, 3)
-  ), [products]);
+  ), [loadedProducts]);
 
   const hideProductWithInvalidImage = (productId) => {
     setHiddenImageProductIds((currentIds) => (
@@ -295,6 +318,18 @@ const ShopPage = () => {
                 </div>
               ))}
             </div>
+
+            {!loading && !error && visibleProducts.length >= PRODUCTS_PER_PAGE && (
+              <div className="text-center">
+                <button
+                  type="button"
+                  className="primary-btn1 hover-btn3"
+                  onClick={() => setPage((currentPage) => currentPage + 1)}
+                >
+                  {isSpanish ? 'Ver mas productos' : 'Load more products'}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
