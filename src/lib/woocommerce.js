@@ -2,7 +2,32 @@ import WooCommerceRestApi from "@woocommerce/woocommerce-rest-api";
 
 const FALLBACK_KEY = "ck_962f8b4455545de9a9a6155616535fdf8d9eb1db";
 const FALLBACK_SECRET = "cs_4242ab75e9fb88408afd2961efb76b7ce9211bc9";
+const FALLBACK_WORDPRESS_URL = "https://oliviers44.sg-host.com";
 const MAX_PRODUCTS_PER_PAGE = 100;
+
+const normalizeWordPressUrl = (value) => {
+  const rawUrl = String(value || "").trim();
+
+  if (!rawUrl) {
+    return FALLBACK_WORDPRESS_URL;
+  }
+
+  try {
+    const parsedUrl = new URL(rawUrl);
+    const hostname = parsedUrl.hostname.replace(/^www\./, "");
+
+    if (
+      hostname === "dosalga.store"
+      || hostname.endsWith(".vercel.app")
+    ) {
+      return FALLBACK_WORDPRESS_URL;
+    }
+
+    return parsedUrl.origin;
+  } catch {
+    return FALLBACK_WORDPRESS_URL;
+  }
+};
 
 const normalizePerPage = (value, fallback = MAX_PRODUCTS_PER_PAGE) => {
   const parsedValue = Number.parseInt(value, 10);
@@ -15,7 +40,11 @@ const normalizePerPage = (value, fallback = MAX_PRODUCTS_PER_PAGE) => {
 };
 
 const api = new WooCommerceRestApi({
-  url: process.env.NEXT_PUBLIC_WORDPRESS_URL || "https://oliviers44.sg-host.com",
+  url: normalizeWordPressUrl(
+    process.env.WORDPRESS_URL
+    || process.env.WOOCOMMERCE_URL
+    || process.env.NEXT_PUBLIC_WORDPRESS_URL
+  ),
   consumerKey: process.env.WC_CONSUMER_KEY || FALLBACK_KEY,
   consumerSecret: process.env.WC_CONSUMER_SECRET || FALLBACK_SECRET,
   version: "wc/v3",

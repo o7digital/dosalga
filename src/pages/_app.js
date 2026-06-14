@@ -19,6 +19,7 @@ import { ToastContainer } from "react-toastify";
 import OliviaChatDosalga from "../components/common/OliviaChatDosalga";
 
 const SHOW_UNDER_CONSTRUCTION =
+  true ||
   process.env.NEXT_PUBLIC_SHOW_UNDER_CONSTRUCTION === "1" ||
   process.env.VERCEL_GIT_COMMIT_REF === "main";
 

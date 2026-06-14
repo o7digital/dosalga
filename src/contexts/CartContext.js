@@ -35,7 +35,7 @@ export const CartProvider = ({ children }) => {
     if (savedCoupon) {
       try {
         const parsedCoupon = JSON.parse(savedCoupon);
-        if (parsedCoupon?.code && parsedCoupon?.type === 'percent') {
+        if (parsedCoupon?.type === 'percent') {
           setAppliedCoupon(parsedCoupon);
         } else {
           localStorage.removeItem('dosalga_coupon');
@@ -58,7 +58,12 @@ export const CartProvider = ({ children }) => {
 
   useEffect(() => {
     if (appliedCoupon) {
-      localStorage.setItem('dosalga_coupon', JSON.stringify(appliedCoupon));
+      const toStore = {
+        label: appliedCoupon.label,
+        type: appliedCoupon.type,
+        rate: appliedCoupon.rate,
+      };
+      localStorage.setItem('dosalga_coupon', JSON.stringify(toStore));
     } else {
       localStorage.removeItem('dosalga_coupon');
     }
@@ -222,7 +227,7 @@ export const CartProvider = ({ children }) => {
         account_password: checkoutOptions.accountPassword || '',
         coupon_code: appliedCoupon?.code || '',
         coupon_discount_amount: getDiscountAmount(),
-        fee_lines: appliedCoupon?.code
+        fee_lines: appliedCoupon
           ? [{
               name: appliedCoupon.label || DEFAULT_COUPON_LABEL,
               total: `-${getDiscountAmount().toFixed(2)}`,
@@ -230,9 +235,9 @@ export const CartProvider = ({ children }) => {
             }]
           : [],
         meta_data: [
-          ...(appliedCoupon?.code
+          ...(appliedCoupon
             ? [
-                { key: 'dosalga_coupon_code', value: appliedCoupon.code },
+                { key: 'dosalga_coupon_label', value: appliedCoupon.label || DEFAULT_COUPON_LABEL },
                 { key: 'dosalga_coupon_type', value: 'percent' },
                 { key: 'dosalga_coupon_rate', value: String(appliedCoupon.rate || '') },
               ]

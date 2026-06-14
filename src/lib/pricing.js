@@ -9,7 +9,6 @@ export const parsePriceValue = (value) => {
   const numeric = Number(normalized);
   return Number.isFinite(numeric) ? numeric : null;
 };
-
 const DEFAULT_MXN_PER_USD = 17.23;
 const PRICE_FIELDS = ['price', 'regular_price', 'sale_price'];
 
@@ -27,7 +26,6 @@ export const convertUSDToMXN = (value) => {
   if (numeric === null) return null;
   return numeric * getMXNPerUSD();
 };
-
 export const getStoreMXNPrice = (value) => {
   const numeric = parsePriceValue(value);
   if (numeric === null) return null;
@@ -115,4 +113,3 @@ export const normalizeWooProductsPricesToMXN = (products) => {
   }
 
   return products.map(normalizeWooProductPricesToMXN);
-};
