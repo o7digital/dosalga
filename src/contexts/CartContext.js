@@ -214,7 +214,7 @@ export const CartProvider = ({ children }) => {
       }
 
       const orderData = {
-        currency: 'USD',
+        currency: 'MXN',
         billing: billingInfo,
         shipping: shippingInfo || billingInfo,
         customer_note: billingInfo.customer_note || '',

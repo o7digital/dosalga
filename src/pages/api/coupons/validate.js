@@ -7,16 +7,16 @@ export default function handler(req, res) {
     return res.status(405).json({ success: false, message: 'Method not allowed' });
   }
 
-  const configuredCode = normalizeCouponCode(process.env.SOCIO_COUPON_CODE);
+  const validCodes = [process.env.SOCIO_COUPON_CODE, '2UP7NFF6'].map(normalizeCouponCode).filter(Boolean);
   const submittedCode = normalizeCouponCode(req.body?.code);
 
-  if (!configuredCode || !submittedCode || submittedCode !== configuredCode) {
+  if (!submittedCode || !validCodes.includes(submittedCode)) {
     return res.status(404).json({ success: false, message: 'Code promo invalide.' });
   }
 
   return res.status(200).json({
     success: true,
-    code: submittedCode,
+    code: 'SOCIO_DISCOUNT',
     label: 'Remise socios',
     type: 'percent',
     rate: SOCIO_DISCOUNT_RATE,
