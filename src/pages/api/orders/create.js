@@ -1,6 +1,18 @@
 import { convertUSDToMXN } from '@/src/lib/pricing';
 
-const WORDPRESS_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL || 'https://oliviers44.sg-host.com';
+const FALLBACK_WORDPRESS_URL = 'https://oliviers44.sg-host.com';
+
+const normalizeHttpsBaseUrl = (value, fallback = FALLBACK_WORDPRESS_URL) => {
+  try {
+    const parsed = new URL(value || fallback);
+    parsed.protocol = 'https:';
+    return parsed.origin;
+  } catch {
+    return fallback;
+  }
+};
+
+const WORDPRESS_URL = normalizeHttpsBaseUrl(process.env.NEXT_PUBLIC_WORDPRESS_URL);
 const SOCIO_COUPON_CODE = String((process.env.SOCIO_COUPON_CODE || '2UP7NFF6')).trim().toUpperCase();
 const SOCIO_DISCOUNT_RATE = 0.50;
 const SOCIO_DISCOUNT_PERCENT = Math.round(SOCIO_DISCOUNT_RATE * 100);
@@ -50,7 +62,9 @@ const normalizeMetaData = (metaData) => {
 
 const normalizeBaseUrl = (value, fallback) => {
   try {
-    return new URL(value).origin;
+    const parsed = new URL(value);
+    parsed.protocol = 'https:';
+    return parsed.origin;
   } catch {
     return fallback;
   }

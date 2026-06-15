@@ -23,6 +23,7 @@ const normalizeWordPressUrl = (value) => {
       return FALLBACK_WORDPRESS_URL;
     }
 
+    parsedUrl.protocol = "https:";
     return parsedUrl.origin;
   } catch {
     return FALLBACK_WORDPRESS_URL;
