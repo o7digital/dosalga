@@ -210,6 +210,10 @@ export const CartProvider = ({ children }) => {
   const createOrder = async (billingInfo, shippingInfo = null, checkoutOptions = {}) => {
     setIsLoading(true);
     try {
+      if (cart.length === 0 || getCartTotalAfterDiscount() <= 0) {
+        throw new Error('Le panier est vide. Ajoute un produit avant de passer commande.');
+      }
+
       const invalidVariableItem = cart.find((item) => {
         const explicitMissingVariationId = item.variation && !item.variation?.id;
         const variableWithoutSelection = item.product_type === 'variable' && !item.variation?.id;

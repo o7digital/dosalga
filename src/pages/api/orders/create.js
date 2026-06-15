@@ -526,6 +526,11 @@ const createUsdRestOrder = async ({
   const normalizedCouponCode = normalizeCouponCode(couponCode);
   const mxnLineItems = await resolveLineItemsWithWooMXNPrices({ wcApi, lineItems });
   const orderLineItems = buildRestOrderLineItems(mxnLineItems);
+  console.info('[checkout] rest_order_input', {
+    requestedItems: lineItems.length,
+    restItems: orderLineItems.length,
+    restSubtotal: getExpectedLineItemsSubtotal(mxnLineItems),
+  });
 
   if (orderLineItems.length === 0) {
     throw new Error('Le panier ne contient aucun produit valide.');
@@ -589,6 +594,14 @@ const createUsdRestOrder = async ({
     orderId: createdOrder.id,
     lineItems: mxnLineItems,
   }) || createdOrder;
+  console.info('[checkout] rest_order_created', {
+    orderId: order.id,
+    status: order.status,
+    currency: order.currency,
+    total: order.total,
+    lines: Array.isArray(order.line_items) ? order.line_items.length : 0,
+    fees: Array.isArray(order.fee_lines) ? order.fee_lines.length : 0,
+  });
 
   if (normalizeCurrencyCode(order?.currency) !== currency) {
     throw new Error(`La commande n'est pas en ${currency}. Paiement stoppe.`);
