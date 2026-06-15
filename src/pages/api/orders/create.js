@@ -607,6 +607,10 @@ const createUsdRestOrder = async ({
     throw new Error(`La commande n'est pas en ${currency}. Paiement stoppe.`);
   }
 
+  if (!Array.isArray(order?.line_items) || order.line_items.length === 0 || parseAmount(order?.total, 0) <= 0) {
+    throw new Error('Commande WooCommerce vide ou total nul. Paiement stoppe.');
+  }
+
   return {
     order,
     paymentUrl: buildPaymentUrl(order.id, order.order_key, req),

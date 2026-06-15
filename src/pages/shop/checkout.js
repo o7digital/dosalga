@@ -281,6 +281,12 @@ const Checkout = () => {
         toast.warn(order.warning);
       }
 
+      const orderTotal = Number.parseFloat(order?.total || 0);
+      const orderLines = Array.isArray(order?.line_items) ? order.line_items.length : 0;
+      if (orderLines === 0 || !Number.isFinite(orderTotal) || orderTotal <= 0) {
+        throw new Error('Commande WooCommerce vide ou total nul. Paiement stoppe.');
+      }
+
       const paymentUrl = getOrderPaymentUrl(order);
 
       if (!paymentUrl) {
