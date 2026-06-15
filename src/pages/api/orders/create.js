@@ -147,21 +147,6 @@ const getExpectedLineItemsSubtotal = (lineItems = []) => {
   return subtotal > 0 ? subtotal : null;
 };
 
-const assertStoreSubtotalMatchesExpected = ({ storeOrder, lineItems }) => {
-  const expectedSubtotal = getExpectedLineItemsSubtotal(lineItems);
-  if (expectedSubtotal === null) return;
-
-  const minorUnit = storeOrder?.totals?.currency_minor_unit ?? 2;
-  const storeSubtotal = parseMinorUnitAmount(storeOrder?.totals?.total_items, minorUnit);
-  if (storeSubtotal === null) return;
-
-  if (Math.abs(storeSubtotal - expectedSubtotal) > 0.05) {
-    throw new Error(
-      `Prix WooCommerce non synchronises en ${STORE_CURRENCY}: sous-total Woo ${storeSubtotal.toFixed(2)}, sous-total attendu ${expectedSubtotal.toFixed(2)}. Paiement stoppe.`
-    );
-  }
-};
-
 const syncOrderTotalWithExpectedSubtotal = async ({ orderId, lineItems }) => {
   const expectedSubtotal = getExpectedLineItemsSubtotal(lineItems);
   if (expectedSubtotal === null) return null;
@@ -850,10 +835,6 @@ export default async function handler(req, res) {
       } catch (storeOrderError) {
         console.error('Store order total check warning:', storeOrderError);
       }
-    }
-
-    if (checkedStoreOrder && !orderTotalSyncedToMXN) {
-      assertStoreSubtotalMatchesExpected({ storeOrder: checkedStoreOrder, lineItems });
     }
 
     if (!syncedOrderCurrency || normalizeCurrencyCode(syncedOrderCurrency) !== normalizeCurrencyCode(requestedCurrency)) {
