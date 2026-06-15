@@ -293,6 +293,37 @@ const enforceOrderCurrency = async ({ orderId, requestedCurrency }) => {
   return updatedOrder;
 };
 
+const enforceOrderLineTotals = async ({ orderId, lineItems }) => {
+  const { default: wcApi } = await import('@/src/lib/woocommerce');
+  const { data: wcOrder } = await wcApi.get(`orders/${orderId}`);
+  const existingLines = Array.isArray(wcOrder?.line_items) ? wcOrder.line_items : [];
+
+  const lineUpdates = existingLines.map((line, index) => {
+    const expected = lineItems[index];
+    const unitPrice = parseAmount(expected?.unit_price, NaN);
+    const quantity = Number.parseInt(expected?.quantity, 10);
+
+    if (!line?.id || !Number.isFinite(unitPrice) || !Number.isFinite(quantity) || quantity <= 0) {
+      return null;
+    }
+
+    const lineTotal = (unitPrice * quantity).toFixed(2);
+    return {
+      id: line.id,
+      subtotal: lineTotal,
+      total: lineTotal,
+    };
+  }).filter(Boolean);
+
+  if (lineUpdates.length === 0) return wcOrder;
+
+  const { data: updatedOrder } = await wcApi.put(`orders/${orderId}`, {
+    line_items: lineUpdates,
+  });
+
+  return updatedOrder;
+};
+
 const storeApiRequest = async ({ path, method = 'GET', token, body }) => {
   const headers = {
     Accept: 'application/json',
@@ -733,6 +764,16 @@ export default async function handler(req, res) {
     }
 
     let checkedStoreOrder = null;
+
+    try {
+      await enforceOrderLineTotals({
+        orderId: order.order_id,
+        lineItems,
+      });
+      checkedStoreOrder = null;
+    } catch (lineTotalSyncError) {
+      console.error('Order line total sync warning:', lineTotalSyncError);
+    }
 
     if (!syncedOrderCurrency) {
       try {
