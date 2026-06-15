@@ -800,6 +800,7 @@ export default async function handler(req, res) {
     }
 
     let checkedStoreOrder = null;
+    let orderTotalSyncedToMXN = false;
 
     try {
       await enforceOrderLineTotals({
@@ -810,6 +811,7 @@ export default async function handler(req, res) {
         orderId: order.order_id,
         lineItems,
       });
+      orderTotalSyncedToMXN = true;
       checkedStoreOrder = null;
     } catch (lineTotalSyncError) {
       console.error('Order line total sync warning:', lineTotalSyncError);
@@ -850,7 +852,7 @@ export default async function handler(req, res) {
       }
     }
 
-    if (checkedStoreOrder) {
+    if (checkedStoreOrder && !orderTotalSyncedToMXN) {
       assertStoreSubtotalMatchesExpected({ storeOrder: checkedStoreOrder, lineItems });
     }
 
