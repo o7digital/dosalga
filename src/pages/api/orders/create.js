@@ -185,6 +185,24 @@ const syncOrderTotalWithExpectedSubtotal = async ({ orderId, lineItems }) => {
   return updatedOrder;
 };
 
+const ensureRestOrderLineItems = async ({ wcApi, order, orderLineItems }) => {
+  const existingLines = Array.isArray(order?.line_items) ? order.line_items : [];
+
+  if (existingLines.length > 0 && parseAmount(order?.total, 0) > 0) {
+    return order;
+  }
+
+  const { data: repairedOrder } = await wcApi.put(`orders/${order.id}`, {
+    status: 'pending',
+    currency: STORE_CURRENCY,
+    payment_method: 'stripe',
+    payment_method_title: 'Credit / Debit Card',
+    line_items: orderLineItems,
+  });
+
+  return repairedOrder;
+};
+
 const isExistingAccountCheckoutError = (error) => {
   const message = String(error?.message || '').toLowerCase();
   const code = String(error?.code || '').toLowerCase();
@@ -530,6 +548,12 @@ const createUsdRestOrder = async ({
     requestedItems: lineItems.length,
     restItems: orderLineItems.length,
     restSubtotal: getExpectedLineItemsSubtotal(mxnLineItems),
+    restLineItems: orderLineItems.map((item) => ({
+      product_id: item.product_id,
+      variation_id: item.variation_id || null,
+      quantity: item.quantity,
+      total: item.total || null,
+    })),
   });
 
   if (orderLineItems.length === 0) {
@@ -590,10 +614,16 @@ const createUsdRestOrder = async ({
     meta_data: orderMetaData,
   });
 
+  const repairedOrder = await ensureRestOrderLineItems({
+    wcApi,
+    order: createdOrder,
+    orderLineItems,
+  });
+
   const order = await syncOrderTotalWithExpectedSubtotal({
-    orderId: createdOrder.id,
+    orderId: repairedOrder.id,
     lineItems: mxnLineItems,
-  }) || createdOrder;
+  }) || repairedOrder;
   console.info('[checkout] rest_order_created', {
     orderId: order.id,
     status: order.status,
