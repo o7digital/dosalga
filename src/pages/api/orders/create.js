@@ -531,7 +531,7 @@ const createUsdRestOrder = async ({
       : []),
   ]);
 
-  const { data: order } = await wcApi.post('orders', {
+  const { data: createdOrder } = await wcApi.post('orders', {
     status: 'pending',
     currency,
     payment_method: 'stripe',
@@ -551,6 +551,11 @@ const createUsdRestOrder = async ({
       : [],
     meta_data: orderMetaData,
   });
+
+  const order = await syncOrderTotalWithExpectedSubtotal({
+    orderId: createdOrder.id,
+    lineItems,
+  }) || createdOrder;
 
   if (normalizeCurrencyCode(order?.currency) !== currency) {
     throw new Error(`La commande n'est pas en ${currency}. Paiement stoppe.`);
