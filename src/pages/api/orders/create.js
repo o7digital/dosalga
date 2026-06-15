@@ -1,3 +1,5 @@
+import { convertUSDToMXN } from '@/src/lib/pricing';
+
 const WORDPRESS_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL || 'https://oliviers44.sg-host.com';
 const SOCIO_COUPON_CODE = String((process.env.SOCIO_COUPON_CODE || '2UP7NFF6')).trim().toUpperCase();
 const SOCIO_DISCOUNT_RATE = 0.50;
@@ -476,6 +478,36 @@ const buildRestOrderLineItems = (lineItems = []) => (
   ))
 );
 
+const resolveLineItemsWithWooMXNPrices = async ({ wcApi, lineItems = [] }) => {
+  const resolvedItems = await Promise.all(lineItems.map(async (item) => {
+    const productId = Number.parseInt(item?.product_id, 10);
+    const variationId = Number.parseInt(item?.variation_id, 10);
+
+    if (!Number.isFinite(productId) || productId <= 0) return item;
+
+    try {
+      const endpoint = Number.isFinite(variationId) && variationId > 0
+        ? `products/${productId}/variations/${variationId}`
+        : `products/${productId}`;
+      const { data: wooProduct } = await wcApi.get(endpoint);
+      const wooUsdPrice = parseAmount(wooProduct?.price || wooProduct?.regular_price || wooProduct?.sale_price, NaN);
+      const mxnPrice = convertUSDToMXN(wooUsdPrice);
+
+      if (!Number.isFinite(mxnPrice) || mxnPrice <= 0) return item;
+
+      return {
+        ...item,
+        unit_price: mxnPrice.toFixed(2),
+      };
+    } catch (error) {
+      console.error('Woo price resolve warning:', error?.response?.data || error?.message || error);
+      return item;
+    }
+  }));
+
+  return resolvedItems;
+};
+
 const createUsdRestOrder = async ({
   req,
   billing,
@@ -492,7 +524,8 @@ const createUsdRestOrder = async ({
   const { default: wcApi } = await import('@/src/lib/woocommerce');
   const currency = normalizeCurrencyCode(requestedCurrency);
   const normalizedCouponCode = normalizeCouponCode(couponCode);
-  const orderLineItems = buildRestOrderLineItems(lineItems);
+  const mxnLineItems = await resolveLineItemsWithWooMXNPrices({ wcApi, lineItems });
+  const orderLineItems = buildRestOrderLineItems(mxnLineItems);
 
   if (orderLineItems.length === 0) {
     throw new Error('Le panier ne contient aucun produit valide.');
@@ -554,7 +587,7 @@ const createUsdRestOrder = async ({
 
   const order = await syncOrderTotalWithExpectedSubtotal({
     orderId: createdOrder.id,
-    lineItems,
+    lineItems: mxnLineItems,
   }) || createdOrder;
 
   if (normalizeCurrencyCode(order?.currency) !== currency) {
