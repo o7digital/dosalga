@@ -19,8 +19,8 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null, onImag
   const [imageFailed, setImageFailed] = useState(false);
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
   const localeSegment = router.pathname.split('/')[1];
-  const currentLang = supportedLocales.includes(localeSegment) ? localeSegment : 'en';
-  const localePrefix = currentLang === 'en' ? '' : `/${currentLang}`;
+  const currentLang = supportedLocales.includes(localeSegment) ? localeSegment : 'es';
+  const localePrefix = currentLang === 'es' ? '' : `/${currentLang}`;
   const isSpanish = currentLang === 'es';
   const formatPrice = (value) => formatLocalizedPrice(value, { pathname: router.pathname });
 

@@ -8,7 +8,7 @@ const FooterUomo = () => {
     const lang = (() => {
         const code = pathname.split('/')[1];
         const supported = ['en', 'es', 'de', 'fr', 'it', 'pt'];
-        return supported.includes(code) ? code : 'en';
+        return supported.includes(code) ? code : 'es';
     })();
 
     const labels = {

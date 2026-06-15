@@ -162,6 +162,42 @@ const assertStoreSubtotalMatchesExpected = ({ storeOrder, lineItems }) => {
   }
 };
 
+const syncOrderTotalWithExpectedSubtotal = async ({ orderId, lineItems }) => {
+  const expectedSubtotal = getExpectedLineItemsSubtotal(lineItems);
+  if (expectedSubtotal === null) return null;
+
+  const { default: wcApi } = await import('@/src/lib/woocommerce');
+  const { data: wcOrder } = await wcApi.get(`orders/${orderId}`);
+  const currentTotal = parseAmount(wcOrder?.total, 0);
+  const adjustment = expectedSubtotal - currentTotal;
+
+  if (Math.abs(adjustment) <= 0.05) return wcOrder;
+
+  const keptFeeLines = Array.isArray(wcOrder?.fee_lines)
+    ? wcOrder.fee_lines
+        .filter((feeLine) => feeLine?.name !== 'Dosalga MXN price adjustment')
+        .map((feeLine) => ({
+          id: feeLine.id,
+          name: feeLine.name,
+          total: String(feeLine.total ?? '0'),
+          taxable: feeLine.taxable ?? false,
+        }))
+    : [];
+
+  const { data: updatedOrder } = await wcApi.put(`orders/${orderId}`, {
+    fee_lines: [
+      ...keptFeeLines,
+      {
+        name: 'Dosalga MXN price adjustment',
+        total: adjustment.toFixed(2),
+        taxable: false,
+      },
+    ],
+  });
+
+  return updatedOrder;
+};
+
 const isExistingAccountCheckoutError = (error) => {
   const message = String(error?.message || '').toLowerCase();
   const code = String(error?.code || '').toLowerCase();
@@ -767,6 +803,10 @@ export default async function handler(req, res) {
 
     try {
       await enforceOrderLineTotals({
+        orderId: order.order_id,
+        lineItems,
+      });
+      await syncOrderTotalWithExpectedSubtotal({
         orderId: order.order_id,
         lineItems,
       });
