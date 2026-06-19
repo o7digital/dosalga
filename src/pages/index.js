@@ -1,4 +1,6 @@
 import Head from "next/head";
+import HeroSlider from "../components/home-uomo/HeroSlider";
+import ShopPage from "./shop";
 
 export default function Home() {
   const siteUrl = "https://dosalga.com";
@@ -40,65 +42,8 @@ export default function Home() {
         <meta name="twitter:image" content={ogImage} />
       </Head>
 
-      <main className="construction-page">
-        <section className="construction-content" aria-labelledby="construction-title">
-          <img
-            className="construction-logo"
-            src="/assets/img/sm-logo.svg"
-            alt="Dosalga"
-          />
-          <p className="construction-kicker">Dosalga</p>
-          <h1 id="construction-title">Sitio en construccion</h1>
-          <p className="construction-copy">
-            Estamos preparando una nueva experiencia. Vuelve pronto.
-          </p>
-        </section>
-      </main>
-
-      <style jsx>{`
-        .construction-page {
-          min-height: 100vh;
-          display: grid;
-          place-items: center;
-          padding: 32px 20px;
-          background: #f6f3ee;
-          color: #171717;
-        }
-
-        .construction-content {
-          width: min(100%, 560px);
-          text-align: center;
-        }
-
-        .construction-logo {
-          width: 88px;
-          height: auto;
-          margin-bottom: 28px;
-        }
-
-        .construction-kicker {
-          margin-bottom: 12px;
-          font-size: 13px;
-          font-weight: 700;
-          letter-spacing: 0.12em;
-          text-transform: uppercase;
-        }
-
-        h1 {
-          margin: 0;
-          font-size: clamp(40px, 8vw, 72px);
-          line-height: 0.95;
-          font-weight: 800;
-        }
-
-        .construction-copy {
-          max-width: 420px;
-          margin: 24px auto 0;
-          color: #555;
-          font-size: 18px;
-          line-height: 1.6;
-        }
-      `}</style>
+      <HeroSlider />
+      <ShopPage />
     </>
   );
 }
