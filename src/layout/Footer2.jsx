@@ -74,10 +74,10 @@ const Footer2 = () => {
                 <div className="payment-gateway">
                   <p>Secured Payment Gateways</p>
                   <div className="icons">
-                    <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/visa.png" alt="" />
-                    <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/mastercard.png" alt="" />
-                    <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/american-express.png" alt="" />
-                    <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/maestro.png" alt="" />
+                    <img src="/assets/img/home1/icon/visa.png" alt="" />
+                    <img src="/assets/img/home1/icon/mastercard.png" alt="" />
+                    <img src="/assets/img/home1/icon/american-express.png" alt="" />
+                    <img src="/assets/img/home1/icon/maestro.png" alt="" />
                   </div>
                 </div>
               </div>

@@ -4,9 +4,9 @@ import React from 'react'
 const Footer = () => {
   return (
     <footer className="footer-section">
-        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/vector-2.svg" alt="" className="vector1" />
-        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/banner-vector1.svg" alt="" className="vector2" />
-        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/vector-4.svg" alt="" className="vector3" />
+        <img src="/assets/img/home1/icon/vector-2.svg" alt="" className="vector1" />
+        <img src="/assets/img/home1/icon/banner-vector1.svg" alt="" className="vector2" />
+        <img src="/assets/img/home1/icon/vector-4.svg" alt="" className="vector3" />
         <div className="container">
             <div className="footer-top">
             <div className="row g-lg-4 gy-5 justify-content-center">
@@ -66,19 +66,19 @@ const Footer = () => {
                     <p>Form App Store or Google Play</p>
                     <div className="app-store">
                     <a href="#">
-                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/google-play.png" alt="" />
+                        <img src="/assets/img/home1/google-play.png" alt="" />
                     </a>
                     <a href="#">
-                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/app-store.png" alt="" />
+                        <img src="/assets/img/home1/app-store.png" alt="" />
                     </a>
                     </div>
                     <div className="payment-gateway">
                     <p>Secured Payment Gateways</p>
                     <div className="icons">
-                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/visa.png" alt="" />
-                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/mastercard.png" alt="" />
-                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/american-express.png" alt="" />
-                        <img src="https://beautico-nextjs.vercel.app/assets/img/home1/icon/maestro.png" alt="" />
+                        <img src="/assets/img/home1/icon/visa.png" alt="" />
+                        <img src="/assets/img/home1/icon/mastercard.png" alt="" />
+                        <img src="/assets/img/home1/icon/american-express.png" alt="" />
+                        <img src="/assets/img/home1/icon/maestro.png" alt="" />
                     </div>
                     </div>
                 </div>

@@ -19,9 +19,8 @@ import { ToastContainer } from "react-toastify";
 import OliviaChatDosalga from "../components/common/OliviaChatDosalga";
 
 const SHOW_UNDER_CONSTRUCTION =
-  true ||
   process.env.NEXT_PUBLIC_SHOW_UNDER_CONSTRUCTION === "1" ||
-  process.env.VERCEL_GIT_COMMIT_REF === "main";
+  process.env.MAINTENANCE === "1";
 
 function UnderConstructionPage() {
   return (
@@ -148,6 +147,7 @@ export default function App({ Component, pageProps }) {
           content="width=device-width, initial-scale=1.0"
         ></meta>
         <meta name="description" content="DOSALGA - Premium sportswear and active lifestyle products" />
+        <meta name="robots" content="index, follow" />
       </Head>
       <Script
         id="Cookiebot"

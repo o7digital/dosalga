@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useProduct, useProducts } from '@/src/hooks/useProducts';
@@ -43,6 +44,7 @@ const isVariationAvailable = (variation) => {
 const ProductDefaultPage = () => {
   const router = useRouter();
   const { addToCart } = useCart();
+  const siteUrl = 'https://dosalga.com';
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
   const localeSegment = router.pathname.split('/')[1];
   const localePrefix = supportedLocales.includes(localeSegment) ? `/${localeSegment}` : '';
@@ -196,6 +198,34 @@ const ProductDefaultPage = () => {
     if (!text) return '';
     return text.length > 260 ? `${text.slice(0, 260).trim()}...` : text;
   }, [product?.description, product?.short_description]);
+  const seoDescription = productSummary || `${product?.name || 'Product'} by Dosalga. Shop premium activewear and lifestyle products online.`;
+  const canonicalUrl = `${siteUrl}${localePrefix}/shop/product/${resolvedId}`;
+  const productImage = displayImage?.src?.startsWith('http')
+    ? displayImage.src
+    : `${siteUrl}${displayImage?.src || '/assets/img/sm-logo.svg'}`;
+  const productAvailability = product?.stock_status === 'outofstock'
+    ? 'https://schema.org/OutOfStock'
+    : 'https://schema.org/InStock';
+  const productSchema = product ? {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description: seoDescription,
+    image: productImage,
+    sku: product.sku || String(product.id || resolvedId),
+    brand: {
+      '@type': 'Brand',
+      name: 'Dosalga',
+    },
+    offers: {
+      '@type': 'Offer',
+      url: canonicalUrl,
+      priceCurrency: 'MXN',
+      price: product.price || product.sale_price || product.regular_price || undefined,
+      availability: productAvailability,
+      itemCondition: 'https://schema.org/NewCondition',
+    },
+  } : null;
 
   const renderStars = () => {
     const stars = [];
@@ -277,6 +307,28 @@ const ProductDefaultPage = () => {
 
   return (
     <>
+      <Head>
+        <title>{`${product.name} | Dosalga`}</title>
+        <meta name="description" content={seoDescription} />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:type" content="product" />
+        <meta property="og:title" content={`${product.name} | Dosalga`} />
+        <meta property="og:description" content={seoDescription} />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta property="og:image" content={productImage} />
+        <meta property="og:image:alt" content={displayImage.alt || product.name} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`${product.name} | Dosalga`} />
+        <meta name="twitter:description" content={seoDescription} />
+        <meta name="twitter:image" content={productImage} />
+        {productSchema && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+          />
+        )}
+      </Head>
+
       <div className="shop-details-top-section mt-110 mb-110">
         <div className="container-xl container-fluid-lg container">
           <div className="row gy-5">

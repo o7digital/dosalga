@@ -1,12 +1,13 @@
 import { Html, Head, Main, NextScript } from "next/document";
 
 export default function Document() {
+  const siteUrl = "https://dosalga.com";
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "Dosalga",
-    "url": "https://dosalga.com",
-    "logo": "https://dosalga.com/assets/img/sm-logo.svg",
+    "url": siteUrl,
+    "logo": `${siteUrl}/assets/img/sm-logo.svg`,
     "description": "Premium sportswear and activewear brand offering high-quality athletic clothing for an active lifestyle",
     "contactPoint": {
       "@type": "ContactPoint",
@@ -27,12 +28,12 @@ export default function Document() {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Dosalga",
-    "url": "https://dosalga.com",
+    "url": siteUrl,
     "potentialAction": {
       "@type": "SearchAction",
       "target": {
         "@type": "EntryPoint",
-        "urlTemplate": "https://dosalga.com/shop?search={search_term_string}"
+        "urlTemplate": `${siteUrl}/shop?search={search_term_string}`
       },
       "query-input": "required name=search_term_string"
     }

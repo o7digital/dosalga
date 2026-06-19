@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Head from 'next/head';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import ProductViewModal from '@/src/components/common/ProductViewModal';
@@ -18,6 +19,7 @@ const SORT_PRESETS = {
 
 const ShopPage = () => {
   const router = useRouter();
+  const siteUrl = 'https://dosalga.com';
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
   const [activeColumn] = useState('column-4');
   const [sortKey, setSortKey] = useState('newest');
@@ -128,6 +130,24 @@ const ShopPage = () => {
 
   return (
     <>
+      <Head>
+        <title>Shop Activewear & Lifestyle Products | Dosalga</title>
+        <meta
+          name="description"
+          content="Shop Dosalga activewear and lifestyle products. Browse premium sportswear, training apparel, and everyday essentials with secure checkout."
+        />
+        <link rel="canonical" href={`${siteUrl}${localePrefix}/shop`} />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Shop Activewear & Lifestyle Products | Dosalga" />
+        <meta
+          property="og:description"
+          content="Browse premium activewear, sportswear, and lifestyle products from Dosalga."
+        />
+        <meta property="og:url" content={`${siteUrl}${localePrefix}/shop`} />
+        <meta property="og:image" content={`${siteUrl}/assets/img/sm-logo.svg`} />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Head>
+
       <div className={`filter-sidebar ${isOpenSidebar ? 'slide' : ''}`} ref={sidebarRef}>
         <div className="sidebar-area">
           <div className="shop-widget mb-30">

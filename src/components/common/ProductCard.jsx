@@ -107,7 +107,7 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null, onImag
 
   // Liens de partage
   const shareLinks = useMemo(() => {
-    const url = encodeURIComponent(`https://www.dosalga.store/shop/product/${id}`);
+    const url = encodeURIComponent(`https://dosalga.com${localePrefix}/shop/product/${id}`);
     const text = encodeURIComponent(name);
     return {
       twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,

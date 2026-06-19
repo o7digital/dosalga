@@ -108,7 +108,7 @@ export default async function handler(req, res) {
       xml += `
   <!-- Product: ${product.name} -->
   <url>
-    <loc>${siteUrl}/shop/product/${product.slug}</loc>
+    <loc>${siteUrl}/shop/product/${product.id}</loc>
     <lastmod>${productDate.split('T')[0]}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
