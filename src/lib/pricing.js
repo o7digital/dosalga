@@ -10,8 +10,9 @@ export const parsePriceValue = (value) => {
   return Number.isFinite(numeric) ? numeric : null;
 };
 
-const DEFAULT_MXN_PER_USD = 17.23;
+const DEFAULT_MXN_PER_USD = 17.49;
 const PRICE_FIELDS = ['price', 'regular_price', 'sale_price'];
+const MXN_IMPORT_CUTOFF = '2026-08-03T00:00:00';
 
 export const getMXNPerUSD = () => {
   const configuredRate = parsePriceValue(process.env.NEXT_PUBLIC_MXN_PER_USD);
@@ -64,8 +65,38 @@ export const formatLocalizedPrice = (value, options = {}) => {
   return formatMXNPrice(value, options);
 };
 
-const formatWooPriceValue = (value) => {
-  const mxn = convertUSDToMXN(value);
+const getMetaValue = (product, key) => {
+  const entry = Array.isArray(product?.meta_data)
+    ? product.meta_data.find((meta) => meta?.key === key)
+    : null;
+
+  return entry?.value ?? null;
+};
+
+export const isImportedMXNProduct = (product) => {
+  const sourceCurrency = String(getMetaValue(product, 'dosalga_price_source_currency') || '').trim().toUpperCase();
+
+  if (sourceCurrency === 'MXN') {
+    return true;
+  }
+
+  const rawDate = product?.date_created || product?.date_created_gmt;
+  if (!rawDate) {
+    return false;
+  }
+
+  return String(rawDate).slice(0, 19) >= MXN_IMPORT_CUTOFF;
+};
+
+export const getWooProductMXNPrice = (product, value) => {
+  const numeric = parsePriceValue(value);
+  if (numeric === null) return null;
+
+  return isImportedMXNProduct(product) ? numeric : numeric * getMXNPerUSD();
+};
+
+const formatWooPriceValue = (product, value) => {
+  const mxn = getWooProductMXNPrice(product, value);
   if (mxn === null) return value;
   return mxn.toFixed(2);
 };
@@ -82,7 +113,7 @@ const normalizePriceField = (product, field) => {
 
   return {
     ...product,
-    [field]: formatWooPriceValue(value),
+    [field]: formatWooPriceValue(product, value),
   };
 };
 
@@ -98,7 +129,7 @@ export const normalizeWooProductPricesToMXN = (product) => {
     price_html: '',
     meta_data: [
       ...(Array.isArray(product.meta_data) ? product.meta_data : []),
-      { key: 'dosalga_price_source_currency', value: 'USD' },
+      { key: 'dosalga_price_source_currency', value: isImportedMXNProduct(product) ? 'MXN' : 'USD' },
       { key: 'dosalga_price_display_currency', value: 'MXN' },
       { key: 'dosalga_mxn_per_usd', value: String(getMXNPerUSD()) },
     ],

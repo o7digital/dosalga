@@ -3,6 +3,7 @@ const WooCommerceRestApi = require('@woocommerce/woocommerce-rest-api').default;
 const FALLBACK_WORDPRESS_URL = 'https://oliviers44.sg-host.com';
 const MAX_PRODUCTS_PER_PAGE = 100;
 const PRICE_FIELDS = ['regular_price', 'sale_price'];
+const MXN_IMPORT_CUTOFF = '2026-08-03T00:00:00';
 
 const parsePriceValue = (value) => {
   const raw = String(value ?? '').trim();
@@ -52,6 +53,13 @@ const getWritablePriceFields = (product) => {
 };
 
 const shouldConvertProduct = (product, sourcePrice) => {
+  const sourceCurrency = String(getMetaValue(product, 'dosalga_price_source_currency') || '').trim().toUpperCase();
+  const createdAt = String(product.date_created || product.date_created_gmt || '').slice(0, 19);
+
+  if (sourceCurrency === 'MXN' || createdAt >= MXN_IMPORT_CUTOFF) {
+    return false;
+  }
+
   const lastMXNPrice = parsePriceValue(getMetaValue(product, 'dosalga_last_mxn_price'));
 
   if (lastMXNPrice === null) {

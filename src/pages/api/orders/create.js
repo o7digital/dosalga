@@ -1,4 +1,4 @@
-import { convertUSDToMXN } from '@/src/lib/pricing';
+import { getWooProductMXNPrice } from '@/src/lib/pricing';
 
 const FALLBACK_WORDPRESS_URL = 'https://oliviers44.sg-host.com';
 
@@ -199,7 +199,7 @@ const syncOrderTotalWithExpectedSubtotal = async ({ orderId, lineItems }) => {
   return updatedOrder;
 };
 
-const ensureRestOrderLineItems = async ({ wcApi, order, orderLineItems }) => {
+const ensureRestOrderLineItems = async ({ wcApi, order, orderLineItems, debugId }) => {
   const existingLines = Array.isArray(order?.line_items) ? order.line_items : [];
 
   if (existingLines.length > 0 && parseAmount(order?.total, 0) > 0) {
@@ -212,6 +212,22 @@ const ensureRestOrderLineItems = async ({ wcApi, order, orderLineItems }) => {
     payment_method: 'stripe',
     payment_method_title: 'Credit / Debit Card',
     line_items: orderLineItems,
+  });
+
+  console.info(`[checkout:${debugId}] rest_order_repair_response`, {
+    orderId: repairedOrder?.id || order?.id || null,
+    total: repairedOrder?.total || null,
+    lineCount: Array.isArray(repairedOrder?.line_items) ? repairedOrder.line_items.length : null,
+    lines: Array.isArray(repairedOrder?.line_items)
+      ? repairedOrder.line_items.map((line) => ({
+          id: line.id,
+          productId: line.product_id,
+          variationId: line.variation_id,
+          quantity: line.quantity,
+          subtotal: line.subtotal,
+          total: line.total,
+        }))
+      : null,
   });
 
   return repairedOrder;
@@ -301,8 +317,12 @@ const createOrFindCustomer = async ({ wcApi, billing, shipping, accountPassword 
   const existingCustomer = await findCustomerByEmail(wcApi, email);
 
   if (existingCustomer?.id) {
+    const { data: updatedCustomer } = await wcApi.put(
+      `customers/${existingCustomer.id}`,
+      buildCustomerPayload({ billing, shipping, accountPassword: '' })
+    );
     return {
-      customer: existingCustomer,
+      customer: updatedCustomer,
       created: false,
       warning: 'Un compte client existe deja pour cet email. La commande a ete rattachee au client existant.',
     };
@@ -510,7 +530,7 @@ const buildRestOrderLineItems = (lineItems = []) => (
   ))
 );
 
-const resolveLineItemsWithWooMXNPrices = async ({ wcApi, lineItems = [] }) => {
+const resolveLineItemsWithWooMXNPrices = async ({ wcApi, lineItems = [], debugId }) => {
   const resolvedItems = await Promise.all(lineItems.map(async (item) => {
     const productId = Number.parseInt(item?.product_id, 10);
     const variationId = Number.parseInt(item?.variation_id, 10);
@@ -522,8 +542,20 @@ const resolveLineItemsWithWooMXNPrices = async ({ wcApi, lineItems = [] }) => {
         ? `products/${productId}/variations/${variationId}`
         : `products/${productId}`;
       const { data: wooProduct } = await wcApi.get(endpoint);
-      const wooUsdPrice = parseAmount(wooProduct?.price || wooProduct?.regular_price || wooProduct?.sale_price, NaN);
-      const mxnPrice = convertUSDToMXN(wooUsdPrice);
+      const wooPrice = parseAmount(wooProduct?.price || wooProduct?.regular_price || wooProduct?.sale_price, NaN);
+      const mxnPrice = getWooProductMXNPrice(wooProduct, wooPrice);
+
+      console.info(`[checkout:${debugId}] product_resolved`, {
+        requestedProductId: productId,
+        requestedVariationId: Number.isFinite(variationId) ? variationId : null,
+        wooProductId: wooProduct?.id || null,
+        wooParentId: wooProduct?.parent_id || null,
+        wooType: wooProduct?.type || null,
+        wooStatus: wooProduct?.status || null,
+        wooPurchasable: wooProduct?.purchasable ?? null,
+        wooPrice,
+        mxnPrice,
+      });
 
       if (!Number.isFinite(mxnPrice) || mxnPrice <= 0) return item;
 
@@ -532,7 +564,13 @@ const resolveLineItemsWithWooMXNPrices = async ({ wcApi, lineItems = [] }) => {
         unit_price: mxnPrice.toFixed(2),
       };
     } catch (error) {
-      console.error('Woo price resolve warning:', error?.response?.data || error?.message || error);
+      console.error(`[checkout:${debugId}] product_resolve_error`, {
+        productId,
+        variationId: Number.isFinite(variationId) ? variationId : null,
+        status: error?.response?.status || null,
+        response: error?.response?.data || null,
+        message: error?.message || String(error),
+      });
       return item;
     }
   }));
@@ -552,13 +590,14 @@ const createUsdRestOrder = async ({
   couponCode,
   couponDiscountAmount,
   requestedMetaData,
+  debugId,
 }) => {
   const { default: wcApi } = await import('@/src/lib/woocommerce');
   const currency = normalizeCurrencyCode(requestedCurrency);
   const normalizedCouponCode = normalizeCouponCode(couponCode);
-  const mxnLineItems = await resolveLineItemsWithWooMXNPrices({ wcApi, lineItems });
+  const mxnLineItems = await resolveLineItemsWithWooMXNPrices({ wcApi, lineItems, debugId });
   const orderLineItems = buildRestOrderLineItems(mxnLineItems);
-  console.info('[checkout] rest_order_input', {
+  console.info(`[checkout:${debugId}] rest_order_input`, {
     requestedItems: lineItems.length,
     restItems: orderLineItems.length,
     restSubtotal: getExpectedLineItemsSubtotal(mxnLineItems),
@@ -628,17 +667,34 @@ const createUsdRestOrder = async ({
     meta_data: orderMetaData,
   });
 
+  console.info(`[checkout:${debugId}] rest_order_create_response`, {
+    orderId: createdOrder?.id || null,
+    total: createdOrder?.total || null,
+    lineCount: Array.isArray(createdOrder?.line_items) ? createdOrder.line_items.length : null,
+    lines: Array.isArray(createdOrder?.line_items)
+      ? createdOrder.line_items.map((line) => ({
+          id: line.id,
+          productId: line.product_id,
+          variationId: line.variation_id,
+          quantity: line.quantity,
+          subtotal: line.subtotal,
+          total: line.total,
+        }))
+      : null,
+  });
+
   const repairedOrder = await ensureRestOrderLineItems({
     wcApi,
     order: createdOrder,
     orderLineItems,
+    debugId,
   });
 
   const order = await syncOrderTotalWithExpectedSubtotal({
     orderId: repairedOrder.id,
     lineItems: mxnLineItems,
   }) || repairedOrder;
-  console.info('[checkout] rest_order_created', {
+  console.info(`[checkout:${debugId}] rest_order_created`, {
     orderId: order.id,
     status: order.status,
     currency: order.currency,
@@ -721,6 +777,7 @@ export default async function handler(req, res) {
         couponCode,
         couponDiscountAmount,
         requestedMetaData,
+        debugId,
       });
 
       console.info(`[checkout:${debugId}] usd_order_ready_for_payment`, {
