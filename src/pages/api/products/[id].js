@@ -2,7 +2,7 @@
  * API Route: /api/products/[id]
  * Récupère un produit par ID depuis WooCommerce
  */
-import { getProduct, getProductVariations } from '@/src/lib/woocommerce';
+import { getProduct, getProductReviews, getProductVariations } from '@/src/lib/woocommerce';
 import { normalizeWooProductPricesToMXN, normalizeWooProductsPricesToMXN } from '@/src/lib/pricing';
 import { translateWooProductDescriptionsToSpanish } from '@/src/lib/productText';
 import { isProductVisible } from '@/src/lib/productVisibility';
@@ -39,11 +39,21 @@ export default async function handler(req, res) {
       variations = await getProductVariations(id);
     }
 
-    const productWithMxnPrices = normalizeWooProductPricesToMXN(product);
+    const reviews = await getProductReviews({ product: id, per_page: 100 });
+    const productWithReviews = {
+      ...product,
+      reviews: Array.isArray(reviews) ? reviews : [],
+    };
+    const productWithMxnPrices = normalizeWooProductPricesToMXN(productWithReviews);
     const normalizedProduct = String(lang).toLowerCase() === 'en'
       ? productWithMxnPrices
       : translateWooProductDescriptionsToSpanish(productWithMxnPrices);
-    const normalizedVariations = normalizeWooProductsPricesToMXN(variations);
+    const normalizedVariations = normalizeWooProductsPricesToMXN(
+      variations.map((variation) => ({
+        ...variation,
+        reviews: productWithReviews.reviews,
+      }))
+    );
 
     res.status(200).json({
       success: true,

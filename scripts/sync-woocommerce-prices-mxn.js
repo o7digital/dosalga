@@ -36,6 +36,32 @@ const getMetaValue = (product, key) => {
   return entry?.value ?? null;
 };
 
+const normalizeCurrencyMarkerText = (value) => {
+  return String(value || '')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .trim()
+    .toUpperCase();
+};
+
+const getProductCommentCurrency = (product) => {
+  const comments = Array.isArray(product.reviews) ? product.reviews : [];
+
+  for (const comment of comments) {
+    const text = normalizeCurrencyMarkerText(comment?.review || comment?.content?.rendered || comment?.content);
+
+    if (text.includes('MXN-PRICE') || text.includes('CURRENCY=MXN')) {
+      return 'MXN';
+    }
+
+    if (text.includes('CURRENCY=USD') || text.includes('USD-PRICE')) {
+      return 'USD';
+    }
+  }
+
+  return null;
+};
+
 const buildMetaData = ({ sourcePrice, convertedPrice, rate }) => [
   { key: 'dosalga_price_source_currency', value: 'USD' },
   { key: 'dosalga_price_display_currency', value: 'MXN' },
@@ -53,6 +79,11 @@ const getWritablePriceFields = (product) => {
 };
 
 const shouldConvertProduct = (product, sourcePrice) => {
+  const commentCurrency = getProductCommentCurrency(product);
+  if (commentCurrency) {
+    return commentCurrency === 'USD';
+  }
+
   const sourceCurrency = String(getMetaValue(product, 'dosalga_price_source_currency') || '').trim().toUpperCase();
   const createdAt = String(product.date_created || product.date_created_gmt || '').slice(0, 19);
 
@@ -67,6 +98,15 @@ const shouldConvertProduct = (product, sourcePrice) => {
   }
 
   return Math.abs(sourcePrice - lastMXNPrice) > 0.01;
+};
+
+const fetchProductReviews = async (api, productId) => {
+  const response = await api.get('products/reviews', {
+    product: productId,
+    per_page: MAX_PRODUCTS_PER_PAGE,
+  });
+
+  return Array.isArray(response.data) ? response.data : [];
 };
 
 const fetchAllProducts = async (api) => {
@@ -158,11 +198,14 @@ const updatePriceResource = async ({ api, resource, endpoint, rate, dryRun }) =>
 };
 
 const updateProduct = async ({ api, product, rate, dryRun }) => {
+  const reviews = await fetchProductReviews(api, product.id);
+  const productWithReviews = { ...product, reviews };
+
   if (product.type !== 'variable') {
     return [
       await updatePriceResource({
         api,
-        resource: product,
+        resource: productWithReviews,
         endpoint: `products/${product.id}`,
         rate,
         dryRun,
@@ -182,7 +225,7 @@ const updateProduct = async ({ api, product, rate, dryRun }) => {
     results.push(
       await updatePriceResource({
         api,
-        resource: variation,
+        resource: { ...variation, reviews },
         endpoint: `products/${product.id}/variations/${variation.id}`,
         rate,
         dryRun,

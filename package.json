@@ -8,6 +8,8 @@
     "vercel-build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "mark:currency-comments": "node scripts/mark-product-currency-comments.js",
+    "mark:currency-comments:dry-run": "node scripts/mark-product-currency-comments.js --dry-run",
     "sync:prices-mxn": "node scripts/sync-woocommerce-prices-mxn.js",
     "sync:prices-mxn:dry-run": "node scripts/sync-woocommerce-prices-mxn.js --dry-run"
   },

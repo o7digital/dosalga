@@ -2,7 +2,7 @@
  * API Route: /api/products
  * Récupère tous les produits depuis WooCommerce
  */
-import { getAllProducts, getProducts } from '@/src/lib/woocommerce';
+import { getAllProductReviews, getAllProducts, getProducts } from '@/src/lib/woocommerce';
 import { normalizeWooProductsPricesToMXN } from '@/src/lib/pricing';
 import { translateWooProductsDescriptionsToSpanish } from '@/src/lib/productText';
 import { isProductVisible } from '@/src/lib/productVisibility';
@@ -22,6 +22,26 @@ const normalizePerPage = (value, fallback) => {
 };
 
 const isTrue = (value) => value === true || value === 'true';
+
+const attachCurrencyReviews = async (products) => {
+  const reviews = await getAllProductReviews({ per_page: 100 });
+  const reviewsByProductId = new Map();
+
+  reviews.forEach((review) => {
+    const productId = Number(review?.product_id || review?.product);
+    if (!Number.isFinite(productId)) return;
+
+    reviewsByProductId.set(productId, [
+      ...(reviewsByProductId.get(productId) || []),
+      review,
+    ]);
+  });
+
+  return products.map((product) => ({
+    ...product,
+    reviews: reviewsByProductId.get(Number(product.id)) || [],
+  }));
+};
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store, max-age=0');
@@ -76,9 +96,10 @@ export default async function handler(req, res) {
       throw new Error('WooCommerce API returned unexpected payload (possibly captcha).');
     }
 
-    const normalizedProducts = normalizeWooProductsPricesToMXN(
+    const productsWithCurrencyReviews = await attachCurrencyReviews(
       products.filter((product) => isProductVisible(product))
     );
+    const normalizedProducts = normalizeWooProductsPricesToMXN(productsWithCurrencyReviews);
     const visibleProducts = String(lang).toLowerCase() === 'en'
       ? normalizedProducts
       : translateWooProductsDescriptionsToSpanish(normalizedProducts);

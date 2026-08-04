@@ -542,8 +542,17 @@ const resolveLineItemsWithWooMXNPrices = async ({ wcApi, lineItems = [], debugId
         ? `products/${productId}/variations/${variationId}`
         : `products/${productId}`;
       const { data: wooProduct } = await wcApi.get(endpoint);
+      const reviewProductId = Number(wooProduct?.parent_id || productId);
+      const { data: reviews } = await wcApi.get('products/reviews', {
+        product: reviewProductId,
+        per_page: 100,
+      });
+      const wooProductWithReviews = {
+        ...wooProduct,
+        reviews: Array.isArray(reviews) ? reviews : [],
+      };
       const wooPrice = parseAmount(wooProduct?.price || wooProduct?.regular_price || wooProduct?.sale_price, NaN);
-      const mxnPrice = getWooProductMXNPrice(wooProduct, wooPrice);
+      const mxnPrice = getWooProductMXNPrice(wooProductWithReviews, wooPrice);
 
       console.info(`[checkout:${debugId}] product_resolved`, {
         requestedProductId: productId,

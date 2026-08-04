@@ -234,3 +234,49 @@ export const getProductReviews = async (params = {}) => {
     throw error;
   }
 };
+
+export const getAllProductReviews = async (params = {}) => {
+  try {
+    const perPage = normalizePerPage(params.per_page);
+    const firstResponse = await api.get("products/reviews", {
+      ...params,
+      page: 1,
+      per_page: perPage,
+    });
+
+    const firstPageReviews = firstResponse.data;
+    if (!Array.isArray(firstPageReviews)) {
+      throw new Error("WooCommerce API returned an unexpected reviews payload for page 1.");
+    }
+
+    const totalPages = Number.parseInt(firstResponse.headers?.["x-wp-totalpages"] || "1", 10);
+    if (!Number.isFinite(totalPages) || totalPages <= 1) {
+      return firstPageReviews;
+    }
+
+    const remainingRequests = [];
+    for (let page = 2; page <= totalPages; page += 1) {
+      remainingRequests.push(
+        api.get("products/reviews", {
+          ...params,
+          page,
+          per_page: perPage,
+        })
+      );
+    }
+
+    const remainingResponses = await Promise.all(remainingRequests);
+    const remainingReviews = remainingResponses.flatMap((response, index) => {
+      if (!Array.isArray(response.data)) {
+        throw new Error(`WooCommerce API returned an unexpected reviews payload for page ${index + 2}.`);
+      }
+
+      return response.data;
+    });
+
+    return [...firstPageReviews, ...remainingReviews];
+  } catch (error) {
+    console.error("Error fetching all product reviews:", error);
+    throw error;
+  }
+};

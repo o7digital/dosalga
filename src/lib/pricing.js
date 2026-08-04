@@ -73,7 +73,47 @@ const getMetaValue = (product, key) => {
   return entry?.value ?? null;
 };
 
+const normalizeCurrencyMarkerText = (value) => {
+  return String(value || '')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .trim()
+    .toUpperCase();
+};
+
+export const getProductCommentCurrency = (product) => {
+  const comments = [
+    product?.currency_comment,
+    product?.price_currency_comment,
+    ...(Array.isArray(product?.reviews) ? product.reviews : []),
+  ];
+
+  for (const comment of comments) {
+    const text = normalizeCurrencyMarkerText(
+      typeof comment === 'string'
+        ? comment
+        : comment?.review || comment?.content?.rendered || comment?.content
+    );
+
+    if (text.includes('MXN-PRICE') || text.includes('CURRENCY=MXN')) {
+      return 'MXN';
+    }
+
+    if (text.includes('CURRENCY=USD') || text.includes('USD-PRICE')) {
+      return 'USD';
+    }
+  }
+
+  return null;
+};
+
 export const isImportedMXNProduct = (product) => {
+  const commentCurrency = getProductCommentCurrency(product);
+
+  if (commentCurrency) {
+    return commentCurrency === 'MXN';
+  }
+
   const sourceCurrency = String(getMetaValue(product, 'dosalga_price_source_currency') || '').trim().toUpperCase();
 
   if (sourceCurrency === 'MXN') {
