@@ -2,9 +2,10 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 
 const SITE_CODE = "dosalga";
-const LEAD_ENDPOINT = "https://www.o7digital.com/api/o7-lead";
-const CHAT_ENDPOINT = "https://www.o7digital.com/api/o7-chat";
-const OFFLINE = true;
+const OLIVIA_API = "https://olivia-ai.o7digital.com/api";
+const LEAD_ENDPOINT = `${OLIVIA_API}/widget/conversations`;
+const CHAT_ENDPOINT = `${OLIVIA_API}/olivia/chat`;
+const OFFLINE = false;
 
 const COPY = {
   es: {
@@ -136,6 +137,7 @@ function detectMessageLanguage(message, fallbackLanguage) {
 
 export default function OliviaChatDosalga() {
   const router = useRouter();
+  const [visitorId] = useState(() => `dosalga-${Date.now()}-${Math.random().toString(16).slice(2)}`);
   const firstSegment = router.asPath.split("/").filter(Boolean)[0];
   const language = ["en", "es", "fr", "de", "it", "pt"].includes(firstSegment) ? firstSegment : "en";
   const copy = COPY[language] || COPY.en;
@@ -172,14 +174,22 @@ export default function OliviaChatDosalga() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          firstName: lead.firstName.trim(),
-          lastName: lead.lastName.trim(),
+          clientCode: SITE_CODE,
+          visitorId,
+          visitorName: `${lead.firstName.trim()} ${lead.lastName.trim()}`.trim(),
           email: lead.email.trim(),
           phone: lead.phone.trim(),
           source: "Chat Olivia DOSALGA",
           language,
-          siteCode: SITE_CODE,
-          message: `Lead Chat Olivia DOSALGA (${language}, ${SITE_CODE})\n\n${transcript}`
+          content: `Lead Chat Olivia DOSALGA (${language})\n\nName: ${lead.firstName.trim()} ${lead.lastName.trim()}\nEmail: ${lead.email.trim()}\nPhone: ${lead.phone.trim()}`,
+          metadata: {
+            type: "lead",
+            firstName: lead.firstName.trim(),
+            lastName: lead.lastName.trim(),
+            pageUrl: typeof window !== "undefined" ? window.location.href : "",
+            pageTitle: typeof document !== "undefined" ? document.title : "",
+            transcript,
+          },
         })
       });
       if (!response.ok) throw new Error("lead failed");
@@ -206,7 +216,16 @@ export default function OliviaChatDosalga() {
       const response = await fetch(CHAT_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message, language: messageLanguage, siteCode: SITE_CODE })
+        body: JSON.stringify({
+          message,
+          language: messageLanguage,
+          clientCode: SITE_CODE,
+          visitorId,
+          metadata: {
+            pageUrl: typeof window !== "undefined" ? window.location.href : "",
+            pageTitle: typeof document !== "undefined" ? document.title : "",
+          },
+        })
       });
       const data = await response.json();
       setMessages((prev) => [...prev, { role: "assistant", content: data.reply || copy.error }]);
