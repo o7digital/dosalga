@@ -145,7 +145,7 @@ export default function OliviaChatDosalga() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [leadSent, setLeadSent] = useState(false);
+  const [leadSent, setLeadSent] = useState(true);
   const [lead, setLead] = useState({ firstName: "", lastName: "", email: "", phone: "" });
   const [messages, setMessages] = useState(
     OFFLINE
