@@ -40,6 +40,13 @@ const ShopPage = () => {
   const sidebarRef = useRef(null);
   const sidebarBtnRef = useRef(null);
 
+  const selectCategory = (categoryId = '') => {
+    setSelectedCategory(String(categoryId));
+    setLoadedProducts([]);
+    setPage(1);
+    setIsOpenSidebar(false);
+  };
+
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (
@@ -176,8 +183,7 @@ const ShopPage = () => {
                       type="button"
                       className={`category-filter-button ${selectedCategory ? '' : 'is-active'}`}
                       onClick={() => {
-                        setSelectedCategory('');
-                        setIsOpenSidebar(false);
+                        selectCategory('');
                     }}
                   >
                     {isSpanish ? 'Todos los productos' : 'All Products'}
@@ -189,8 +195,7 @@ const ShopPage = () => {
                       type="button"
                       className={`category-filter-button ${String(category.id) === selectedCategory ? 'is-active' : ''}`}
                       onClick={() => {
-                        setSelectedCategory(String(category.id));
-                        setIsOpenSidebar(false);
+                        selectCategory(category.id);
                       }}
                     >
                       {category.name} ({category.count})
@@ -275,7 +280,7 @@ const ShopPage = () => {
             <button
               type="button"
               className={`dosalga-chip ${selectedCategory ? '' : 'is-active'}`}
-              onClick={() => setSelectedCategory('')}
+              onClick={() => selectCategory('')}
             >
               {isSpanish ? 'Todos' : 'All'} ({totalCategoryCount || products.length})
             </button>
@@ -285,7 +290,7 @@ const ShopPage = () => {
                 key={category.id}
                 type="button"
                 className={`dosalga-chip ${String(category.id) === selectedCategory ? 'is-active' : ''}`}
-                onClick={() => setSelectedCategory(String(category.id))}
+                onClick={() => selectCategory(category.id)}
               >
                 {category.name} ({category.count})
               </button>
