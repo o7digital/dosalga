@@ -8,12 +8,19 @@ import {
   getProductVariations,
   getWooCommerceErrorDetails,
 } from '@/src/lib/woocommerce';
-import { normalizeWooProductPricesToMXN, normalizeWooProductsPricesToMXN } from '@/src/lib/pricing';
+import {
+  getWordPressPriceSourceCurrency,
+  normalizeWooProductPricesToMXN,
+  normalizeWooProductsPricesToMXN,
+} from '@/src/lib/pricing';
 import {
   normalizeWooProductTextToEnglish,
   translateWooProductDescriptionsToSpanish,
 } from '@/src/lib/productText';
-import { isProductVisible } from '@/src/lib/productVisibility';
+import {
+  isProductVisible,
+  preferDescriptionProductImages,
+} from '@/src/lib/productVisibility';
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store, max-age=0');
@@ -27,12 +34,14 @@ export default async function handler(req, res) {
   const { id, lang = 'es' } = req.query;
 
   try {
-    const product = await getProduct(id);
+    const sourceProduct = await getProduct(id);
 
     // Guard contre les réponses HTML/captcha
-    if (!product || typeof product !== 'object' || Array.isArray(product)) {
+    if (!sourceProduct || typeof sourceProduct !== 'object' || Array.isArray(sourceProduct)) {
       throw new Error('Réponse produit invalide (captcha ou HTML).');
     }
+
+    const product = preferDescriptionProductImages(sourceProduct);
 
     if (!isProductVisible(product)) {
       return res.status(404).json({
@@ -47,7 +56,9 @@ export default async function handler(req, res) {
       variations = await getProductVariations(id);
     }
 
-    const reviews = await getProductReviews({ product: id, per_page: 100 });
+    const reviews = getWordPressPriceSourceCurrency() === 'MXN'
+      ? []
+      : await getProductReviews({ product: id, per_page: 100 });
     const productWithReviews = {
       ...product,
       reviews: Array.isArray(reviews) ? reviews : [],

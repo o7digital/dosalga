@@ -8,12 +8,18 @@ import {
   getProducts,
   getWooCommerceErrorDetails,
 } from '@/src/lib/woocommerce';
-import { normalizeWooProductsPricesToMXN } from '@/src/lib/pricing';
+import {
+  getWordPressPriceSourceCurrency,
+  normalizeWooProductsPricesToMXN,
+} from '@/src/lib/pricing';
 import {
   normalizeWooProductsTextToEnglish,
   translateWooProductsDescriptionsToSpanish,
 } from '@/src/lib/productText';
-import { isProductVisible } from '@/src/lib/productVisibility';
+import {
+  isProductVisible,
+  preferDescriptionProductImages,
+} from '@/src/lib/productVisibility';
 
 const parsePositiveInteger = (value, fallback) => {
   const parsedValue = Number.parseInt(value, 10);
@@ -111,9 +117,12 @@ export default async function handler(req, res) {
       throw new Error('WooCommerce API returned unexpected payload (possibly captcha).');
     }
 
-    const productsWithCurrencyReviews = await attachCurrencyReviews(
-      products.filter((product) => isProductVisible(product))
-    );
+    const visibleSourceProducts = products
+      .map(preferDescriptionProductImages)
+      .filter((product) => isProductVisible(product));
+    const productsWithCurrencyReviews = getWordPressPriceSourceCurrency() === 'MXN'
+      ? visibleSourceProducts
+      : await attachCurrencyReviews(visibleSourceProducts);
     const normalizedProducts = normalizeWooProductsPricesToMXN(productsWithCurrencyReviews);
     const visibleProducts = String(lang).toLowerCase() === 'en'
       ? normalizeWooProductsTextToEnglish(normalizedProducts)

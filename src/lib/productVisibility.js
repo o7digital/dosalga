@@ -56,6 +56,40 @@ export const getVisibleProductImages = (product) => {
   });
 };
 
+const decodeHtmlUrl = (value) => String(value || '')
+  .replace(/&amp;/gi, '&')
+  .replace(/&#038;/gi, '&');
+
+export const getDescriptionProductImages = (product) => {
+  const html = [product?.description, product?.short_description]
+    .filter(Boolean)
+    .join(' ');
+  const matches = html.matchAll(/<img\b[^>]*\bsrc=["']([^"']+)["']/gi);
+  const urls = [...matches]
+    .map((match) => decodeHtmlUrl(match[1]))
+    .filter((src) => /^https?:\/\//i.test(src));
+
+  return [...new Set(urls)].map((src, index) => ({
+    id: `description-${index}`,
+    src,
+    thumbnail: src,
+    alt: product?.name || '',
+  }));
+};
+
+export const preferDescriptionProductImages = (product) => {
+  const descriptionImages = getDescriptionProductImages(product);
+
+  if (descriptionImages.length === 0) {
+    return product;
+  }
+
+  return {
+    ...product,
+    images: descriptionImages,
+  };
+};
+
 export const getPrimaryProductImageSrc = (product) => {
   const image = getVisibleProductImages(product)[0];
   return typeof image === 'string' ? image : image?.src || '';
