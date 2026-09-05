@@ -69,7 +69,12 @@ export const getDescriptionProductImages = (product) => {
     .map((match) => decodeHtmlUrl(match[1]))
     .filter((src) => /^https?:\/\//i.test(src));
 
-  return [...new Set(urls)].map((src, index) => ({
+  const uniqueUrls = [...new Set(urls)];
+  const orderedUrls = uniqueUrls.length > 1
+    ? [uniqueUrls[uniqueUrls.length - 1], ...uniqueUrls.slice(0, -1)]
+    : uniqueUrls;
+
+  return orderedUrls.map((src, index) => ({
     id: `description-${index}`,
     src,
     thumbnail: src,
