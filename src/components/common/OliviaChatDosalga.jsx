@@ -149,7 +149,8 @@ export default function OliviaChatDosalga() {
   // source route during a locale rewrite, which left the widget in English.
   const currentPath = typeof window !== "undefined" ? window.location.pathname : router.asPath;
   const firstSegment = currentPath.split("/").filter(Boolean)[0];
-  const language = ["en", "es", "fr", "de", "it", "pt"].includes(firstSegment) ? firstSegment : "en";
+  // DOSALGA MX is Spanish by default; only the explicit /en route is English.
+  const language = ["en", "es", "fr", "de", "it", "pt"].includes(firstSegment) ? firstSegment : "es";
   const copy = COPY[language] || COPY.en;
   const privacyCopy = {
     privacy: copy.privacy || COPY.en.privacy,
