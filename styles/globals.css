@@ -100,6 +100,10 @@ a {
   text-decoration: none;
 }
 
+.info-page .cover-copy h1 {
+  color: #fff;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
