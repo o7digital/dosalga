@@ -1,1 +1,2 @@
-export { default } from '../about-us';
+import Page from '@/src/components/common/DosalgaInfoPage';
+export default function Route(){return <Page page="about" language="en"/>}
