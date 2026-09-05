@@ -1,2 +1,2 @@
-import Page from '@/src/components/common/DosalgaInfoPage';
-export default function Route(){return <Page page="services" language="en"/>}
+import Page from '@/src/components/common/ServicesPremiumPage';
+export default function Route(){return <Page language="en"/>}

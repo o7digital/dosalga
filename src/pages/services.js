@@ -1,2 +1,1 @@
-import Page from '@/src/components/common/DosalgaInfoPage';
-export default function Route(){return <Page page="services"/>}
+export {default} from '@/src/components/common/ServicesPremiumPage';
