@@ -5,6 +5,7 @@ const SITE_CODE = "dosalga";
 const OLIVIA_API = "https://olivia-ai.o7digital.com/api";
 const LEAD_ENDPOINT = `${OLIVIA_API}/widget/conversations`;
 const CHAT_ENDPOINT = `${OLIVIA_API}/olivia/chat`;
+const IDENTITY_ENDPOINT = `${OLIVIA_API}/widget/identity`;
 const OFFLINE = false;
 
 const COPY = {
@@ -25,7 +26,10 @@ const COPY = {
     leadThanks: "Gracias. Tus datos fueron enviados y un asesor te contactara pronto.",
     placeholder: "Escribe tu pregunta...",
     send: "Enviar",
-    error: "No pude enviar el mensaje. Intenta de nuevo o contacta directamente a DOSALGA."
+    error: "No pude enviar el mensaje. Intenta de nuevo o contacta directamente a DOSALGA.",
+    privacy: "He leído y acepto el",
+    privacyLink: "Aviso de Privacidad",
+    privacyRequired: "Acepta el Aviso de Privacidad para poder chatear."
   },
   en: {
     title: "Olivia",
@@ -44,7 +48,10 @@ const COPY = {
     leadThanks: "Thanks. Your details were sent and an advisor will contact you soon.",
     placeholder: "Write your question...",
     send: "Send",
-    error: "I could not send the message. Please try again or contact DOSALGA directly."
+    error: "I could not send the message. Please try again or contact DOSALGA directly.",
+    privacy: "I have read and accept the",
+    privacyLink: "Privacy Notice",
+    privacyRequired: "Please accept the Privacy Notice to start the chat."
   },
   fr: {
     title: "Olivia",
@@ -138,13 +145,23 @@ function detectMessageLanguage(message, fallbackLanguage) {
 export default function OliviaChatDosalga() {
   const router = useRouter();
   const [visitorId] = useState(() => `dosalga-${Date.now()}-${Math.random().toString(16).slice(2)}`);
-  const firstSegment = router.asPath.split("/").filter(Boolean)[0];
-  const language = ["en", "es", "fr", "de", "it", "pt"].includes(firstSegment) ? firstSegment : "es";
+  // Use the browser pathname after hydration: Next can briefly expose the
+  // source route during a locale rewrite, which left the widget in English.
+  const currentPath = typeof window !== "undefined" ? window.location.pathname : router.asPath;
+  const firstSegment = currentPath.split("/").filter(Boolean)[0];
+  const language = ["en", "es", "fr", "de", "it", "pt"].includes(firstSegment) ? firstSegment : "en";
   const copy = COPY[language] || COPY.en;
+  const privacyCopy = {
+    privacy: copy.privacy || COPY.en.privacy,
+    privacyLink: copy.privacyLink || COPY.en.privacyLink,
+    privacyRequired: copy.privacyRequired || COPY.en.privacyRequired,
+  };
 
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [identity, setIdentity] = useState("");
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [leadSent, setLeadSent] = useState(true);
   const [lead, setLead] = useState({ firstName: "", lastName: "", email: "", phone: "" });
   const [messages, setMessages] = useState(
@@ -155,24 +172,33 @@ export default function OliviaChatDosalga() {
 
   useEffect(() => {
     if (OFFLINE) return;
-    setMessages((prev) => {
-      if (prev.length !== 1 || prev[0]?.role !== "assistant") return prev;
-      return [{ role: "assistant", content: copy.welcome }];
-    });
-  }, [copy.welcome]);
+    // A locale switch must also reset the visible greeting/transcript. Otherwise
+    // an already-open English conversation remains visible on the Spanish page.
+    setMessages([{ role: "assistant", content: copy.welcome }]);
+    setInput("");
+  }, [language, copy.welcome]);
+
+  useEffect(() => {
+    let active = true;
+    fetch(IDENTITY_ENDPOINT, { cache: "no-store" })
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error("identity failed")))
+      .then((data) => { if (active) setIdentity(data.identity || ""); })
+      .catch(() => { if (active) setIdentity(""); });
+    return () => { active = false; };
+  }, []);
 
   const transcript = useMemo(() => messages.map((msg) => `${msg.role}: ${msg.content}`).join("\n"), [messages]);
 
   const submitLead = async (event) => {
     event.preventDefault();
     if (OFFLINE) return;
-    if (!lead.firstName.trim() || !lead.lastName.trim() || !lead.email.trim() || !lead.phone.trim() || isLoading) return;
+    if (!lead.firstName.trim() || !lead.lastName.trim() || !lead.email.trim() || !lead.phone.trim() || isLoading || !identity) return;
 
     setIsLoading(true);
     try {
       const response = await fetch(LEAD_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "X-Olivia-Widget-Identity": identity },
         body: JSON.stringify({
           clientCode: SITE_CODE,
           visitorId,
@@ -205,8 +231,7 @@ export default function OliviaChatDosalga() {
   const sendMessage = async () => {
     if (OFFLINE) return;
     const message = input.trim();
-    if (!message || isLoading || !leadSent) return;
-    const messageLanguage = detectMessageLanguage(message, language);
+    if (!message || isLoading || !leadSent || !privacyAccepted || !identity) return;
 
     setInput("");
     setMessages((prev) => [...prev, { role: "user", content: message }]);
@@ -215,10 +240,10 @@ export default function OliviaChatDosalga() {
     try {
       const response = await fetch(CHAT_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "X-Olivia-Widget-Identity": identity },
         body: JSON.stringify({
           message,
-          language: messageLanguage,
+          language,
           clientCode: SITE_CODE,
           visitorId,
           metadata: {
@@ -228,6 +253,7 @@ export default function OliviaChatDosalga() {
         })
       });
       const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "chat failed");
       setMessages((prev) => [...prev, { role: "assistant", content: data.reply || copy.error }]);
     } catch {
       setMessages((prev) => [...prev, { role: "assistant", content: copy.error }]);
@@ -266,9 +292,15 @@ export default function OliviaChatDosalga() {
             </form>
           )}
 
+          <div className="olivia-dosalga-privacy">
+            <label>
+              <input type="checkbox" checked={privacyAccepted} onChange={(e) => setPrivacyAccepted(e.target.checked)} />
+              <span>{privacyCopy.privacy} <a href={language === "es" ? "/es/privacy-policy" : "/privacy-policy"} target="_blank" rel="noreferrer">{privacyCopy.privacyLink}</a>.</span>
+            </label>
+          </div>
           <div className="olivia-dosalga-composer">
-            <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") sendMessage(); }} disabled={OFFLINE || !leadSent || isLoading} placeholder={OFFLINE ? "Offline" : copy.placeholder} />
-            <button type="button" onClick={sendMessage} disabled={OFFLINE || isLoading || !leadSent} aria-label={copy.send}>{">"}</button>
+            <input value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") sendMessage(); }} disabled={OFFLINE || !leadSent || isLoading || !privacyAccepted || !identity} placeholder={OFFLINE ? "Offline" : !privacyAccepted ? privacyCopy.privacyRequired : copy.placeholder} />
+            <button type="button" onClick={sendMessage} disabled={OFFLINE || isLoading || !leadSent || !privacyAccepted || !identity} aria-label={copy.send}>{">"}</button>
           </div>
         </section>
       )}
@@ -288,31 +320,36 @@ export default function OliviaChatDosalga() {
       <style jsx global>{`
         .olivia-dosalga-chat { position: fixed; right: 22px; bottom: 22px; z-index: 2147483646; font-family: system-ui, -apple-system, Segoe UI, sans-serif; }
         .olivia-dosalga-chat * { box-sizing: border-box; }
-        .olivia-dosalga-panel { width: min(390px, calc(100vw - 28px)); height: min(650px, calc(100vh - 110px)); margin-bottom: 14px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(255,255,255,.22); border-radius: 18px; background: #121214; color: #fff; box-shadow: 0 28px 90px rgba(0,0,0,.55); }
-        .olivia-dosalga-header { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 18px; background: linear-gradient(135deg, rgba(255,255,255,.16), rgba(0,0,0,.22)); border-bottom: 1px solid rgba(255,255,255,.2); }
+        .olivia-dosalga-panel { width: min(390px, calc(100vw - 28px)); height: min(650px, calc(100vh - 110px)); margin-bottom: 14px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(255,255,255,.14); border-radius: 26px; background: linear-gradient(145deg,#261b1b,#080808); color: #fff; box-shadow: 0 42px 72px -24px #000b,0 8px 24px -12px #d2000080,inset 0 1px #ffffff2b; animation:olivia-in .32s ease; }
+        .olivia-dosalga-header { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 17px 18px; background: linear-gradient(135deg,#080808,#3b1212); border-bottom: 1px solid #d2000073; }
         .olivia-dosalga-title { margin: 0; color: #fff; font-size: 18px; font-weight: 900; line-height: 1.2; }
-        .olivia-dosalga-status { margin: 4px 0 0; color: rgba(255,255,255,.7); font-size: 13px; }
+        .olivia-dosalga-status { margin: 4px 0 0; color: rgba(255,255,255,.7); font-size: 13px; }.olivia-dosalga-status:before{content:'';display:inline-block;width:8px;height:8px;margin-right:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 4px #22c55e25}
         .olivia-dosalga-close,.olivia-dosalga-toggle,.olivia-dosalga-teaser,.olivia-dosalga-lead button,.olivia-dosalga-composer button { border: 0; cursor: pointer; font: inherit; }
-        .olivia-dosalga-close { width: 38px; height: 38px; border-radius: 12px; background: rgba(255,255,255,.18); color: #fff; font-weight: 900; }
-        .olivia-dosalga-messages { flex: 1; min-height: 180px; overflow-y: auto; padding: 16px; background: linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px), #111; background-size: 100% 42px; }
-        .olivia-dosalga-message { width: fit-content; max-width: 88%; margin: 0 0 10px; padding: 11px 13px; border-radius: 16px; font-size: 14px; line-height: 1.45; white-space: pre-wrap; }
-        .olivia-dosalga-message.assistant { background: rgba(255,255,255,.1); color: #fff; }
-        .olivia-dosalga-message.user { margin-left: auto; background: #fff; color: #111; }
+        .olivia-dosalga-close { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.15); color: #fff; font-weight: 900; }
+        .olivia-dosalga-messages { flex: 1; min-height: 180px; overflow-y: auto; padding: 17px; background: #171717; }
+        .olivia-dosalga-message { width: fit-content; max-width: 88%; margin: 0 0 10px; padding: 11px 13px; border-radius: 18px 18px 18px 6px; font-size: 14px; line-height: 1.45; white-space: pre-wrap; box-shadow:0 8px 18px #0003; animation:olivia-msg .25s ease both; }
+        .olivia-dosalga-message.assistant { background: #2a2a2a; color: #fff; }
+        .olivia-dosalga-message.user { margin-left: auto; background: #d20000; color: #fff; border-radius:18px 18px 6px 18px; }
         .olivia-dosalga-lead { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; padding: 14px; background: #181818; border-top: 1px solid rgba(255,255,255,.1); }
         .olivia-dosalga-lead p,.olivia-dosalga-lead button { grid-column: 1 / -1; }
         .olivia-dosalga-lead p { margin: 0; color: rgba(255,255,255,.72); font-size: 13px; line-height: 1.4; }
         .olivia-dosalga-lead input,.olivia-dosalga-composer input { width: 100%; min-width: 0; border: 1px solid rgba(255,255,255,.25); border-radius: 12px; background: rgba(255,255,255,.08); color: #fff; font: inherit; font-size: 14px; outline: none; }
         .olivia-dosalga-lead input { padding: 11px; }
         .olivia-dosalga-lead input::placeholder,.olivia-dosalga-composer input::placeholder { color: rgba(255,255,255,.58); }
-        .olivia-dosalga-lead button,.olivia-dosalga-composer button,.olivia-dosalga-toggle { background: #fff; color: #111; font-weight: 900; }
+        .olivia-dosalga-lead button,.olivia-dosalga-composer button,.olivia-dosalga-toggle { background: #d20000; color: #fff; font-weight: 900; }
         .olivia-dosalga-lead button { padding: 12px 14px; border-radius: 12px; }
         .olivia-dosalga-composer { display: grid; grid-template-columns: 1fr 52px; gap: 9px; padding: 14px; background: #121214; border-top: 1px solid rgba(255,255,255,.1); }
+        .olivia-dosalga-privacy { padding: 10px 14px 0; background: #121214; color: rgba(255,255,255,.72); font-size: 12px; line-height: 1.35; }
+        .olivia-dosalga-privacy label { display: flex; gap: 8px; align-items: flex-start; cursor: pointer; }
+        .olivia-dosalga-privacy input { margin: 3px 0 0; accent-color: #fff; }
+        .olivia-dosalga-privacy a { color: #fff; text-decoration: underline; font-weight: 700; }
         .olivia-dosalga-composer input { padding: 12px 13px; }
         .olivia-dosalga-composer button { border-radius: 12px; font-size: 20px; }
         .olivia-dosalga-composer button:disabled,.olivia-dosalga-lead button:disabled,.olivia-dosalga-composer input:disabled { opacity: .58; cursor: not-allowed; }
         .olivia-dosalga-closed { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
-        .olivia-dosalga-teaser { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid rgba(255,255,255,.3); border-radius: 999px; background: #121214; color: #fff; box-shadow: 0 18px 42px rgba(0,0,0,.35); }
-        .olivia-dosalga-avatar { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: #fff; color: #111; font-weight: 900; }
+        .olivia-dosalga-teaser { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid #d2000080; border-radius: 999px; background: #111; color: #fff; box-shadow: 0 24px 42px -18px #0009,inset 0 1px #ffffff1a; font-weight:800; }
+        .olivia-dosalga-avatar { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: #d20000; color: #fff; font-weight: 900; }
+        @keyframes olivia-in{from{opacity:0;transform:translateY(24px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes olivia-msg{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
         .olivia-dosalga-toggle { min-width: 78px; height: 68px; padding: 0 14px; border-radius: 999px; box-shadow: 0 16px 44px rgba(0,0,0,.42); }
         @media (max-width: 560px) { .olivia-dosalga-chat { right: 14px; bottom: 14px; } .olivia-dosalga-lead { grid-template-columns: 1fr; } }
       `}</style>
