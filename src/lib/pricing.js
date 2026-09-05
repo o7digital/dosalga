@@ -132,6 +132,10 @@ export const getWooProductMXNPrice = (product, value) => {
   const numeric = parsePriceValue(value);
   if (numeric === null) return null;
 
+  if (getWordPressPriceSourceCurrency() === 'MXN') {
+    return numeric;
+  }
+
   return isImportedMXNProduct(product) ? numeric : numeric * getMXNPerUSD();
 };
 
@@ -163,13 +167,16 @@ export const normalizeWooProductPricesToMXN = (product) => {
   }
 
   const normalizedProduct = PRICE_FIELDS.reduce(normalizePriceField, product);
+  const sourceCurrency = getWordPressPriceSourceCurrency() === 'MXN' || isImportedMXNProduct(product)
+    ? 'MXN'
+    : 'USD';
 
   return {
     ...normalizedProduct,
     price_html: '',
     meta_data: [
       ...(Array.isArray(product.meta_data) ? product.meta_data : []),
-      { key: 'dosalga_price_source_currency', value: isImportedMXNProduct(product) ? 'MXN' : 'USD' },
+      { key: 'dosalga_price_source_currency', value: sourceCurrency },
       { key: 'dosalga_price_display_currency', value: 'MXN' },
       { key: 'dosalga_mxn_per_usd', value: String(getMXNPerUSD()) },
     ],
