@@ -4,10 +4,10 @@ import { useRouter } from 'next/router';
 
 const FooterUomo = () => {
     const [email, setEmail] = useState('');
-    const { pathname } = useRouter();
+    const router = useRouter();
     const lang = (() => {
-        const code = pathname.split('/')[1];
         const supported = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+        const code = router.asPath.split('?')[0].split('/')[1];
         return supported.includes(code) ? code : 'es';
     })();
 

@@ -4,7 +4,7 @@
  */
 import { getCategories, getWooCommerceErrorDetails } from '@/src/lib/woocommerce';
 import { isHiddenCreamCategory } from '@/src/lib/productVisibility';
-import { translateCategoriesToSpanish } from '@/src/lib/productText';
+import { normalizeCategoriesToEnglish, translateCategoriesToSpanish } from '@/src/lib/productText';
 
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store, max-age=0');
@@ -28,7 +28,7 @@ export default async function handler(req, res) {
       ? categories.filter((category) => !isHiddenCreamCategory(category))
       : [];
     const visibleCategories = String(lang).toLowerCase() === 'en'
-      ? filteredCategories
+      ? normalizeCategoriesToEnglish(filteredCategories)
       : translateCategoriesToSpanish(filteredCategories);
     
     res.status(200).json({

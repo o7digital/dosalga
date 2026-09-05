@@ -44,8 +44,10 @@ const ProductDefaultPage = () => {
   const router = useRouter();
   const { addToCart } = useCart();
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
-  const localeSegment = router.pathname.split('/')[1];
-  const currentLang = supportedLocales.includes(localeSegment) ? localeSegment : 'es';
+  const localeSegment = router.asPath.split('?')[0].split('/')[1];
+  const currentLang = localeSegment === 'en'
+    ? 'en'
+    : supportedLocales.includes(localeSegment) ? localeSegment : 'es';
   const isSpanish = currentLang === 'es';
   const localePrefix = currentLang === 'es' ? '' : `/${currentLang}`;
   const formatPrice = (value) => formatLocalizedPrice(value, { pathname: router.pathname });
@@ -255,7 +257,7 @@ const ProductDefaultPage = () => {
   const handleBuyNow = () => {
     const added = handleAddToCart();
     if (added) {
-      router.push('/shop/checkout');
+      router.push(`${localePrefix}/shop/checkout`);
     }
   };
 

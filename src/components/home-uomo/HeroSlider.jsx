@@ -6,8 +6,8 @@ import { useRouter } from 'next/router';
 const HeroSlider = () => {
     const router = useRouter();
     const lang = (() => {
-        const code = router.pathname.split('/')[1];
         const supported = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+        const code = router.asPath.split('?')[0].split('/')[1];
         return supported.includes(code) ? code : 'es';
     })();
 
@@ -227,7 +227,7 @@ const HeroSlider = () => {
                                 <span className="badge">{slide.badge}</span>
                                 <h1 className="title">{slide.title}</h1>
                                 {slide.subtitle && <p className="subtitle">{slide.subtitle}</p>}
-                                <Link legacyBehavior href={lang === 'en' ? "/shop" : `/${lang}/shop`}>
+                                <Link legacyBehavior href={`/${lang}/shop`}>
                                     <a className="shop-link">{slide.cta}</a>
                                 </Link>
                             </div>

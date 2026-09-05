@@ -29,8 +29,10 @@ const ShopPage = () => {
   const [loadedProducts, setLoadedProducts] = useState([]);
   const [hiddenImageProductIds, setHiddenImageProductIds] = useState([]);
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
-  const localeSegment = router.pathname.split('/')[1];
-  const currentLang = supportedLocales.includes(localeSegment) ? localeSegment : 'es';
+  const localeSegment = router.asPath.split('?')[0].split('/')[1];
+  const currentLang = localeSegment === 'en'
+    ? 'en'
+    : supportedLocales.includes(localeSegment) ? localeSegment : 'es';
   const isSpanish = currentLang === 'es';
   const localePrefix = currentLang === 'es' ? '' : `/${currentLang}`;
   const formatPrice = (value) => formatLocalizedPrice(value, { pathname: router.pathname });
@@ -97,6 +99,14 @@ const ShopPage = () => {
   useEffect(() => {
     setPage(1);
   }, [currentLang, selectedCategory, sortKey]);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const category = Array.isArray(router.query.category)
+      ? router.query.category[0]
+      : router.query.category;
+    setSelectedCategory(category ? String(category) : '');
+  }, [router.isReady, router.query.category]);
 
   const visibleProducts = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();

@@ -139,7 +139,7 @@ export default function OliviaChatDosalga() {
   const router = useRouter();
   const [visitorId] = useState(() => `dosalga-${Date.now()}-${Math.random().toString(16).slice(2)}`);
   const firstSegment = router.asPath.split("/").filter(Boolean)[0];
-  const language = ["en", "es", "fr", "de", "it", "pt"].includes(firstSegment) ? firstSegment : "en";
+  const language = ["en", "es", "fr", "de", "it", "pt"].includes(firstSegment) ? firstSegment : "es";
   const copy = COPY[language] || COPY.en;
 
   const [isOpen, setIsOpen] = useState(false);

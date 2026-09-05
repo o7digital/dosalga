@@ -34,6 +34,9 @@ export default function App({ Component, pageProps }) {
           content="width=device-width, initial-scale=1.0"
         ></meta>
         <meta name="description" content="DOSALGA - Premium sportswear and active lifestyle products" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/assets/img/sm-logo.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </Head>
       <Script
         id="Cookiebot"

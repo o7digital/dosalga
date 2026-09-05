@@ -18,8 +18,10 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null, onImag
   const [rating, setRating] = useState(0);
   const [imageFailed, setImageFailed] = useState(false);
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
-  const localeSegment = router.pathname.split('/')[1];
-  const currentLang = supportedLocales.includes(localeSegment) ? localeSegment : 'es';
+  const localeSegment = router.asPath.split('?')[0].split('/')[1];
+  const currentLang = localeSegment === 'en'
+    ? 'en'
+    : supportedLocales.includes(localeSegment) ? localeSegment : 'es';
   const localePrefix = currentLang === 'es' ? '' : `/${currentLang}`;
   const isSpanish = currentLang === 'es';
   const formatPrice = (value) => formatLocalizedPrice(value, { pathname: router.pathname });
@@ -49,6 +51,9 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null, onImag
 
   // Extraire le nom de la première catégorie
   const categoryName = categories[0]?.name || 'Produit';
+  const categoryLink = categories[0]?.id
+    ? `${localePrefix}/shop?category=${encodeURIComponent(categories[0].id)}`
+    : `${localePrefix}/shop`;
 
   // Calculer le pourcentage de réduction
   const discountPercentage = on_sale && regular_price && sale_price
@@ -108,14 +113,14 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null, onImag
 
   // Liens de partage
   const shareLinks = useMemo(() => {
-    const url = encodeURIComponent(`https://www.dosalga.store/shop/product/${id}`);
+    const url = encodeURIComponent(`https://www.dosalga.online${productLink}`);
     const text = encodeURIComponent(name);
     return {
-      twitter: `https://twitter.com/intent/tweet?url=${url}&text=${text}`,
+      twitter: `https://x.com/intent/post?url=${url}&text=${text}`,
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
       whatsapp: `https://api.whatsapp.com/send?text=${text}%20${url}`,
     };
-  }, [id, name]);
+  }, [name, productLink]);
 
   const handleAddToCart = (e) => {
     e.preventDefault();
@@ -285,7 +290,7 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null, onImag
           </Link>
         </h6>
         <p>
-          <Link legacyBehavior href={`/category/${categories[0]?.slug || ''}`}>
+          <Link legacyBehavior href={categoryLink}>
             <a>{categoryName}</a>
           </Link>
         </p>

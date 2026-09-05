@@ -1,11 +1,36 @@
 const DESCRIPTION_FIELDS = ['description', 'short_description'];
 const TEXT_FIELDS = ['name', ...DESCRIPTION_FIELDS];
+const CATEGORY_NAME_ENGLISH_OVERRIDES = {
+  bags: 'Bags',
+  bikes: 'Bikes',
+  briefcase: 'Briefcases',
+  corbatas: 'Ties',
+  electronics: 'Electronics',
+  garden: 'Garden',
+  'men-jacket': "Men's Jackets",
+  'men-sweater': "Men's Sweaters",
+  'mens-shoes': "Men's Shoes",
+  'mens-tshirts': "Men's T-Shirts",
+  scooters: 'Scooters',
+  shoes: 'Shoes',
+  'travel-bags': 'Travel Bags',
+  watches: 'Watches',
+  'womens-sportswear': "Women's Sportswear",
+  'womens-swimsuit': "Women's Swimwear",
+  'womens-jackets': "Women's Jackets",
+  'womens-leggings': "Women's Leggings",
+};
 const CATEGORY_NAME_OVERRIDES = {
   bags: 'Bolsos',
+  bikes: 'Bicicletas',
   briefcase: 'Maletines',
   corbatas: 'Corbatas',
-  electronics: 'Electronica',
-  garden: 'Jardin',
+  electronics: 'Electrónica',
+  garden: 'Jardín',
+  'men-jacket': 'Chaquetas para hombre',
+  'men-sweater': 'Suéteres para hombre',
+  'mens-shoes': 'Calzado para hombre',
+  'mens-tshirts': 'Camisetas para hombre',
   'men sweater': 'Sueteres para hombre',
   'mens sweater': 'Sueteres para hombre',
   "men's sweater": 'Sueteres para hombre',
@@ -14,12 +39,71 @@ const CATEGORY_NAME_OVERRIDES = {
   scooters: 'Scooters',
   shoes: 'Zapatos',
   'travel bags': 'Bolsos de viaje',
+  'travel-bags': 'Bolsos de viaje',
   watches: 'Relojes',
+  'womens-sportswear': 'Ropa deportiva para mujer',
+  'womens-swimsuit': 'Trajes de baño para mujer',
+  'womens-jackets': 'Chaquetas para mujer',
+  'womens-leggings': 'Leggings para mujer',
   'womens jackets': 'Chaquetas para mujer',
   "women's jackets": 'Chaquetas para mujer',
 };
 
+const PRODUCT_NAME_OVERRIDES = {
+  'printed pink conjoined lady maternity swimsuit swimsuit': 'Traje de baño premamá rosa estampado de una pieza',
+  'printed one piece conservative surf swimsuit smalllong': 'Traje de baño conservador estampado de una pieza para surf',
+  "women's large one piece swimsuit": 'Traje de baño de una pieza para mujer talla grande',
+  'solid cross back swimsuit one piece backless swimwear': 'Traje de baño de una pieza con espalda cruzada y descubierta',
+  "women's one piece boxer swimsuit small breasts gather to cover the belly": 'Traje de baño tipo bóxer de una pieza con control abdominal para mujer',
+  'one-piece halterneck all-in-one bikini print': 'Bikini estampado de una pieza con cuello halter',
+  'muslim flower print ladies conservative swimsuit': 'Traje de baño conservador con estampado floral para mujer',
+  'mesh one-piece swimsuit ladies': 'Traje de baño de una pieza con malla para mujer',
+  "women's sports one piece swimsuit conservative color blocking europe and america": 'Traje de baño deportivo conservador de una pieza con bloques de color',
+  'bikini beach vacation bottoming jumpsuit low cut': 'Mono de playa tipo bikini con escote pronunciado',
+  'women control one piece swimsuits retro bathing suit halter swimwear': 'Traje de baño retro de una pieza con control y cuello halter',
+  "women's fashion casual bikini one piece swimsuit": 'Bikini casual de moda de una pieza para mujer',
+  'pearl spaghetti straps one-piece swimsuit slimming women': 'Traje de baño moldeador de una pieza con tirantes finos y perlas',
+  'one piece bikini with metal chain and shoulder strap': 'Bikini de una pieza con cadena metálica y tirante',
+  'triangle sexy swimsuit': 'Traje de baño triangular',
+  "women's bikini swimsuit": 'Bikini para mujer',
+  'one piece swimsuit bikini covering belly thin': 'Traje de baño de una pieza con cobertura abdominal',
+  'european and american one-piece swimsuit lily one-piece': 'Traje de baño europeo y americano de una pieza estilo lirio',
+  'swimsuit parent-child bikini one-piece bikini': 'Bikini familiar de una pieza',
+  'printed one-piece loose plus size comfort swimsuit': 'Traje de baño holgado estampado de una pieza en talla grande',
+  'new zipper one piece swimsuit europe and america': 'Traje de baño nuevo de una pieza con cierre',
+  'maternity swimwear solid color pull-edge new hot sale bikini': 'Bikini premamá liso con ribete',
+  'ladies long sleeve panel conservative swimwear': 'Traje de baño conservador de manga larga con paneles',
+  "women's solid color v-neck sling one piece swimsuit": 'Traje de baño liso de una pieza con escote en V y tirantes',
+};
+
 const SPANISH_REPLACEMENTS = [
+  ['asian sizes are 1 to 2 sizes smaller than european and american people', 'las tallas asiaticas son de 1 a 2 tallas menores que las europeas y americanas'],
+  ['choose the larger size if your size between two sizes', 'elige la talla mayor si estas entre dos tallas'],
+  ['please allow 2-3cm differences due to manual measurement', 'considera una diferencia de 2 a 3 cm debido a la medicion manual'],
+  ['please check the size chart carefully before you buy the item', 'consulta cuidadosamente la tabla de tallas antes de comprar'],
+  ["if you don't know how to choose size", 'si no sabes que talla elegir'],
+  ['please contact our customer service', 'contacta a nuestro servicio al cliente'],
+  ['the different computers display colors differently', 'las pantallas pueden mostrar los colores de manera diferente'],
+  ['different computers display colors differently', 'las pantallas pueden mostrar los colores de manera diferente'],
+  ['the color of the actual item may vary slightly from the following images', 'el color real del articulo puede variar ligeramente respecto a las imagenes'],
+  ['fabric composition content', 'contenido de la composicion del tejido'],
+  ['lining composition content', 'contenido de la composicion del forro'],
+  ['fabric composition', 'composicion del tejido'],
+  ['lining composition', 'composicion del forro'],
+  ['fabric name', 'tejido'],
+  ['lining name', 'forro'],
+  ['as you know', 'como sabes'],
+  ['one piece', 'una pieza'],
+  ['one-piece', 'una pieza'],
+  ['swimsuits', 'trajes de baño'],
+  ['swimsuit', 'traje de baño'],
+  ['swimwear', 'ropa de baño'],
+  ['bathing suit', 'traje de baño'],
+  ['maternity', 'premamá'],
+  ['backless', 'espalda descubierta'],
+  ['halter neck', 'cuello halter'],
+  ['halterneck', 'cuello halter'],
+  ['spandex', 'elastano'],
   ['cross-border', 'importacion'],
   ['briefcases', 'maletines'],
   ['briefcase', 'maletin'],
@@ -266,7 +350,7 @@ const applyReplacements = (text) => {
 };
 
 export const translateProductTextToSpanish = (value) => {
-  const raw = String(value ?? '');
+  const raw = String(value ?? '').replace(/&(?:amp;)?nbsp;/gi, ' ');
   if (!raw.trim()) return value;
 
   return raw
@@ -275,12 +359,39 @@ export const translateProductTextToSpanish = (value) => {
     .join('');
 };
 
+export const translateProductNameToSpanish = (value) => {
+  const raw = String(value ?? '').trim();
+  if (!raw) return value;
+
+  const override = PRODUCT_NAME_OVERRIDES[raw.toLowerCase()];
+  const translated = override || translateProductTextToSpanish(raw);
+  return translated.charAt(0).toUpperCase() + translated.slice(1);
+};
+
+const getCategoryKey = (category) => String(category?.slug || category?.name || '').trim().toLowerCase();
+
+export const normalizeCategoryToEnglish = (category) => {
+  if (!category || typeof category !== 'object' || !category.name) {
+    return category;
+  }
+
+  return {
+    ...category,
+    name: CATEGORY_NAME_ENGLISH_OVERRIDES[getCategoryKey(category)] || category.name,
+  };
+};
+
+export const normalizeCategoriesToEnglish = (categories) => {
+  return Array.isArray(categories) ? categories.map(normalizeCategoryToEnglish) : categories;
+};
+
 export const translateCategoryToSpanish = (category) => {
   if (!category || typeof category !== 'object' || !category.name) {
     return category;
   }
 
-  const override = CATEGORY_NAME_OVERRIDES[String(category.name).trim().toLowerCase()];
+  const override = CATEGORY_NAME_OVERRIDES[getCategoryKey(category)]
+    || CATEGORY_NAME_OVERRIDES[String(category.name).trim().toLowerCase()];
 
   return {
     ...category,
@@ -314,7 +425,9 @@ export const translateWooProductTextToSpanish = (product) => {
 
     return {
       ...nextProduct,
-      [field]: translateProductTextToSpanish(value),
+      [field]: field === 'name'
+        ? translateProductNameToSpanish(value)
+        : translateProductTextToSpanish(value),
     };
   }, product);
 
@@ -340,6 +453,21 @@ export const translateWooProductsDescriptionsToSpanish = (products) => {
   }
 
   return products.map(translateWooProductTextToSpanish);
+};
+
+export const normalizeWooProductTextToEnglish = (product) => {
+  if (!product || typeof product !== 'object' || Array.isArray(product)) {
+    return product;
+  }
+
+  return {
+    ...product,
+    categories: normalizeCategoriesToEnglish(product.categories),
+  };
+};
+
+export const normalizeWooProductsTextToEnglish = (products) => {
+  return Array.isArray(products) ? products.map(normalizeWooProductTextToEnglish) : products;
 };
 
 export const translateWooProductDescriptionsFieldsToSpanish = (product) => {

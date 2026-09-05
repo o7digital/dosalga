@@ -9,7 +9,10 @@ import {
   getWooCommerceErrorDetails,
 } from '@/src/lib/woocommerce';
 import { normalizeWooProductPricesToMXN, normalizeWooProductsPricesToMXN } from '@/src/lib/pricing';
-import { translateWooProductDescriptionsToSpanish } from '@/src/lib/productText';
+import {
+  normalizeWooProductTextToEnglish,
+  translateWooProductDescriptionsToSpanish,
+} from '@/src/lib/productText';
 import { isProductVisible } from '@/src/lib/productVisibility';
 
 export default async function handler(req, res) {
@@ -51,7 +54,7 @@ export default async function handler(req, res) {
     };
     const productWithMxnPrices = normalizeWooProductPricesToMXN(productWithReviews);
     const normalizedProduct = String(lang).toLowerCase() === 'en'
-      ? productWithMxnPrices
+      ? normalizeWooProductTextToEnglish(productWithMxnPrices)
       : translateWooProductDescriptionsToSpanish(productWithMxnPrices);
     const normalizedVariations = normalizeWooProductsPricesToMXN(
       variations.map((variation) => ({

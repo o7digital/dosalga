@@ -11,8 +11,8 @@ const HeaderUomo = () => {
     const [scrolled, setScrolled] = useState(false);
     const router = useRouter();
     const lang = (() => {
-        const code = router.pathname.split('/')[1];
         const supported = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+        const code = router.asPath.split('?')[0].split('/')[1];
         return supported.includes(code) ? code : 'es';
     })();
 
@@ -22,7 +22,9 @@ const HeaderUomo = () => {
         contact: { en: 'CONTACT', es: 'CONTACTO', de: 'KONTAKT', fr: 'CONTACT', it: 'CONTATTI', pt: 'CONTATO' },
     };
 
-    const localizedPath = (slug) => (lang === 'en' ? `/${slug}` : `/${lang}/${slug}`);
+    const localizedPath = (slug) => `/${lang}/${slug}`;
+    const localizedHome = lang === 'es' ? '/' : `/${lang}`;
+    const localizedWishlist = `/${lang}/shop/whistlist`;
 
     useEffect(() => {
         const handleScroll = () => {
@@ -52,7 +54,7 @@ const HeaderUomo = () => {
                     <div className="header-wrapper d-flex align-items-center justify-content-between">
                         {/* Logo */}
                         <div className="header-logo">
-                            <Link legacyBehavior href="/">
+                            <Link legacyBehavior href={localizedHome}>
                                 <a className="logo-link">
                                     <img src="/logo-dosalga.png" alt="Dosalga" className="logo-img" />
                                 </a>
@@ -108,7 +110,7 @@ const HeaderUomo = () => {
                             </button>
 
                             {/* Wishlist */}
-                            <Link legacyBehavior href="/shop/whistlist">
+                            <Link legacyBehavior href={localizedWishlist}>
                                 <a className="header-action-btn wishlist-btn" aria-label="Wishlist">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M10 18.35L8.55 17.03C3.4 12.36 0 9.27 0 5.5C0 2.41 2.42 0 5.5 0C7.24 0 8.91 0.81 10 2.08C11.09 0.81 12.76 0 14.5 0C17.58 0 20 2.41 20 5.5C20 9.27 16.6 12.36 11.45 17.03L10 18.35Z" fill="currentColor"/>
@@ -171,7 +173,7 @@ const HeaderUomo = () => {
                     <div className="mobile-menu-overlay" onClick={toggleMobileMenu}></div>
                     <div className="mobile-menu-content">
                         <div className="mobile-menu-header">
-                            <Link legacyBehavior href="/">
+                            <Link legacyBehavior href={localizedHome}>
                                 <a className="mobile-logo">
                                     <img src="/logo-dosalga.png" alt="Dosalga" />
                                 </a>
