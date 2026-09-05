@@ -2,7 +2,12 @@
  * API Route: /api/products/[id]
  * Récupère un produit par ID depuis WooCommerce
  */
-import { getProduct, getProductReviews, getProductVariations } from '@/src/lib/woocommerce';
+import {
+  getProduct,
+  getProductReviews,
+  getProductVariations,
+  getWooCommerceErrorDetails,
+} from '@/src/lib/woocommerce';
 import { normalizeWooProductPricesToMXN, normalizeWooProductsPricesToMXN } from '@/src/lib/pricing';
 import { translateWooProductDescriptionsToSpanish } from '@/src/lib/productText';
 import { isProductVisible } from '@/src/lib/productVisibility';
@@ -63,7 +68,7 @@ export default async function handler(req, res) {
       }
     });
   } catch (error) {
-    console.error(`Error fetching product ${id}:`, error);
+    console.error(`Error fetching product ${id}:`, getWooCommerceErrorDetails(error));
     res.status(500).json({ 
       success: false,
       message: 'Erreur lors de la récupération du produit',

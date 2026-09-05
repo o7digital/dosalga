@@ -2,7 +2,12 @@
  * API Route: /api/products
  * Récupère tous les produits depuis WooCommerce
  */
-import { getAllProductReviews, getAllProducts, getProducts } from '@/src/lib/woocommerce';
+import {
+  getAllProductReviews,
+  getAllProducts,
+  getProducts,
+  getWooCommerceErrorDetails,
+} from '@/src/lib/woocommerce';
 import { normalizeWooProductsPricesToMXN } from '@/src/lib/pricing';
 import { translateWooProductsDescriptionsToSpanish } from '@/src/lib/productText';
 import { isProductVisible } from '@/src/lib/productVisibility';
@@ -24,7 +29,14 @@ const normalizePerPage = (value, fallback) => {
 const isTrue = (value) => value === true || value === 'true';
 
 const attachCurrencyReviews = async (products) => {
-  const reviews = await getAllProductReviews({ per_page: 100 });
+  let reviews = [];
+
+  try {
+    reviews = await getAllProductReviews({ per_page: 100 });
+  } catch (error) {
+    console.warn('Product reviews unavailable; returning products without reviews.', getWooCommerceErrorDetails(error));
+  }
+
   const reviewsByProductId = new Map();
 
   reviews.forEach((review) => {
@@ -111,7 +123,7 @@ export default async function handler(req, res) {
       all: fetchAllProducts,
     });
   } catch (error) {
-    console.error('Error fetching products:', error);
+    console.error('Error fetching products:', getWooCommerceErrorDetails(error));
     res.status(500).json({ 
       success: false,
       message: 'Erreur lors de la récupération des produits',

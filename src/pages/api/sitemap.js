@@ -1,4 +1,4 @@
-import WooCommerceRestApi from "@woocommerce/woocommerce-rest-api";
+import wcApi, { getWooCommerceErrorDetails } from "@/src/lib/woocommerce";
 
 /**
  * API Route pour générer le sitemap dynamique depuis WooCommerce
@@ -6,14 +6,6 @@ import WooCommerceRestApi from "@woocommerce/woocommerce-rest-api";
  */
 export default async function handler(req, res) {
   try {
-    // Configuration WooCommerce
-    const api = new WooCommerceRestApi({
-      url: process.env.NEXT_PUBLIC_WORDPRESS_SITE_URL || 'http://localhost:8000',
-      consumerKey: process.env.WC_CONSUMER_KEY || '',
-      consumerSecret: process.env.WC_CONSUMER_SECRET || '',
-      version: 'wc/v3'
-    });
-
     const siteUrl = 'https://dosalga.com';
     const currentDate = new Date().toISOString().split('T')[0];
     const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
@@ -45,13 +37,13 @@ export default async function handler(req, res) {
     let categories = [];
 
     try {
-      const productsResponse = await api.get('products', {
+      const productsResponse = await wcApi.get('products', {
         per_page: 100,
         status: 'publish'
       });
       products = productsResponse.data || [];
 
-      const categoriesResponse = await api.get('products/categories', {
+      const categoriesResponse = await wcApi.get('products/categories', {
         per_page: 100
       });
       categories = categoriesResponse.data || [];
@@ -125,7 +117,7 @@ export default async function handler(req, res) {
     
     res.status(200).send(xml);
   } catch (error) {
-    console.error('Sitemap generation error:', error);
+    console.error('Sitemap generation error:', getWooCommerceErrorDetails(error));
     res.status(500).json({ error: 'Error generating sitemap' });
   }
 }

@@ -1,4 +1,5 @@
 import { getWooProductMXNPrice } from '@/src/lib/pricing';
+import { getWooCommerceErrorDetails } from '@/src/lib/woocommerce';
 
 const FALLBACK_WORDPRESS_URL = 'https://oliviers44.sg-host.com';
 
@@ -1148,7 +1149,7 @@ export default async function handler(req, res) {
       debug_id: debugId,
     });
   } catch (error) {
-    console.error(`[checkout:${debugId}] error`, error);
+    console.error(`[checkout:${debugId}] error`, getWooCommerceErrorDetails(error));
     const isAccountError =
       /account|registration|email/i.test(String(error?.message || '')) ||
       /woocommerce_rest_checkout_invalid_customer/i.test(String(error?.code || '')) ||
