@@ -58,6 +58,9 @@ export default function App({ Component, pageProps }) {
         .countdown-timer {
           display: none !important;
         }
+        .info-page .cover-copy h1 {
+          color: #fff !important;
+        }
       `}</style>
     </>
   );
