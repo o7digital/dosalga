@@ -172,27 +172,29 @@ const ShopPage = () => {
               <h5 className="shop-widget-title">{isSpanish ? 'Categorias' : 'Categories'}</h5>
               <ul className="shop-item">
                 <li>
-                    <a
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
+                    <button
+                      type="button"
+                      className={`category-filter-button ${selectedCategory ? '' : 'is-active'}`}
+                      onClick={() => {
                         setSelectedCategory('');
+                        setIsOpenSidebar(false);
                     }}
                   >
                     {isSpanish ? 'Todos los productos' : 'All Products'}
-                  </a>
+                  </button>
                 </li>
                 {categories.map((category) => (
                   <li key={category.id}>
-                    <a
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
+                    <button
+                      type="button"
+                      className={`category-filter-button ${String(category.id) === selectedCategory ? 'is-active' : ''}`}
+                      onClick={() => {
                         setSelectedCategory(String(category.id));
+                        setIsOpenSidebar(false);
                       }}
                     >
-                      {category.name}
-                    </a>
+                      {category.name} ({category.count})
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -348,6 +350,26 @@ const ShopPage = () => {
       <ProductViewModal />
 
       <style jsx>{`
+        .category-filter-button {
+          width: 100%;
+          border: 0;
+          padding: 0;
+          background: transparent;
+          color: inherit;
+          font: inherit;
+          text-align: left;
+          cursor: pointer;
+        }
+
+        .category-filter-button.is-active {
+          font-weight: 700;
+        }
+
+        :global(.shop-item li:has(.category-filter-button.is-active)::before) {
+          background-color: #111;
+          border-color: #111;
+        }
+
         .dosalga-filter-bar {
           display: flex;
           align-items: center;
