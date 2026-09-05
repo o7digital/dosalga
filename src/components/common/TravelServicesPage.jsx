@@ -71,7 +71,7 @@ const CONTENT = {
 export default function TravelServicesPage({ language = 'en' }) {
   const lang = language === 'es' ? 'es' : 'en';
   const content = CONTENT[lang];
-  const siteUrl = 'https://www.dosalga.store';
+  const siteUrl = 'https://www.dosalga.online';
   const canonical = lang === 'en' ? `${siteUrl}/services` : `${siteUrl}/es/services`;
   const contactPath = lang === 'en' ? '/contact' : '/es/contact';
 

@@ -6,7 +6,7 @@ import wcApi, { getWooCommerceErrorDetails } from "@/src/lib/woocommerce";
  */
 export default async function handler(req, res) {
   try {
-    const siteUrl = 'https://dosalga.com';
+    const siteUrl = 'https://www.dosalga.online';
     const currentDate = new Date().toISOString().split('T')[0];
     const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
     const pageSlugs = [

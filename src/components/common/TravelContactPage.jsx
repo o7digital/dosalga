@@ -84,7 +84,7 @@ const SUPPORT_EMAIL = 'contact@dosalga.store';
 export default function TravelContactPage({ language = 'en' }) {
   const lang = language === 'es' ? 'es' : 'en';
   const content = CONTENT[lang];
-  const siteUrl = 'https://www.dosalga.store';
+  const siteUrl = 'https://www.dosalga.online';
   const canonical = lang === 'en' ? `${siteUrl}/contact` : `${siteUrl}/es/contact`;
 
   const handleSubmit = (event) => {
