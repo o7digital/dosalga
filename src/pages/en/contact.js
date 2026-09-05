@@ -1,2 +1,5 @@
-import Page from '@/src/components/common/DosalgaInfoPage';
-export default function Route(){return <Page page="contact" language="en"/>}
+import TravelContactPage from '../../components/common/TravelContactPage';
+
+export default function ContactPage() {
+  return <TravelContactPage language="en" />;
+}
