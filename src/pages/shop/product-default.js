@@ -58,12 +58,12 @@ const ProductDefaultPage = () => {
 
   const { product, loading, error } = useProduct(resolvedId, { lang: currentLang });
 
-  const [selectedImage, setSelectedImage] = useState(0);
+  const [selectedImage, setSelectedImage] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [selectedOptions, setSelectedOptions] = useState({});
 
   useEffect(() => {
-    setSelectedImage(0);
+    setSelectedImage(null);
     setQuantity(1);
     setSelectedOptions({});
   }, [resolvedId]);
@@ -186,7 +186,8 @@ const ProductDefaultPage = () => {
     ? product.images
     : [{ src: '/assets/img/placeholder.png', alt: product?.name || 'Product image' }];
 
-  const currentImage = images[selectedImage] || images[0];
+  const defaultImageIndex = images.length - 1;
+  const currentImage = images[selectedImage ?? defaultImageIndex] || images[defaultImageIndex];
   const displayImage = previewVariation?.image?.src
     ? {
         src: previewVariation.image.src,
@@ -298,7 +299,7 @@ const ProductDefaultPage = () => {
                     {images.map((img, index) => (
                       <button
                         key={img.id || index}
-                        className={`nav-link ${selectedImage === index ? 'active' : ''}`}
+                        className={`nav-link ${(selectedImage ?? defaultImageIndex) === index ? 'active' : ''}`}
                         type="button"
                         onClick={() => setSelectedImage(index)}
                       >

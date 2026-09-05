@@ -47,7 +47,8 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null, onImag
 
   const visibleImages = getVisibleProductImages(product);
   const mainImage = getPrimaryProductImageSrc(product);
-  const hoverImage = visibleImages[1]?.src || visibleImages[1] || mainImage;
+  const hoverCandidate = visibleImages[visibleImages.length - 2];
+  const hoverImage = hoverCandidate?.src || hoverCandidate || mainImage;
 
   // Extraire le nom de la première catégorie
   const categoryName = categories[0]?.name || 'Produit';

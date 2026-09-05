@@ -69,12 +69,7 @@ export const getDescriptionProductImages = (product) => {
     .map((match) => decodeHtmlUrl(match[1]))
     .filter((src) => /^https?:\/\//i.test(src));
 
-  const uniqueUrls = [...new Set(urls)];
-  const orderedUrls = uniqueUrls.length > 1
-    ? [uniqueUrls[uniqueUrls.length - 1], ...uniqueUrls.slice(0, -1)]
-    : uniqueUrls;
-
-  return orderedUrls.map((src, index) => ({
+  return [...new Set(urls)].map((src, index) => ({
     id: `description-${index}`,
     src,
     thumbnail: src,
@@ -96,7 +91,8 @@ export const preferDescriptionProductImages = (product) => {
 };
 
 export const getPrimaryProductImageSrc = (product) => {
-  const image = getVisibleProductImages(product)[0];
+  const images = getVisibleProductImages(product);
+  const image = images[images.length - 1];
   return typeof image === 'string' ? image : image?.src || '';
 };
 
