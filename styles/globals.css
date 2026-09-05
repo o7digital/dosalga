@@ -101,7 +101,7 @@ a {
 }
 
 .info-page .cover-copy h1 {
-  color: #fff;
+  color: #fff !important;
 }
 
 @media (prefers-color-scheme: dark) {
