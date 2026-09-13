@@ -1,5 +1,5 @@
-import TravelContactPage from '../components/common/TravelContactPage';
+import CustomerContactPage from '../components/common/CustomerContactPage';
 
 export default function ContactPage() {
-  return <TravelContactPage language="es" />;
+  return <CustomerContactPage language="es" />;
 }

@@ -2,14 +2,14 @@ import Head from 'next/head';
 
 const CONTENT = {
   en: {
-    eyebrow: 'CONTACT DOSALGA USA',
-    title: 'We are here to make your journey easier',
-    intro: 'Questions about luggage, delivery, or an existing order? Tell us what you need and we will help you find the clearest next step.',
-    metaTitle: 'Contact Dosalga USA | Luggage & Order Support',
-    metaDescription: 'Contact Dosalga USA for help with luggage, travel accessories, product information, orders, shipping, and returns.',
+    eyebrow: 'CONTACT DOSALGA',
+    title: 'Questions about your purchase? We can help.',
+    intro: 'Ask us about a product, a size, an order or a delivery. Include the product link or your order number so we can review the details and answer your question.',
+    metaTitle: 'Contact Dosalga | Product & Order Support',
+    metaDescription: 'Contact Dosalga for product information, sizing questions, order updates, delivery issues and return requests.',
     topicsTitle: 'How can we help?',
     topics: [
-      ['Product guidance', 'Compare suitcase sizes, materials, features, and travel accessories before ordering.'],
+      ['Product guidance', 'Ask about sizes, materials, colors or the details listed on a product page. Include the link and the information you need.'],
       ['Order & delivery', 'Ask about an existing order, delivery information, or a package that needs attention.'],
       ['Returns & support', 'Get clear information about return eligibility and the steps that apply to your purchase.'],
     ],
@@ -40,14 +40,14 @@ const CONTENT = {
     labels: { name: 'Name', email: 'Email', phone: 'Phone', order: 'Order number', message: 'Message' },
   },
   es: {
-    eyebrow: 'CONTACTO DOSALGA USA',
-    title: 'Estamos aquí para facilitar tu viaje',
-    intro: '¿Tienes dudas sobre una maleta, una entrega o un pedido? Cuéntanos qué necesitas y te ayudaremos a encontrar el siguiente paso.',
-    metaTitle: 'Contacto Dosalga USA | Soporte de equipaje y pedidos',
-    metaDescription: 'Contacta con Dosalga USA para recibir ayuda con maletas, accesorios de viaje, productos, pedidos, envíos y devoluciones.',
+    eyebrow: 'CONTACTO DOSALGA',
+    title: '¿Tienes dudas sobre tu compra? Te ayudamos.',
+    intro: 'Consúltanos sobre un producto, una talla, un pedido o una entrega. Incluye el enlace del artículo o tu número de pedido para que podamos revisar los detalles y responder a tu pregunta.',
+    metaTitle: 'Contacto Dosalga | Atención de productos y pedidos',
+    metaDescription: 'Contacta con Dosalga para consultar productos, tallas, estado de pedidos, incidencias de entrega y solicitudes de devolución.',
     topicsTitle: '¿Cómo podemos ayudarte?',
     topics: [
-      ['Orientación de producto', 'Compara tamaños, materiales, funciones y accesorios de viaje antes de realizar tu pedido.'],
+      ['Orientación de producto', 'Pregunta por las tallas, materiales, colores o detalles de un artículo. Incluye el enlace del producto y la información que necesitas.'],
       ['Pedidos y entregas', 'Consulta un pedido existente, la información de entrega o un paquete que requiere atención.'],
       ['Devoluciones y soporte', 'Recibe información clara sobre los requisitos y pasos aplicables a tu compra.'],
     ],
@@ -81,11 +81,11 @@ const CONTENT = {
 
 const SUPPORT_EMAIL = 'contact@dosalga.store';
 
-export default function TravelContactPage({ language = 'en' }) {
+export default function CustomerContactPage({ language = 'en' }) {
   const lang = language === 'es' ? 'es' : 'en';
   const content = CONTENT[lang];
   const siteUrl = 'https://www.dosalga.online';
-  const canonical = lang === 'en' ? `${siteUrl}/contact` : `${siteUrl}/es/contact`;
+  const canonical = lang === 'en' ? `${siteUrl}/en/contact` : `${siteUrl}/contact`;
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -110,8 +110,8 @@ export default function TravelContactPage({ language = 'en' }) {
         <title>{content.metaTitle}</title>
         <meta name="description" content={content.metaDescription} />
         <link rel="canonical" href={canonical} />
-        <link rel="alternate" hrefLang="en" href={`${siteUrl}/contact`} />
-        <link rel="alternate" hrefLang="es" href={`${siteUrl}/es/contact`} />
+        <link rel="alternate" hrefLang="en" href={`${siteUrl}/en/contact`} />
+        <link rel="alternate" hrefLang="es" href={`${siteUrl}/contact`} />
         <link rel="alternate" hrefLang="x-default" href={`${siteUrl}/contact`} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={canonical} />

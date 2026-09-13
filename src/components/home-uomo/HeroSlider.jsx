@@ -15,59 +15,59 @@ const HeroSlider = () => {
         en: [
             {
                 id: 1,
-                badge: "NEW ARRIVALS",
-                title: "Activewear Designed for Real Life",
-                subtitle: "Comfort, simplicity, and movement for everyday routines.",
-                cta: "Shop Essentials",
+                badge: "THE COLLECTION",
+                title: "Everyday Style. Your Choice.",
+                subtitle: "Discover clothing for your daily routine. Compare styles, colors and available sizes to find your next piece.",
+                cta: "Shop Clothing",
                 image: "/slider/gemini1.png",
-                alt: "Lifestyle activewear designed for real life"
+                alt: "Everyday clothing from Dosalga"
             },
             {
                 id: 2,
-                badge: "NEW ARRIVALS",
-                title: "Move Through Your Day With Ease",
-                subtitle: "Versatile activewear made to fit your lifestyle, not the gym.",
-                cta: "Discover the Collection",
+                badge: "THE COLLECTION",
+                title: "The Details Make the Difference",
+                subtitle: "Take a closer look at product photos, listed materials and available options before you choose.",
+                cta: "Browse Products",
                 image: "/slider/gemini2.png",
-                alt: "Everyday activewear for modern lifestyles"
+                alt: "Dosalga clothing and product details"
             },
             {
                 id: 3,
-                badge: "NEW ARRIVALS",
-                title: "Comfort That Goes Wherever You Do",
-                subtitle: "Light layers and everyday essentials for real movement.",
-                cta: "Explore Dosalga",
+                badge: "THE COLLECTION",
+                title: "Find Your Next Favorite",
+                subtitle: "Explore the collection, check the fit and choose the pieces that work with your wardrobe.",
+                cta: "Discover Dosalga",
                 image: "/slider/gemini3.png",
-                alt: "Comfortable activewear in real environments"
+                alt: "Everyday style from the Dosalga collection"
             }
         ],
         es: [
             {
                 id: 1,
-                badge: "NUEVAS LLEGADAS",
-                title: "Activewear diseñado para la vida real",
-                subtitle: "Comodidad, sencillez y movimiento para tus rutinas diarias.",
-                cta: "Comprar esenciales",
+                badge: "LA COLECCIÓN",
+                title: "Tu estilo, todos los días",
+                subtitle: "Descubre prendas para tu rutina. Compara estilos, colores y tallas disponibles para elegir tu próxima pieza.",
+                cta: "Comprar ropa",
                 image: "/slider/gemini1.png",
-                alt: "Ropa activa para la vida cotidiana"
+                alt: "Ropa Dosalga para el día a día"
             },
             {
                 id: 2,
-                badge: "NUEVAS LLEGADAS",
-                title: "Muévete por tu día con facilidad",
-                subtitle: "Activewear versátil pensado para tu estilo de vida, no solo el gimnasio.",
-                cta: "Descubrir la colección",
+                badge: "LA COLECCIÓN",
+                title: "Los detalles hacen la diferencia",
+                subtitle: "Mira de cerca las fotografías, los materiales indicados y las opciones disponibles antes de elegir.",
+                cta: "Ver productos",
                 image: "/slider/gemini2.png",
-                alt: "Activewear versátil para tu día"
+                alt: "Prendas y detalles de productos Dosalga"
             },
             {
                 id: 3,
-                badge: "NUEVAS LLEGADAS",
-                title: "Comodidad dondequiera que vayas",
-                subtitle: "Capas ligeras y esenciales diarios para moverte de verdad.",
-                cta: "Explora Dosalga",
+                badge: "LA COLECCIÓN",
+                title: "Encuentra tu próxima prenda favorita",
+                subtitle: "Explora la colección, revisa las medidas y elige las piezas que combinan con tu guardarropa.",
+                cta: "Descubrir Dosalga",
                 image: "/slider/gemini3.png",
-                alt: "Activewear cómodo en entornos reales"
+                alt: "Estilo cotidiano de la colección Dosalga"
             }
         ],
         de: [
