@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server'
 
 export function middleware(request) {
+  // Preview and local development must remain accessible, even when maintenance is enabled.
+  if (process.env.VERCEL_ENV !== 'production') return NextResponse.next()
+
   const host = request.headers.get('host') || ''
   const productionHosts = new Set([
-    'dosalga.store',
-    'www.dosalga.store',
     'dosalga.online',
     'www.dosalga.online',
   ])
