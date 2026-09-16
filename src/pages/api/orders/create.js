@@ -1,5 +1,6 @@
 import { getWooProductMXNPrice } from '@/src/lib/pricing';
 import { getWooCommerceErrorDetails } from '@/src/lib/woocommerce';
+import { COMMERCE_ENABLED } from '@/src/config/commerce';
 
 const FALLBACK_WORDPRESS_URL = 'https://oliviers44.sg-host.com';
 
@@ -732,6 +733,14 @@ const createUsdRestOrder = async ({
 
 export default async function handler(req, res) {
   const debugId = `co_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
+  if (!COMMERCE_ENABLED) {
+    return res.status(503).json({
+      success: false,
+      message: 'Les achats sont temporairement suspendus pendant la validation des prix.',
+      debug_id: debugId,
+    });
+  }
 
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed', debug_id: debugId });

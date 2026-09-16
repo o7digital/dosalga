@@ -17,6 +17,7 @@ import "../../public/assets/css/uomo-style.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import OliviaChatDosalga from "../components/common/OliviaChatDosalga";
+import { COMMERCE_ENABLED } from "../config/commerce";
 
 export default function App({ Component, pageProps }) {
   useEffect(() => {
@@ -47,10 +48,12 @@ export default function App({ Component, pageProps }) {
       />
       <CartProvider>
         <WishlistProvider>
-          <MainLayoutUomo>
-            <Component {...pageProps} />
-            <OliviaChatDosalga />
-          </MainLayoutUomo>
+          <div className={COMMERCE_ENABLED ? undefined : "commerce-disabled"}>
+            <MainLayoutUomo>
+              <Component {...pageProps} />
+              <OliviaChatDosalga />
+            </MainLayoutUomo>
+          </div>
         </WishlistProvider>
       </CartProvider>
       <ToastContainer position="bottom-center" autoClose={1800} hideProgressBar />
@@ -60,6 +63,13 @@ export default function App({ Component, pageProps }) {
         }
         .info-page .cover-copy h1 {
           color: #fff !important;
+        }
+        .commerce-disabled .add-cart-btn,
+        .commerce-disabled .add-card-btn,
+        .commerce-disabled .shop-details-btn,
+        .commerce-disabled .cart-wrapper,
+        .commerce-disabled a[href$="/checkout"] {
+          display: none !important;
         }
       `}</style>
     </>
