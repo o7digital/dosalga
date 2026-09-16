@@ -132,10 +132,20 @@ export const getWooProductMXNPrice = (product, value) => {
   const numeric = parsePriceValue(value);
   if (numeric === null) return null;
 
-  if (getWordPressPriceSourceCurrency() === 'MXN') {
+  const sourceCurrency = getWordPressPriceSourceCurrency();
+
+  if (sourceCurrency === 'MXN') {
     return numeric;
   }
 
+  // The WooCommerce catalog is configured in USD. Always trust that explicit
+  // catalog setting over import dates or legacy review markers; otherwise new
+  // USD products are incorrectly displayed as tiny MXN amounts.
+  if (sourceCurrency === 'USD') {
+    return numeric * getMXNPerUSD();
+  }
+
+  // Keep the legacy per-product detection only for an explicitly mixed catalog.
   return isImportedMXNProduct(product) ? numeric : numeric * getMXNPerUSD();
 };
 
@@ -167,9 +177,10 @@ export const normalizeWooProductPricesToMXN = (product) => {
   }
 
   const normalizedProduct = PRICE_FIELDS.reduce(normalizePriceField, product);
-  const sourceCurrency = getWordPressPriceSourceCurrency() === 'MXN' || isImportedMXNProduct(product)
-    ? 'MXN'
-    : 'USD';
+  const configuredSourceCurrency = getWordPressPriceSourceCurrency();
+  const sourceCurrency = configuredSourceCurrency === 'USD' || configuredSourceCurrency === 'MXN'
+    ? configuredSourceCurrency
+    : (isImportedMXNProduct(product) ? 'MXN' : 'USD');
 
   return {
     ...normalizedProduct,
