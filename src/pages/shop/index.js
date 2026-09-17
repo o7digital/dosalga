@@ -25,6 +25,7 @@ const ShopPage = () => {
   const [sortKey, setSortKey] = useState('newest');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
   const [page, setPage] = useState(1);
   const [loadedProducts, setLoadedProducts] = useState([]);
   const [hiddenImageProductIds, setHiddenImageProductIds] = useState([]);
@@ -66,6 +67,16 @@ const ShopPage = () => {
 
   const sortPreset = SORT_PRESETS[sortKey] || SORT_PRESETS.newest;
 
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery.trim());
+      setPage(1);
+      setLoadedProducts([]);
+    }, 300);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [searchQuery]);
+
   const productParams = useMemo(() => {
     const params = {
       page,
@@ -79,8 +90,12 @@ const ShopPage = () => {
       params.category = selectedCategory;
     }
 
+    if (debouncedSearchQuery) {
+      params.search = debouncedSearchQuery;
+    }
+
     return params;
-  }, [currentLang, page, selectedCategory, sortPreset.order, sortPreset.orderby]);
+  }, [currentLang, debouncedSearchQuery, page, selectedCategory, sortPreset.order, sortPreset.orderby]);
 
   const { products, loading, error } = useProducts(productParams);
   const { categories } = useCategories({ per_page: 100, hide_empty: true, lang: currentLang });
@@ -133,6 +148,7 @@ const ShopPage = () => {
         product.slug,
         product.short_description,
         product.description,
+        product.sku,
         ...(product.categories || []).map((category) => category.name || category),
       ]
         .filter(Boolean)

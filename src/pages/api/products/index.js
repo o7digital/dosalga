@@ -65,9 +65,7 @@ const attachCurrencyReviews = async (products) => {
 };
 
 export default async function handler(req, res) {
-  res.setHeader('Cache-Control', 'no-store, max-age=0');
-  res.setHeader('CDN-Cache-Control', 'no-store');
-  res.setHeader('Vercel-CDN-Cache-Control', 'no-store');
+  res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=86400');
 
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Method not allowed' });
@@ -80,6 +78,7 @@ export default async function handler(req, res) {
       limit,
       category, 
       search, 
+      sku,
       orderby = 'date', 
       order = 'desc',
       on_sale,
@@ -104,7 +103,11 @@ export default async function handler(req, res) {
 
     // Ajouter les filtres optionnels
     if (category) params.category = category;
-    if (search) params.search = search;
+    const normalizedSearch = String(search || '').trim();
+    const normalizedSku = String(sku || '').trim();
+    if (normalizedSku) params.sku = normalizedSku;
+    else if (/^CJ[A-Z0-9-]+$/i.test(normalizedSearch)) params.sku = normalizedSearch;
+    else if (normalizedSearch) params.search = normalizedSearch;
     if (on_sale !== undefined) params.on_sale = isTrue(on_sale);
     if (featured !== undefined) params.featured = isTrue(featured);
 
