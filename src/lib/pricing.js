@@ -120,6 +120,16 @@ export const isImportedMXNProduct = (product) => {
     return true;
   }
 
+  // The swimsuit catalogue was imported with final MXN amounts, unlike the
+  // older CJ catalogue whose numeric prices are USD. Keep those prices as-is.
+  const categoryText = (Array.isArray(product?.categories) ? product.categories : [])
+    .map((category) => category?.name || category?.slug || category)
+    .join(' ')
+    .toUpperCase();
+  if (/SWIMSUIT|SWIMWEAR|TRAJE(?:S)? DE BA[ÑN]O|BA[ÑN]ADOR/.test(categoryText)) {
+    return true;
+  }
+
   const rawDate = product?.date_created || product?.date_created_gmt;
   if (!rawDate) {
     return false;
