@@ -353,7 +353,7 @@ const ShopPage = () => {
               ))}
             </div>
 
-            {!loading && !error && visibleProducts.length >= PRODUCTS_PER_PAGE && (
+            {!loading && !error && products.length >= PRODUCTS_PER_PAGE && (
               <div className="text-center">
                 <button
                   type="button"
