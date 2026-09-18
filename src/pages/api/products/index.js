@@ -6,6 +6,7 @@ import {
   getAllProductReviews,
   getAllProducts,
   getProducts,
+  getCategories,
   getWooCommerceErrorDetails,
 } from '@/src/lib/woocommerce';
 import {
@@ -138,7 +139,19 @@ export default async function handler(req, res) {
     const normalizedSku = String(sku || '').trim();
     if (normalizedSku) params.sku = normalizedSku;
     else if (/^CJ[A-Z0-9-]+$/i.test(normalizedSearch)) params.sku = normalizedSearch;
-    else if (normalizedSearch) params.search = normalizedSearch;
+    else if (normalizedSearch) {
+      const categoryCandidates = await getCategories({ per_page: 100, hide_empty: true });
+      const normalizedTerm = normalizedSearch.toLocaleLowerCase('es');
+      const matchedCategory = Array.isArray(categoryCandidates)
+        ? categoryCandidates.find((candidate) => (
+            String(candidate?.name || '').toLocaleLowerCase('es') === normalizedTerm
+            || String(candidate?.slug || '').toLocaleLowerCase('es') === normalizedTerm
+          ))
+        : null;
+
+      if (matchedCategory?.id) params.category = matchedCategory.id;
+      else params.search = normalizedSearch;
+    }
     if (on_sale !== undefined) params.on_sale = isTrue(on_sale);
     if (featured !== undefined) params.featured = isTrue(featured);
 

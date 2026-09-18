@@ -22,6 +22,44 @@ import {
   preferDescriptionProductImages,
 } from '@/src/lib/productVisibility';
 
+const attachAdminManagedPrice = async (product) => {
+  const sku = String(product?.sku || '').trim();
+  if (!sku) return product;
+
+  try {
+    const adminUrl = process.env.DOSALGA_ADMIN_URL || 'https://admindosalga.vercel.app';
+    const response = await fetch(`${adminUrl}/api/products`, {
+      headers: { Accept: 'application/json' },
+      signal: AbortSignal.timeout(10000),
+      cache: 'no-store',
+    });
+    if (!response.ok) return product;
+
+    const payload = await response.json();
+    const adminProduct = (payload.products || []).find((candidate) => (
+      String(candidate.sku || '').trim() === sku
+      && candidate.wooPricePublication?.state === 'woo_verified'
+    ));
+    if (!adminProduct) return product;
+
+    const price = Number(adminProduct.wooPricePublication?.price ?? adminProduct.salePrice);
+    if (!Number.isFinite(price)) return product;
+
+    return {
+      ...product,
+      price: String(price),
+      regular_price: String(price),
+      sale_price: '',
+      meta_data: [
+        ...(Array.isArray(product.meta_data) ? product.meta_data : []),
+        { key: 'dosalga_price_source_currency', value: adminProduct.saleCurrency || 'MXN' },
+      ],
+    };
+  } catch {
+    return product;
+  }
+};
+
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store, max-age=0');
   res.setHeader('CDN-Cache-Control', 'no-store');
@@ -59,10 +97,10 @@ export default async function handler(req, res) {
     const reviews = getWordPressPriceSourceCurrency() === 'MXN'
       ? []
       : await getProductReviews({ product: id, per_page: 100 });
-    const productWithReviews = {
+    const productWithReviews = await attachAdminManagedPrice({
       ...product,
       reviews: Array.isArray(reviews) ? reviews : [],
-    };
+    });
     const productWithMxnPrices = normalizeWooProductPricesToMXN(productWithReviews);
     const normalizedProduct = String(lang).toLowerCase() === 'en'
       ? normalizeWooProductTextToEnglish(productWithMxnPrices)
@@ -70,6 +108,12 @@ export default async function handler(req, res) {
     const normalizedVariations = normalizeWooProductsPricesToMXN(
       variations.map((variation) => ({
         ...variation,
+        ...(productWithReviews.price ? {
+          price: productWithReviews.price,
+          regular_price: productWithReviews.regular_price,
+          sale_price: productWithReviews.sale_price,
+          meta_data: productWithReviews.meta_data,
+        } : {}),
         reviews: productWithReviews.reviews,
       }))
     );
