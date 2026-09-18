@@ -37,6 +37,37 @@ const normalizePerPage = (value, fallback) => {
 
 const isTrue = (value) => value === true || value === 'true';
 
+const attachAdminManagedPrices = async (products) => {
+  try {
+    const adminUrl = process.env.DOSALGA_ADMIN_URL || 'https://admindosalga.vercel.app';
+    const response = await fetch(`${adminUrl}/api/products`, {
+      headers: { Accept: 'application/json' },
+      signal: AbortSignal.timeout(10000),
+      cache: 'no-store',
+    });
+    if (!response.ok) return products;
+    const payload = await response.json();
+    const managed = new Map((payload.products || [])
+      .filter((product) => product.wooPricePublication?.state === 'woo_verified')
+      .map((product) => [String(product.sku || '').trim(), product]));
+    return products.map((product) => {
+      const adminProduct = managed.get(String(product.sku || '').trim());
+      if (!adminProduct) return product;
+      const price = Number(adminProduct.wooPricePublication?.price ?? adminProduct.salePrice);
+      return {
+        ...product,
+        ...(Number.isFinite(price) ? { price: String(price), regular_price: String(price), sale_price: '' } : {}),
+        meta_data: [
+          ...(Array.isArray(product.meta_data) ? product.meta_data : []),
+          { key: 'dosalga_price_source_currency', value: adminProduct.saleCurrency || 'MXN' },
+        ],
+      };
+    });
+  } catch {
+    return products;
+  }
+};
+
 const attachCurrencyReviews = async (products) => {
   let reviews = [];
 
@@ -123,9 +154,10 @@ export default async function handler(req, res) {
     const visibleSourceProducts = products
       .map(preferDescriptionProductImages)
       .filter((product) => isProductVisible(product));
+    const productsWithAdminPrices = await attachAdminManagedPrices(visibleSourceProducts);
     const productsWithCurrencyReviews = getWordPressPriceSourceCurrency() === 'MXN'
-      ? visibleSourceProducts
-      : await attachCurrencyReviews(visibleSourceProducts);
+      ? productsWithAdminPrices
+      : await attachCurrencyReviews(productsWithAdminPrices);
     const normalizedProducts = normalizeWooProductsPricesToMXN(productsWithCurrencyReviews);
     const visibleProducts = String(lang).toLowerCase() === 'en'
       ? normalizeWooProductsTextToEnglish(normalizedProducts)
