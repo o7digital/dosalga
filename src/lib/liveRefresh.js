@@ -1,4 +1,4 @@
-const DEFAULT_WOOCOMMERCE_REFRESH_MS = 30000;
+const DEFAULT_WOOCOMMERCE_REFRESH_MS = 0;
 const MIN_WOOCOMMERCE_REFRESH_MS = 5000;
 
 export const getWooCommerceRefreshIntervalMs = (value = process.env.NEXT_PUBLIC_WP_REFRESH_MS) => {

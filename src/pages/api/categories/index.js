@@ -7,9 +7,7 @@ import { isHiddenCreamCategory } from '@/src/lib/productVisibility';
 import { normalizeCategoriesToEnglish, translateCategoriesToSpanish } from '@/src/lib/productText';
 
 export default async function handler(req, res) {
-  res.setHeader('Cache-Control', 'no-store, max-age=0');
-  res.setHeader('CDN-Cache-Control', 'no-store');
-  res.setHeader('Vercel-CDN-Cache-Control', 'no-store');
+  res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=86400');
 
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Method not allowed' });

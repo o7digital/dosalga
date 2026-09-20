@@ -27,7 +27,7 @@ export const useCategories = (params = {}, options = {}) => {
       const queryParams = new URLSearchParams(params).toString();
       const url = `/api/categories${queryParams ? `?${queryParams}` : ''}`;
       
-      const response = await fetch(url, { cache: 'no-store' });
+      const response = await fetch(url);
       const result = await response.json();
       
       if (!response.ok) {

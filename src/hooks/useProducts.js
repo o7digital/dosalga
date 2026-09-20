@@ -42,7 +42,7 @@ export const useProducts = (initialParams = {}, options = {}) => {
       const queryParams = buildQueryString(params);
       const url = `/api/products${queryParams ? `?${queryParams}` : ''}`;
       
-      const response = await fetch(url, { cache: 'no-store' });
+      const response = await fetch(url);
       const result = await response.json();
       
       if (!response.ok) {
@@ -109,7 +109,7 @@ export const useProduct = (productId, options = {}) => {
         setError(null);
         
         const queryParams = buildQueryString({ lang });
-        const response = await fetch(`/api/products/${productId}${queryParams ? `?${queryParams}` : ''}`, { cache: 'no-store' });
+        const response = await fetch(`/api/products/${productId}${queryParams ? `?${queryParams}` : ''}`);
         let result;
         try {
           result = await response.json();
@@ -172,7 +172,7 @@ export const useProductSearch = () => {
         ...params
       });
       
-      const response = await fetch(`/api/products?${queryParams}`, { cache: 'no-store' });
+      const response = await fetch(`/api/products?${queryParams}`);
       const result = await response.json();
       
       if (!response.ok) {
