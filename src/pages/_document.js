@@ -64,7 +64,7 @@ export default function Document() {
         {/* Google Analytics */}
         <script
           async
-          src="https://www.googletagmanager.com/gtag/js?id=G-NXYGGSH0NR"
+          src="https://www.googletagmanager.com/gtag/js?id=G-KZLMRG3F6B"
         />
         <script
           dangerouslySetInnerHTML={{
@@ -72,7 +72,7 @@ export default function Document() {
               window.dataLayer = window.dataLayer || [];
               function gtag(){dataLayer.push(arguments);}
               gtag('js', new Date());
-              gtag('config', 'G-NXYGGSH0NR');
+              gtag('config', 'G-KZLMRG3F6B');
             `,
           }}
         />
