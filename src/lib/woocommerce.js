@@ -103,7 +103,7 @@ const storeApiRequest = async (path, params = {}) => {
       Accept: "application/json",
       "User-Agent": "Dosalga-MX/1.0",
     },
-    signal: AbortSignal.timeout(Math.min(requestTimeoutMs, 15000)),
+    signal: AbortSignal.timeout(requestTimeoutMs),
   });
 
   if (!response.ok) {
@@ -139,7 +139,7 @@ const normalizeStoreAttribute = (attribute) => ({
     : [],
 });
 
-const normalizeStoreProduct = (product) => {
+export const normalizeStoreProduct = (product) => {
   if (!product || typeof product !== "object" || Array.isArray(product)) return product;
 
   const price = getStorePrice(product.prices, "price");
@@ -282,6 +282,35 @@ export const getAllProducts = async (params = {}) => {
 };
 
 /**
+ * Full synchronization intentionally fetches pages one by one. WordPress is
+ * slower with 100-item pages and parallel calls make its response time worse.
+ */
+export const getAllProductsSequential = async (params = {}) => {
+  const perPage = normalizePerPage(params.per_page);
+  const products = [];
+  let page = 1;
+
+  while (true) {
+    const response = await storeApiRequest('products', getStoreProductParams({
+      ...params,
+      page,
+      per_page: perPage,
+    }));
+
+    if (!Array.isArray(response.data)) {
+      throw new Error(`WooCommerce API returned an unexpected payload for page ${page}.`);
+    }
+
+    products.push(...response.data.map(normalizeStoreProduct));
+    const totalPages = Math.max(1, Math.ceil(response.total / perPage));
+    if (page >= totalPages || response.data.length === 0) break;
+    page += 1;
+  }
+
+  return products;
+};
+
+/**
  * Récupérer un produit par ID
  */
 export const getProduct = async (id) => {
@@ -305,6 +334,31 @@ export const getCategories = async (params = {}) => {
     logWooCommerceError("Error fetching categories:", error);
     throw error;
   }
+};
+
+export const getAllCategories = async (params = {}) => {
+  const perPage = normalizePerPage(params.per_page);
+  const categories = [];
+  let page = 1;
+
+  while (true) {
+    const response = await storeApiRequest('products/categories', {
+      ...params,
+      page,
+      per_page: perPage,
+    });
+
+    if (!Array.isArray(response.data)) {
+      throw new Error(`WooCommerce categories returned an unexpected payload for page ${page}.`);
+    }
+
+    categories.push(...response.data);
+    const totalPages = Math.max(1, Math.ceil(response.total / perPage));
+    if (page >= totalPages || response.data.length === 0) break;
+    page += 1;
+  }
+
+  return categories;
 };
 
 /**

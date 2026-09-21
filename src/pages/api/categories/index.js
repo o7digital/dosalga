@@ -1,13 +1,11 @@
-/**
- * API Route: /api/categories
- * Récupère toutes les catégories depuis WooCommerce
- */
-import { getCategories, getWooCommerceErrorDetails } from '@/src/lib/woocommerce';
-import { isHiddenCreamCategory } from '@/src/lib/productVisibility';
+import { getCatalogCategories } from '@/src/lib/catalogRepository';
 import { normalizeCategoriesToEnglish, translateCategoriesToSpanish } from '@/src/lib/productText';
+import { isHiddenCreamCategory } from '@/src/lib/productVisibility';
 
 export default async function handler(req, res) {
-  res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=86400');
+  res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=300, stale-while-revalidate=86400');
+  res.setHeader('Vercel-CDN-Cache-Control', 'max-age=300, stale-while-revalidate=86400');
+  res.setHeader('X-Dosalga-Catalog-Source', 'railway');
 
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Method not allowed' });
@@ -15,31 +13,20 @@ export default async function handler(req, res) {
 
   try {
     const { per_page = 100, hide_empty = true, lang = 'es' } = req.query;
+    const limit = Math.min(Math.max(Number.parseInt(per_page, 10) || 100, 1), 100);
+    const categories = await getCatalogCategories({ hideEmpty: hide_empty === 'true' });
+    const filtered = categories.filter((category) => !isHiddenCreamCategory(category)).slice(0, limit);
+    const localized = String(lang).toLowerCase() === 'en'
+      ? normalizeCategoriesToEnglish(filtered)
+      : translateCategoriesToSpanish(filtered);
 
-    const params = {
-      per_page: parseInt(per_page),
-      hide_empty: hide_empty === 'true'
-    };
-
-    const categories = await getCategories(params);
-    const filteredCategories = Array.isArray(categories)
-      ? categories.filter((category) => !isHiddenCreamCategory(category))
-      : [];
-    const visibleCategories = String(lang).toLowerCase() === 'en'
-      ? normalizeCategoriesToEnglish(filteredCategories)
-      : translateCategoriesToSpanish(filteredCategories);
-    
-    res.status(200).json({
-      success: true,
-      data: visibleCategories,
-      count: visibleCategories.length
-    });
+    return res.status(200).json({ success: true, data: localized, count: localized.length, source: 'railway' });
   } catch (error) {
-    console.error('Error fetching categories:', getWooCommerceErrorDetails(error));
-    res.status(500).json({ 
+    console.error('Error reading the Railway category catalog:', error);
+    return res.status(503).json({
       success: false,
-      message: 'Erreur lors de la récupération des catégories',
-      error: error.message 
+      message: 'Les catégories sont temporairement indisponibles',
+      error: error.message,
     });
   }
 }

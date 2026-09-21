@@ -5,7 +5,8 @@ import ProductCard from '@/src/components/common/ProductCard';
 const BestSellingProduct = () => {
   // Récupérer les produits best-sellers depuis WooCommerce
   const { products, loading, error } = useProducts({
-    all: true,
+    page: 1,
+    per_page: 8,
     orderby: 'popularity',
     order: 'desc'
   });

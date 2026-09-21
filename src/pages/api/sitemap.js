@@ -1,4 +1,4 @@
-import wcApi, { getWooCommerceErrorDetails } from "@/src/lib/woocommerce";
+import { getCatalogCategories, getCatalogProducts } from '@/src/lib/catalogRepository';
 
 /**
  * API Route pour générer le sitemap dynamique depuis WooCommerce
@@ -32,24 +32,18 @@ export default async function handler(req, res) {
       return `${siteUrl}${prefix}${path}`;
     };
 
-    // Récupérer les produits depuis WooCommerce
+    // Railway is the storefront source; sitemap generation never blocks on WP.
     let products = [];
     let categories = [];
 
     try {
-      const productsResponse = await wcApi.get('products', {
-        per_page: 100,
-        status: 'publish'
-      });
-      products = productsResponse.data || [];
-
-      const categoriesResponse = await wcApi.get('products/categories', {
-        per_page: 100
-      });
-      categories = categoriesResponse.data || [];
+      [products, categories] = await Promise.all([
+        getCatalogProducts({ all: true, orderby: 'date', order: 'desc' }),
+        getCatalogCategories(),
+      ]);
     } catch (error) {
-      console.error('Error fetching from WooCommerce:', error.message);
-      // Continue avec les pages statiques même si WooCommerce échoue
+      console.error('Error reading the Railway catalog for sitemap:', error.message);
+      // Continue with static pages if the catalog database is unavailable.
     }
 
     // Construire le XML du sitemap
@@ -117,7 +111,7 @@ export default async function handler(req, res) {
     
     res.status(200).send(xml);
   } catch (error) {
-    console.error('Sitemap generation error:', getWooCommerceErrorDetails(error));
+    console.error('Sitemap generation error:', error);
     res.status(500).json({ error: 'Error generating sitemap' });
   }
 }

@@ -73,6 +73,17 @@ const getMetaValue = (product, key) => {
   return entry?.value ?? null;
 };
 
+const getExplicitProductCurrency = (product) => {
+  const currency = String(
+    product?.prices?.currency_code
+    || product?.currency
+    || getMetaValue(product, 'dosalga_price_source_currency')
+    || ''
+  ).trim().toUpperCase();
+
+  return currency === 'MXN' || currency === 'USD' ? currency : null;
+};
+
 const normalizeCurrencyMarkerText = (value) => {
   return String(value || '')
     .replace(/<[^>]*>/g, ' ')
@@ -142,6 +153,13 @@ export const getWooProductMXNPrice = (product, value) => {
   const numeric = parsePriceValue(value);
   if (numeric === null) return null;
 
+  // The Store API reports the product's actual currency. It takes precedence
+  // over a global fallback so an imported MXN amount is never treated as USD.
+  const explicitCurrency = getExplicitProductCurrency(product);
+
+  if (explicitCurrency === 'MXN') return numeric;
+  if (explicitCurrency === 'USD') return numeric * getMXNPerUSD();
+
   const sourceCurrency = getWordPressPriceSourceCurrency();
 
   if (sourceCurrency === 'MXN') {
@@ -188,9 +206,11 @@ export const normalizeWooProductPricesToMXN = (product) => {
 
   const normalizedProduct = PRICE_FIELDS.reduce(normalizePriceField, product);
   const configuredSourceCurrency = getWordPressPriceSourceCurrency();
-  const sourceCurrency = configuredSourceCurrency === 'USD' || configuredSourceCurrency === 'MXN'
-    ? configuredSourceCurrency
-    : (isImportedMXNProduct(product) ? 'MXN' : 'USD');
+  const explicitSourceCurrency = getExplicitProductCurrency(product);
+  const sourceCurrency = explicitSourceCurrency
+    || (configuredSourceCurrency === 'USD' || configuredSourceCurrency === 'MXN'
+      ? configuredSourceCurrency
+      : (isImportedMXNProduct(product) ? 'MXN' : 'USD'));
 
   return {
     ...normalizedProduct,

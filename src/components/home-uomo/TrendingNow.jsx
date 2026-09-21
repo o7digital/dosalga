@@ -5,13 +5,13 @@ import { useRouter } from 'next/router';
 import { formatLocalizedPrice, parsePriceValue } from '../../lib/pricing';
 
 const TrendingNow = () => {
-    const { products, loading, error } = useProducts({ all: true });
     const { pathname } = useRouter();
     const lang = (() => {
         const code = pathname.split('/')[1];
         const supported = ['en', 'es', 'de', 'fr', 'it', 'pt'];
         return supported.includes(code) ? code : 'es';
     })();
+    const { products, loading, error } = useProducts({ page: 1, per_page: 24, lang });
 
     const [sortOption, setSortOption] = useState('most-expensive');
     const [selectedCategory, setSelectedCategory] = useState('all');
