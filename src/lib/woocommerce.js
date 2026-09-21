@@ -310,6 +310,33 @@ export const getAllProductsSequential = async (params = {}) => {
   return products;
 };
 
+export const getAllRestProductsSequential = async (params = {}) => {
+  const perPage = normalizePerPage(params.per_page);
+  const products = [];
+  let page = 1;
+
+  while (true) {
+    const response = await api.get('products', {
+      status: 'publish',
+      ...params,
+      page,
+      per_page: perPage,
+    });
+    const pageProducts = response.data;
+
+    if (!Array.isArray(pageProducts)) {
+      throw new Error(`WooCommerce REST API returned an unexpected payload for page ${page}.`);
+    }
+
+    products.push(...pageProducts);
+    const totalPages = Number.parseInt(response.headers?.['x-wp-totalpages'] || '1', 10);
+    if (page >= totalPages || pageProducts.length === 0) break;
+    page += 1;
+  }
+
+  return products;
+};
+
 /**
  * Récupérer un produit par ID
  */

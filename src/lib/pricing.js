@@ -75,9 +75,7 @@ const getMetaValue = (product, key) => {
 
 const getExplicitProductCurrency = (product) => {
   const currency = String(
-    product?.prices?.currency_code
-    || product?.currency
-    || getMetaValue(product, 'dosalga_price_source_currency')
+    getMetaValue(product, 'dosalga_price_source_currency')
     || ''
   ).trim().toUpperCase();
 
@@ -153,28 +151,20 @@ export const getWooProductMXNPrice = (product, value) => {
   const numeric = parsePriceValue(value);
   if (numeric === null) return null;
 
-  // The Store API reports the product's actual currency. It takes precedence
-  // over a global fallback so an imported MXN amount is never treated as USD.
+  // Woo Store API currency_code is the store display currency, not the
+  // currency of the value originally imported into this individual product.
   const explicitCurrency = getExplicitProductCurrency(product);
 
   if (explicitCurrency === 'MXN') return numeric;
   if (explicitCurrency === 'USD') return numeric * getMXNPerUSD();
 
+  const rawDate = product?.date_created || product?.date_created_gmt;
+  if (rawDate || Array.isArray(product?.categories)) {
+    return isImportedMXNProduct(product) ? numeric : numeric * getMXNPerUSD();
+  }
+
   const sourceCurrency = getWordPressPriceSourceCurrency();
-
-  if (sourceCurrency === 'MXN') {
-    return numeric;
-  }
-
-  // The WooCommerce catalog is configured in USD. Always trust that explicit
-  // catalog setting over import dates or legacy review markers; otherwise new
-  // USD products are incorrectly displayed as tiny MXN amounts.
-  if (sourceCurrency === 'USD') {
-    return numeric * getMXNPerUSD();
-  }
-
-  // Keep the legacy per-product detection only for an explicitly mixed catalog.
-  return isImportedMXNProduct(product) ? numeric : numeric * getMXNPerUSD();
+  return sourceCurrency === 'MXN' ? numeric : numeric * getMXNPerUSD();
 };
 
 const formatWooPriceValue = (product, value) => {
@@ -205,12 +195,9 @@ export const normalizeWooProductPricesToMXN = (product) => {
   }
 
   const normalizedProduct = PRICE_FIELDS.reduce(normalizePriceField, product);
-  const configuredSourceCurrency = getWordPressPriceSourceCurrency();
   const explicitSourceCurrency = getExplicitProductCurrency(product);
   const sourceCurrency = explicitSourceCurrency
-    || (configuredSourceCurrency === 'USD' || configuredSourceCurrency === 'MXN'
-      ? configuredSourceCurrency
-      : (isImportedMXNProduct(product) ? 'MXN' : 'USD'));
+    || (isImportedMXNProduct(product) ? 'MXN' : 'USD');
 
   return {
     ...normalizedProduct,
