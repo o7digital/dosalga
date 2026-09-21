@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import ProductViewModal from '@/src/components/common/ProductViewModal';
 import ProductCard from '@/src/components/common/ProductCard';
@@ -36,6 +37,38 @@ const ShopPage = () => {
     : supportedLocales.includes(localeSegment) ? localeSegment : 'es';
   const isSpanish = currentLang === 'es';
   const localePrefix = currentLang === 'es' ? '' : `/${currentLang}`;
+  const siteUrl = 'https://www.dosalga.online';
+  const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+  const hrefFor = (locale) => locale === 'es'
+    ? `${siteUrl}/shop`
+    : `${siteUrl}/${locale}/shop`;
+  const shopSeo = {
+    en: {
+      title: 'Dosalga Shop | Premium Sportswear and Active Lifestyle',
+      description: 'Shop premium sportswear and active lifestyle products from Dosalga, selected for comfort, style, and everyday performance.',
+    },
+    es: {
+      title: 'Tienda Dosalga | Ropa deportiva premium y estilo de vida activo',
+      description: 'Compra ropa deportiva premium y productos para un estilo de vida activo en Dosalga, seleccionados por su comodidad, estilo y rendimiento.',
+    },
+    de: {
+      title: 'Dosalga Shop | Premium-Sportbekleidung und Active Lifestyle',
+      description: 'Entdecke Premium-Sportbekleidung und Active-Lifestyle-Produkte von Dosalga fuer Komfort, Stil und Alltag.',
+    },
+    fr: {
+      title: 'Boutique Dosalga | Vêtements de sport premium et activewear',
+      description: 'Découvrez les vêtements de sport premium et produits activewear Dosalga, choisis pour le confort, le style et le quotidien.',
+    },
+    it: {
+      title: 'Shop Dosalga | Activewear premium e stile di vita attivo',
+      description: 'Scopri l’activewear premium e i prodotti lifestyle Dosalga, scelti per comfort, stile e prestazioni quotidiane.',
+    },
+    pt: {
+      title: 'Loja Dosalga | Activewear premium e estilo de vida ativo',
+      description: 'Conheça o activewear premium e os produtos lifestyle da Dosalga, selecionados para conforto, estilo e uso diário.',
+    },
+  };
+  const seo = shopSeo[currentLang] || shopSeo.en;
   const formatPrice = (value) => formatLocalizedPrice(value, { pathname: router.pathname });
 
   const sidebarRef = useRef(null);
@@ -188,6 +221,15 @@ const ShopPage = () => {
 
   return (
     <>
+      <Head>
+        <title>{seo.title}</title>
+        <meta name="description" content={seo.description} />
+        <link rel="canonical" href={hrefFor(currentLang)} />
+        {locales.map((locale) => (
+          <link key={locale} rel="alternate" hrefLang={locale} href={hrefFor(locale)} />
+        ))}
+        <link rel="alternate" hrefLang="x-default" href={hrefFor('en')} />
+      </Head>
       <div className={`filter-sidebar ${isOpenSidebar ? 'slide' : ''}`} ref={sidebarRef}>
         <div className="sidebar-area">
           <div className="shop-widget mb-30">

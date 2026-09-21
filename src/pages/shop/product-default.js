@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useProduct, useProducts } from '@/src/hooks/useProducts';
 import { useCart } from '@/src/contexts/CartContext';
@@ -53,8 +54,12 @@ const ProductDefaultPage = () => {
   const formatPrice = (value) => formatLocalizedPrice(value, { pathname: router.pathname });
 
   const queryId = Array.isArray(router.query.id) ? router.query.id[0] : router.query.id;
+  const pathSegments = router.asPath.split(/[?#]/)[0].split('/').filter(Boolean);
+  const pathId = pathSegments[pathSegments.length - 2] === 'product'
+    ? pathSegments[pathSegments.length - 1]
+    : undefined;
   const { products: fallbackProducts } = useProducts({ per_page: 1, orderby: 'date', order: 'desc', lang: currentLang });
-  const resolvedId = queryId || fallbackProducts[0]?.id;
+  const resolvedId = queryId || pathId || fallbackProducts[0]?.id;
 
   const { product, loading, error } = useProduct(resolvedId, { lang: currentLang });
 
@@ -204,6 +209,55 @@ const ProductDefaultPage = () => {
   const productDescription = useMemo(() => {
     return product?.description || product?.short_description || '';
   }, [product?.description, product?.short_description]);
+  const siteUrl = 'https://www.dosalga.online';
+  const locales = ['en', 'es', 'de', 'fr', 'it', 'pt'];
+  const productHrefFor = (locale) => locale === 'es'
+    ? `${siteUrl}/shop/product/${resolvedId}`
+    : `${siteUrl}/${locale}/shop/product/${resolvedId}`;
+  const canonicalUrl = productHrefFor(currentLang);
+  const productStructuredData = product ? {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description: productSummary || undefined,
+    image: images.map((image) => image.src).filter(Boolean),
+    sku: product.sku || undefined,
+    offers: product.price ? {
+      '@type': 'Offer',
+      url: canonicalUrl,
+      price: Number(product.price),
+      priceCurrency: 'MXN',
+      availability: product.stock_status === 'outofstock'
+        ? 'https://schema.org/OutOfStock'
+        : 'https://schema.org/InStock',
+    } : undefined,
+  } : null;
+  const seoTitle = product?.name ? `${product.name} | Dosalga` : `${isSpanish ? 'Producto' : 'Product'} | Dosalga`;
+  const seoDescription = productSummary || (isSpanish
+    ? 'Consulta los detalles, el precio y la disponibilidad de este producto Dosalga.'
+    : 'View the details, price, and availability of this Dosalga product.');
+  const seoHead = (
+    <Head>
+      <title>{seoTitle}</title>
+      <meta name="description" content={seoDescription} />
+      <link rel="canonical" href={canonicalUrl} />
+      {locales.map((locale) => (
+        <link key={locale} rel="alternate" hrefLang={locale} href={productHrefFor(locale)} />
+      ))}
+      <link rel="alternate" hrefLang="x-default" href={productHrefFor('en')} />
+      <meta property="og:type" content="product" />
+      <meta property="og:url" content={canonicalUrl} />
+      <meta property="og:title" content={seoTitle} />
+      <meta property="og:description" content={seoDescription} />
+      {images[0]?.src && <meta property="og:image" content={images[0].src} />}
+      {productStructuredData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(productStructuredData) }}
+        />
+      )}
+    </Head>
+  );
 
   const renderStars = () => {
     const stars = [];
@@ -264,27 +318,34 @@ const ProductDefaultPage = () => {
 
   if (loading || !resolvedId) {
     return (
-      <div className="container py-5 mt-110 mb-110 text-center">
-        <div className="spinner-border" role="status">
-          <span className="visually-hidden">Loading...</span>
+      <>
+        {seoHead}
+        <div className="container py-5 mt-110 mb-110 text-center">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
   if (error || !product) {
     return (
-      <div className="container py-5 mt-110 mb-110">
-        <div className="alert alert-danger mb-3">{error || 'Unable to load product.'}</div>
-        <Link legacyBehavior href={`${localePrefix}/shop`}>
-          <a className="primary-btn1">Back to shop</a>
-        </Link>
-      </div>
+      <>
+        {seoHead}
+        <div className="container py-5 mt-110 mb-110">
+          <div className="alert alert-danger mb-3">{error || 'Unable to load product.'}</div>
+          <Link legacyBehavior href={`${localePrefix}/shop`}>
+            <a className="primary-btn1">Back to shop</a>
+          </Link>
+        </div>
+      </>
     );
   }
 
   return (
     <>
+      {seoHead}
       <div className="shop-details-top-section mt-110 mb-110">
         <div className="container-xl container-fluid-lg container">
           <div className="row gy-5">
