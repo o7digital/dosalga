@@ -4,9 +4,11 @@ const CATEGORY_NAME_ENGLISH_OVERRIDES = {
   bags: 'Bags',
   bikes: 'Bikes',
   briefcase: 'Briefcases',
+  caps: 'Caps',
   corbatas: 'Ties',
   electronics: 'Electronics',
   garden: 'Garden',
+  hats: 'Hats',
   'men-jacket': "Men's Jackets",
   'men-sweater': "Men's Sweaters",
   'mens-shoes': "Men's Shoes",
@@ -24,9 +26,11 @@ const CATEGORY_NAME_OVERRIDES = {
   bags: 'Bolsos',
   bikes: 'Bicicletas',
   briefcase: 'Maletines',
+  caps: 'Gorras',
   corbatas: 'Corbatas',
   electronics: 'Electrónica',
   garden: 'Jardín',
+  hats: 'Sombreros',
   'men-jacket': 'Chaquetas para hombre',
   'men-sweater': 'Suéteres para hombre',
   'mens-shoes': 'Calzado para hombre',
@@ -75,6 +79,69 @@ const PRODUCT_NAME_OVERRIDES = {
   'ladies long sleeve panel conservative swimwear': 'Traje de baño conservador de manga larga con paneles',
   "women's solid color v-neck sling one piece swimsuit": 'Traje de baño liso de una pieza con escote en V y tirantes',
 };
+
+const SPANISH_PRODUCT_OVERRIDES = {
+  33045: ['Gorra de béisbol transpirable, versátil y moderna para hombre', 'Gorra ligera y transpirable de color liso, adecuada para primavera, uso diario y actividades al aire libre.'],
+  33028: ['Gorra de béisbol vintage lavada con letra bordada en relieve', 'Gorra ajustable de estilo vintage con acabado lavado, bordado en relieve y diseño cómodo para deportes y viajes.'],
+  33008: ['Gorra de béisbol vintage ajustable con letra bordada en relieve', 'Gorra lavable y ajustable con efecto desgastado y bordado tridimensional, pensada para paseos, compras y actividades deportivas.'],
+  32983: ['Gorra de béisbol ligera de malla transpirable para primavera y verano', 'Gorra ajustable de algodón y poliéster con malla transpirable, acabado lavado y protección solar.'],
+  32962: ['Gorra unisex ligera de secado rápido con ventilación y protección solar', 'Gorra de visera corta con tejido ligero, cordón ajustable y ventilación para salidas y actividades al aire libre.'],
+  32954: ['Gorra de béisbol ajustable bordada «One Nation Under God»', 'Gorra unisex de algodón y poliéster con bordado frontal, cierre ajustable y diseño para uso diario.'],
+  32942: ['Gorra de béisbol de algodón lavado con estampado azul marino', 'Gorra transpirable y ajustable de algodón lavado, con estilo retro y contorno adaptable.'],
+  32924: ['Gorra de béisbol ajustable con bandera nacional bordada', 'Gorra de visera suave con acabado lavado y bordado de bandera, adecuada para celebraciones y actividades cotidianas al aire libre.'],
+  32897: ['Gorra hip-hop de ala ancha y color liso para hombre', 'Gorra ajustable de estilo urbano con ala ancha, acabado plateado y cierre trasero a presión.'],
+  32880: ['Conjunto de sombrero y máscara con protección solar para senderismo', 'Conjunto de dos piezas en poliéster para senderismo y montañismo, con cobertura solar para cabeza y rostro.'],
+  32861: ['Gorra de béisbol minimalista de color liso estilo coreano', 'Gorra unisex de algodón con bordado discreto, contorno ajustable y diseño versátil.'],
+  32836: ['Gorra de béisbol térmica con forro polar para invierno', 'Gorra ajustable con forro cálido de piel de oveja sintética, adecuada para los meses fríos.'],
+  32824: ['Juego de 2 gorras vintage bordadas de Texas', 'Dos gorras ajustables de algodón lavado con bordado de Texas y diseño unisex de estilo vintage.'],
+  32804: ['Gorra de béisbol ligera y ajustable con letras bordadas', 'Gorra de secado rápido con protección solar, ideal para deporte, trayectos diarios y actividades casuales al aire libre.'],
+  32790: ['Gorra de béisbol ajustable con bordado para actividades al aire libre', 'Gorra moderna con letras y detalles bordados, diseñada para proteger del sol durante senderismo, pesca y excursiones.'],
+  32781: ['Gorra vintage bordada «Dad Veteran Hero Legend»', 'Gorra de algodón lavado con perfil bajo, cierre ajustable y bordado patriótico para veteranos.'],
+  32771: ['Gorra de camionero bordada «PAPA» para hombre', 'Gorra ajustable de algodón lavado con bordado «PAPA», pensada como regalo para el Día del Padre.'],
+  32761: ['Gorra vintage bordada «Football Dad»', 'Gorra de algodón lavado, estructura flexible y ajuste trasero, ideal como regalo para aficionados al fútbol americano.'],
+  32739: ['Gorra de béisbol de malla transpirable con diseño patchwork', 'Gorra ligera de copa suave con paneles de malla, adecuada para viajes, paseos y actividades al aire libre.'],
+  32722: ['Gorra de béisbol de camuflaje con bandera nacional', 'Gorra casual de copa suave con estampado de camuflaje, bandera bordada y estilo inspirado en los camioneros.'],
+  32709: ['Gorra de béisbol multicolor con oso bordado', 'Gorra ligera de poliéster con oso bordado y secado rápido para uso diario y actividades al aire libre.'],
+  32699: ['Gorra ajustable con letra C bordada para golf', 'Gorra redonda de poliéster con bordado en relieve, protección solar y ajuste trasero para golf y deporte.'],
+  32676: ['Gorra de béisbol casual transpirable y de secado rápido', 'Gorra unisex ajustable con letras bordadas, diseñada para primavera, verano y otoño.'],
+  32663: ['Gorra visera con águila bordada y estampado digital', 'Gorra de algodón con águila bordada, estilo retro y talla ajustable para uso diario.'],
+  32646: ['Gorra de béisbol bordada con protección solar para hombre', 'Gorra de poliéster con bordado a máquina, copa redonda y ajuste cómodo para exteriores.'],
+  32631: ['Gorra moderna de color liso con letras bordadas', 'Gorra de algodón con copa redonda, visera enrollada y letras bordadas para el verano.'],
+  32622: ['Gorra de béisbol con bandera de México para mujer y hombre', 'Gorra unisex de algodón con la bandera de México, ajustable y adecuada como regalo patriótico.'],
+  32611: ['Gorra de béisbol de algodón bordada con bandera de Israel', 'Gorra unisex ajustable con bandera y nombre de Israel bordados en la parte frontal.'],
+  32597: ['Gorra de béisbol de malla transpirable en rojo y azul', 'Gorra ajustable de algodón espacial y poliéster, transpirable y resistente al viento.'],
+  32581: ['Gorra de béisbol de secado rápido con protección solar', 'Gorra ligera de poliéster con copa alta, ventilación y protección solar para primavera, verano y otoño.'],
+  32560: ['Gorra de béisbol de algodón personalizable y estampada', 'Gorra ajustable de algodón disponible en varios colores, apta para estampado y bordado personalizado.'],
+  32541: ['Gorra de béisbol para hombre con contorno amplio', 'Gorra de algodón ajustable para cabezas grandes, con diseño transpirable y protección solar.'],
+  32530: ['Gorra de pesca con visera alargada y protección solar', 'Gorra de algodón con visera larga, ajuste trasero y ventilación para pesca y actividades al aire libre.'],
+  32494: ['Gorra de pana versátil con visera para hombre', 'Gorra de algodón tipo pana, disponible en varios colores y fácil de combinar con ropa casual.'],
+  32481: ['Gorra de béisbol de algodón lavado con calabaza bordada', 'Gorra unisex de Halloween con calabaza sonriente bordada, copa redonda y talla ajustable.'],
+  32468: ['Casco protector acolchado para fútbol, rugby, patinaje y snowboard', 'Protección acolchada para la cabeza indicada para deportes de contacto, ciclismo, patinaje y actividades en nieve.'],
+  32460: ['Gorra con cereza bordada y protección solar para exterior', 'Gorra ajustable de algodón con cereza bordada, transpirable y adecuada para viajes y uso diario.'],
+  32447: ['Gorra de béisbol de algodón lavado con fantasma bordado', 'Gorra ajustable y transpirable con diseño de fantasma bordado, apta para las cuatro estaciones.'],
+  32401: ['Gorra de béisbol de verano con tiburón bordado', 'Gorra de algodón con bordado de tiburón, talla ajustable y amplia variedad de colores.'],
+  32378: ['Gorra de béisbol vintage lavada y desgastada con astronauta', 'Gorra ajustable de estilo retro con efecto lavado, detalles desgastados y bordado de astronauta.'],
+  32371: ['Gorra retro lavada con letras de Tokio', 'Gorra de algodón con bordado de Tokio, acabado lavado y ajuste trasero para un estilo casual.'],
+  32354: ['Gorra de camuflaje con malla y bordado para hombre', 'Gorra ajustable de algodón con malla transpirable, estampado de camuflaje y letras bordadas.'],
+  32322: ['Gorra de béisbol de algodón con huella de perro bordada', 'Gorra ajustable de algodón con copa suave y bordado de huella, disponible en varios colores.'],
+  32188: ['Gorra retro de visera corta para mujer y hombre', 'Gorra unisex de poliéster con visera corta, bordado discreto y contorno ajustable.'],
+  32333: ['Sombrero de ala ancha con protección solar para hombre', 'Sombrero transpirable de poliéster con ala ancha y contorno ajustable para el verano.'],
+  32305: ['Sombrero tipo bucket de algodón vintage con protección solar', 'Sombrero de algodón de estilo utilitario, con ala protectora y talla adaptable para hombre.'],
+  32284: ['Sombrero transpirable anti-UV con protección de cuello para hombre', 'Sombrero de poliéster con cubrenuca, protección solar y diseño transpirable para senderismo y pesca.'],
+  32261: ['Sombrero tipo bucket con máscara para montañismo, camping y pesca', 'Conjunto de sombrero y máscara de algodón para actividades al aire libre en otoño e invierno.'],
+  32228: ['Sombrero tipo bucket de ala ancha con protección facial y solar', 'Sombrero ajustable de nailon con ala ancha y cobertura de rostro para montañismo y actividades de verano.'],
+};
+
+const decodeProductNameEntities = (value) => String(value ?? '')
+  .replace(/&(?:amp;)?nbsp;/gi, ' ')
+  .replace(/&#0*39;|&apos;/gi, "'")
+  .replace(/&#8216;|&#8217;|&lsquo;|&rsquo;/gi, '’')
+  .replace(/&#8211;|&ndash;/gi, '–')
+  .replace(/&#8212;|&mdash;/gi, '—')
+  .replace(/&quot;/gi, '"')
+  .replace(/&amp;/gi, '&')
+  .replace(/\s+/g, ' ')
+  .trim();
 
 const SPANISH_REPLACEMENTS = [
   ['asian sizes are 1 to 2 sizes smaller than european and american people', 'las tallas asiaticas son de 1 a 2 tallas menores que las europeas y americanas'],
@@ -360,7 +427,7 @@ export const translateProductTextToSpanish = (value) => {
 };
 
 export const translateProductNameToSpanish = (value) => {
-  const raw = String(value ?? '').trim();
+  const raw = decodeProductNameEntities(value);
   if (!raw) return value;
 
   const override = PRODUCT_NAME_OVERRIDES[raw.toLowerCase()];
@@ -431,8 +498,15 @@ export const translateWooProductTextToSpanish = (product) => {
     };
   }, product);
 
+  const productOverride = SPANISH_PRODUCT_OVERRIDES[Number(product.id)];
+
   return {
     ...translatedProduct,
+    ...(productOverride ? {
+      name: productOverride[0],
+      short_description: `<p>${productOverride[1]}</p>`,
+      description: `<p>${productOverride[1]}</p>`,
+    } : {}),
     categories: translateCategoriesToSpanish(translatedProduct.categories),
   };
 };
@@ -462,6 +536,7 @@ export const normalizeWooProductTextToEnglish = (product) => {
 
   return {
     ...product,
+    name: decodeProductNameEntities(product.name),
     categories: normalizeCategoriesToEnglish(product.categories),
   };
 };
