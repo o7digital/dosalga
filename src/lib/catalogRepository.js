@@ -1,5 +1,6 @@
 import { query, withTransaction } from '@/src/lib/database';
 import { applyRailwayPriceRegistry } from '@/src/lib/pricing';
+import { getAdminRailwayPriceRegistry } from '@/src/lib/railwayPriceRegistry';
 
 const STORE_ID = 'MX';
 
@@ -272,9 +273,10 @@ export const getCatalogProducts = async (options = {}) => {
     WHERE ${conditions.join(' AND ')}
     ORDER BY ${orderColumn} ${orderDirection} NULLS LAST, storefront_catalog_products.woo_id DESC${pagination}
   `, values);
+  const adminRegistry = await getAdminRailwayPriceRegistry();
   return result.rows.map((row) => applyRailwayPriceRegistry(
     row.payload,
-    row.raw_currency ? row : null,
+    adminRegistry.get(String(row.payload?.id)) || (row.raw_currency ? row : null),
   ));
 };
 
@@ -300,7 +302,12 @@ export const getCatalogProduct = async (id) => {
     LIMIT 1
   `, [STORE_ID, id]);
   const row = result.rows[0];
-  return row ? applyRailwayPriceRegistry(row.payload, row.raw_currency ? row : null) : null;
+  if (!row) return null;
+  const adminRegistry = await getAdminRailwayPriceRegistry();
+  return applyRailwayPriceRegistry(
+    row.payload,
+    adminRegistry.get(String(row.payload?.id)) || (row.raw_currency ? row : null),
+  );
 };
 
 export const getCatalogCategories = async ({ hideEmpty = false } = {}) => {
