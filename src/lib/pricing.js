@@ -73,14 +73,24 @@ const getMetaValue = (product, key) => {
   return entry?.value ?? null;
 };
 
-const getExplicitProductCurrency = (product) => {
-  const currency = String(
-    getMetaValue(product, 'dosalga_price_source_currency')
-    || ''
-  ).trim().toUpperCase();
-
+const normalizeCurrencyCode = (value) => {
+  const currency = String(value || '').trim().toUpperCase();
   return currency === 'MXN' || currency === 'USD' ? currency : null;
 };
+
+const getExplicitProductCurrency = (product) => {
+  return normalizeCurrencyCode(
+    getMetaValue(product, 'dosalga_price_source_currency')
+    || product?.sourceCurrency
+    || product?.source_currency
+  );
+};
+
+const getPersistedValueCurrency = (product) => normalizeCurrencyCode(
+  getMetaValue(product, 'dosalga_price_value_currency')
+  || product?.priceValueCurrency
+  || product?.price_value_currency
+);
 
 const normalizeCurrencyMarkerText = (value) => {
   return String(value || '')
@@ -151,13 +161,19 @@ export const getWooProductMXNPrice = (product, value) => {
   const numeric = parsePriceValue(value);
   if (numeric === null) return null;
 
-  // Woo Store API currency_code is the store display currency, not the
-  // currency of the value originally imported into this individual product.
-  const explicitCurrency = getExplicitProductCurrency(product);
+  // A value already normalized and persisted in Railway must be idempotent.
+  // The per-product source marker is the only authority for conversion: the
+  // Store API currency and catalogue-wide defaults cannot describe mixed
+  // legacy/CJ imports safely.
+  const explicitCurrency = getPersistedValueCurrency(product)
+    || getExplicitProductCurrency(product);
 
   if (explicitCurrency === 'MXN') return numeric;
   if (explicitCurrency === 'USD') return numeric * getMXNPerUSD();
 
+  // Legacy products predate the Railway register. Keep the existing marker/date
+  // bootstrap only for those unregistered records; the register takes over as
+  // soon as a per-product decision exists.
   const rawDate = product?.date_created || product?.date_created_gmt;
   if (rawDate || Array.isArray(product?.categories)) {
     return isImportedMXNProduct(product) ? numeric : numeric * getMXNPerUSD();
@@ -196,16 +212,26 @@ export const normalizeWooProductPricesToMXN = (product) => {
 
   const normalizedProduct = PRICE_FIELDS.reduce(normalizePriceField, product);
   const explicitSourceCurrency = getExplicitProductCurrency(product);
-  const sourceCurrency = explicitSourceCurrency
-    || (isImportedMXNProduct(product) ? 'MXN' : 'USD');
+  const managedMetaKeys = new Set([
+    'dosalga_price_origin_currency',
+    'dosalga_price_source_currency',
+    'dosalga_price_display_currency',
+    'dosalga_price_value_currency',
+    'dosalga_mxn_per_usd',
+  ]);
+  const metadata = (Array.isArray(product.meta_data) ? product.meta_data : [])
+    .filter((entry) => !managedMetaKeys.has(entry?.key));
 
   return {
     ...normalizedProduct,
     price_html: '',
     meta_data: [
-      ...(Array.isArray(product.meta_data) ? product.meta_data : []),
-      { key: 'dosalga_price_source_currency', value: sourceCurrency },
+      ...metadata,
+      ...(explicitSourceCurrency
+        ? [{ key: 'dosalga_price_source_currency', value: explicitSourceCurrency }]
+        : []),
       { key: 'dosalga_price_display_currency', value: 'MXN' },
+      { key: 'dosalga_price_value_currency', value: 'MXN' },
       { key: 'dosalga_mxn_per_usd', value: String(getMXNPerUSD()) },
     ],
   };
@@ -218,4 +244,53 @@ export const normalizeWooProductsPricesToMXN = (products) => {
 
   return products.map(normalizeWooProductPricesToMXN);
 
+};
+
+export const applyRailwayPriceRegistry = (product, registry) => {
+  if (!product || !registry) return product;
+  const finalPrice = parsePriceValue(registry.final_price ?? registry.finalPrice);
+  const rawPrice = parsePriceValue(registry.raw_price ?? registry.rawPrice);
+  const rawCurrency = normalizeCurrencyCode(registry.raw_currency ?? registry.rawCurrency);
+  const finalCurrency = normalizeCurrencyCode(registry.final_currency ?? registry.finalCurrency);
+  const exchangeRate = parsePriceValue(registry.exchange_rate ?? registry.exchangeRate);
+  if (finalPrice === null || rawPrice === null || !rawCurrency || !finalCurrency || exchangeRate === null) return product;
+
+  const managedMetaKeys = new Set([
+    'dosalga_price_origin_currency',
+    'dosalga_price_source_currency',
+    'dosalga_price_display_currency',
+    'dosalga_price_value_currency',
+    'dosalga_mxn_per_usd',
+  ]);
+  const metaData = (Array.isArray(product.meta_data) ? product.meta_data : [])
+    .filter((entry) => !managedMetaKeys.has(entry?.key));
+  const formatted = finalPrice.toFixed(2);
+
+  return {
+    ...product,
+    price: formatted,
+    regular_price: formatted,
+    ...(product.sale_price ? { sale_price: formatted } : {}),
+    sourcePrice: rawPrice,
+    sourceCurrency: rawCurrency,
+    priceValueCurrency: finalCurrency,
+    priceRegistry: {
+      rawPrice,
+      rawCurrency,
+      exchangeRate,
+      finalPrice,
+      finalCurrency,
+      decisionSource: registry.decision_source ?? registry.decisionSource,
+      verified: registry.verified === true,
+      updatedAt: registry.updated_at ?? registry.updatedAt ?? null,
+    },
+    meta_data: [
+      ...metaData,
+      { key: 'dosalga_price_origin_currency', value: rawCurrency },
+      { key: 'dosalga_price_source_currency', value: finalCurrency },
+      { key: 'dosalga_price_display_currency', value: finalCurrency },
+      { key: 'dosalga_price_value_currency', value: finalCurrency },
+      { key: 'dosalga_mxn_per_usd', value: String(exchangeRate) },
+    ],
+  };
 };

@@ -1,7 +1,7 @@
 import crypto from 'node:crypto';
 import { deleteCatalogProduct, upsertCatalogProduct } from '@/src/lib/catalogRepository';
 import { normalizeWooProductPricesToMXN } from '@/src/lib/pricing';
-import { getProduct } from '@/src/lib/woocommerce';
+import { getProduct, getRestProduct } from '@/src/lib/woocommerce';
 
 export const config = {
   api: { bodyParser: false },
@@ -49,8 +49,18 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true, action: 'deleted', productId });
     }
 
-    const product = await getProduct(productId);
-    await upsertCatalogProduct(normalizeWooProductPricesToMXN([product])[0]);
+    const [product, restProduct] = await Promise.all([
+      getProduct(productId),
+      getRestProduct(productId),
+    ]);
+    const enriched = {
+      ...product,
+      date_created: restProduct.date_created,
+      date_created_gmt: restProduct.date_created_gmt,
+      date_modified: restProduct.date_modified,
+      meta_data: restProduct.meta_data,
+    };
+    await upsertCatalogProduct(normalizeWooProductPricesToMXN(enriched));
     return res.status(200).json({ success: true, action: 'upserted', productId });
   } catch (error) {
     console.error('Catalog webhook failed:', error);

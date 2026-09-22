@@ -1,4 +1,5 @@
 import { query, withTransaction } from '@/src/lib/database';
+import { applyRailwayPriceRegistry } from '@/src/lib/pricing';
 
 const STORE_ID = 'MX';
 
@@ -30,6 +31,24 @@ CREATE TABLE IF NOT EXISTS storefront_catalog_sync_runs (
   status TEXT NOT NULL, product_count INTEGER NOT NULL DEFAULT 0,
   category_count INTEGER NOT NULL DEFAULT 0, started_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   completed_at TIMESTAMPTZ, error_message TEXT
+);
+CREATE TABLE IF NOT EXISTS product_price_registry (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  store_code TEXT NOT NULL CHECK (store_code IN ('MX', 'US')),
+  woo_product_id BIGINT NOT NULL,
+  external_id TEXT,
+  sku TEXT,
+  raw_price NUMERIC(14, 4) NOT NULL CHECK (raw_price >= 0),
+  raw_currency CHAR(3) NOT NULL CHECK (raw_currency IN ('MXN', 'USD')),
+  exchange_rate NUMERIC(20, 8) NOT NULL CHECK (exchange_rate > 0),
+  final_price NUMERIC(14, 4) NOT NULL CHECK (final_price >= 0),
+  final_currency CHAR(3) NOT NULL CHECK (final_currency IN ('MXN', 'USD')),
+  decision_source TEXT NOT NULL,
+  verified BOOLEAN NOT NULL DEFAULT FALSE,
+  evidence JSONB NOT NULL DEFAULT '{}'::JSONB,
+  first_recorded_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (store_code, woo_product_id)
 );`;
 
 let schemaPromise;
@@ -205,7 +224,10 @@ export const deleteCatalogProduct = async (id) => {
 export const getCatalogProducts = async (options = {}) => {
   await ensureCatalogSchema();
   const values = [STORE_ID];
-  const conditions = ['store_id = $1', "status = 'publish'"];
+  const conditions = [
+    'storefront_catalog_products.store_id = $1',
+    "storefront_catalog_products.status = 'publish'",
+  ];
   const addValue = (value) => {
     values.push(value);
     return `$${values.length}`;
@@ -213,19 +235,19 @@ export const getCatalogProducts = async (options = {}) => {
 
   if (options.category) {
     const categoryId = Number.parseInt(options.category, 10);
-    if (Number.isFinite(categoryId)) conditions.push(`category_ids @> ARRAY[${addValue(categoryId)}]::bigint[]`);
+    if (Number.isFinite(categoryId)) conditions.push(`storefront_catalog_products.category_ids @> ARRAY[${addValue(categoryId)}]::bigint[]`);
   }
-  if (options.sku) conditions.push(`LOWER(sku) = LOWER(${addValue(String(options.sku).trim())})`);
-  if (options.search) conditions.push(`search_text ILIKE ${addValue(`%${String(options.search).trim()}%`)}`);
-  if (options.onSale !== undefined) conditions.push(`on_sale = ${addValue(Boolean(options.onSale))}`);
-  if (options.featured !== undefined) conditions.push(`featured = ${addValue(Boolean(options.featured))}`);
+  if (options.sku) conditions.push(`LOWER(storefront_catalog_products.sku) = LOWER(${addValue(String(options.sku).trim())})`);
+  if (options.search) conditions.push(`storefront_catalog_products.search_text ILIKE ${addValue(`%${String(options.search).trim()}%`)}`);
+  if (options.onSale !== undefined) conditions.push(`storefront_catalog_products.on_sale = ${addValue(Boolean(options.onSale))}`);
+  if (options.featured !== undefined) conditions.push(`storefront_catalog_products.featured = ${addValue(Boolean(options.featured))}`);
 
   const orderColumns = {
-    date: 'date_created',
-    price: 'price',
-    popularity: 'total_sales',
-    rating: 'average_rating',
-    title: 'name',
+    date: 'storefront_catalog_products.date_created',
+    price: 'COALESCE(product_price_registry.final_price, storefront_catalog_products.price)',
+    popularity: 'storefront_catalog_products.total_sales',
+    rating: 'storefront_catalog_products.average_rating',
+    title: 'storefront_catalog_products.name',
   };
   const orderColumn = orderColumns[options.orderby] || orderColumns.date;
   const orderDirection = String(options.order).toLowerCase() === 'asc' ? 'ASC' : 'DESC';
@@ -234,20 +256,51 @@ export const getCatalogProducts = async (options = {}) => {
     : ` LIMIT ${addValue(options.perPage || 24)} OFFSET ${addValue(((options.page || 1) - 1) * (options.perPage || 24))}`;
 
   const result = await query(`
-    SELECT payload FROM storefront_catalog_products
+    SELECT storefront_catalog_products.payload,
+           product_price_registry.raw_price,
+           product_price_registry.raw_currency,
+           product_price_registry.exchange_rate,
+           product_price_registry.final_price,
+           product_price_registry.final_currency,
+           product_price_registry.decision_source,
+           product_price_registry.verified,
+           product_price_registry.updated_at
+    FROM storefront_catalog_products
+    LEFT JOIN product_price_registry
+      ON product_price_registry.store_code = storefront_catalog_products.store_id
+     AND product_price_registry.woo_product_id = storefront_catalog_products.woo_id
     WHERE ${conditions.join(' AND ')}
-    ORDER BY ${orderColumn} ${orderDirection} NULLS LAST, woo_id DESC${pagination}
+    ORDER BY ${orderColumn} ${orderDirection} NULLS LAST, storefront_catalog_products.woo_id DESC${pagination}
   `, values);
-  return result.rows.map((row) => row.payload);
+  return result.rows.map((row) => applyRailwayPriceRegistry(
+    row.payload,
+    row.raw_currency ? row : null,
+  ));
 };
 
 export const getCatalogProduct = async (id) => {
   await ensureCatalogSchema();
   const result = await query(`
-    SELECT payload FROM storefront_catalog_products
-    WHERE store_id = $1 AND woo_id = $2 AND status = 'publish' LIMIT 1
+    SELECT storefront_catalog_products.payload,
+           product_price_registry.raw_price,
+           product_price_registry.raw_currency,
+           product_price_registry.exchange_rate,
+           product_price_registry.final_price,
+           product_price_registry.final_currency,
+           product_price_registry.decision_source,
+           product_price_registry.verified,
+           product_price_registry.updated_at
+    FROM storefront_catalog_products
+    LEFT JOIN product_price_registry
+      ON product_price_registry.store_code = storefront_catalog_products.store_id
+     AND product_price_registry.woo_product_id = storefront_catalog_products.woo_id
+    WHERE storefront_catalog_products.store_id = $1
+      AND storefront_catalog_products.woo_id = $2
+      AND storefront_catalog_products.status = 'publish'
+    LIMIT 1
   `, [STORE_ID, id]);
-  return result.rows[0]?.payload || null;
+  const row = result.rows[0];
+  return row ? applyRailwayPriceRegistry(row.payload, row.raw_currency ? row : null) : null;
 };
 
 export const getCatalogCategories = async ({ hideEmpty = false } = {}) => {
