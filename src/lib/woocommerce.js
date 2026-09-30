@@ -1,7 +1,5 @@
 import WooCommerceRestApi from "@woocommerce/woocommerce-rest-api";
 
-const FALLBACK_KEY = "ck_962f8b4455545de9a9a6155616535fdf8d9eb1db";
-const FALLBACK_SECRET = "cs_4242ab75e9fb88408afd2961efb76b7ce9211bc9";
 const FALLBACK_WORDPRESS_URL = "https://wp-dosalga-mx.o7digitalgroup.com";
 const MAX_PRODUCTS_PER_PAGE = 100;
 const STORE_API_PRODUCT_PARAMS = [
@@ -197,10 +195,10 @@ const api = new WooCommerceRestApi({
   // WooCommerce accepts WordPress Application Passwords through HTTPS Basic Auth.
   consumerKey: hasApplicationPasswordAuth
     ? applicationUsername
-    : process.env.WC_CONSUMER_KEY || FALLBACK_KEY,
+    : process.env.WC_CONSUMER_KEY || "",
   consumerSecret: hasApplicationPasswordAuth
     ? applicationPassword
-    : process.env.WC_CONSUMER_SECRET || FALLBACK_SECRET,
+    : process.env.WC_CONSUMER_SECRET || "",
   version: "wc/v3",
   // Consumer keys can use query-string auth; application passwords must use Basic Auth.
   queryStringAuth: !hasApplicationPasswordAuth,
