@@ -1,8 +1,6 @@
 const WooCommerceRestApi = require('@woocommerce/woocommerce-rest-api').default;
 
 const FALLBACK_WORDPRESS_URL = 'https://oliviers44.sg-host.com';
-const FALLBACK_KEY = 'ck_962f8b4455545de9a9a6155616535fdf8d9eb1db';
-const FALLBACK_SECRET = 'cs_4242ab75e9fb88408afd2961efb76b7ce9211bc9';
 const MAX_PRODUCTS_PER_PAGE = 100;
 const MXN_IMPORT_CUTOFF = '2026-08-03T00:00:00';
 const USD_MARKER = 'CURRENCY=USD';
@@ -65,14 +63,17 @@ const fetchAllPages = async (api, endpoint, params = {}) => {
 
 const main = async () => {
   const dryRun = process.argv.includes('--dry-run');
+  if (!process.env.WC_CONSUMER_KEY || !process.env.WC_CONSUMER_SECRET) {
+    throw new Error('WC_CONSUMER_KEY and WC_CONSUMER_SECRET are required.');
+  }
   const api = new WooCommerceRestApi({
     url: normalizeWordPressUrl(
       process.env.WORDPRESS_URL
       || process.env.WOOCOMMERCE_URL
       || process.env.NEXT_PUBLIC_WORDPRESS_URL
     ),
-    consumerKey: process.env.WC_CONSUMER_KEY || FALLBACK_KEY,
-    consumerSecret: process.env.WC_CONSUMER_SECRET || FALLBACK_SECRET,
+    consumerKey: process.env.WC_CONSUMER_KEY,
+    consumerSecret: process.env.WC_CONSUMER_SECRET,
     version: 'wc/v3',
     queryStringAuth: true,
     axiosConfig: {
