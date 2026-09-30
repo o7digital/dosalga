@@ -5,16 +5,25 @@
 
 const https = require('https');
 
-const WORDPRESS_URL = 'https://oliviers44.sg-host.com';
-const CONSUMER_KEY = 'ck_962f8b4455545de9a9a6155616535fdf8d9eb1db';
-const CONSUMER_SECRET = 'cs_4242ab75e9fb88408afd2961efb76b7ce9211bc9';
+const WORDPRESS_URL = process.env.WORDPRESS_URL || 'https://wp-dosalga-mx.o7digitalgroup.com';
+const CONSUMER_KEY = process.env.WC_CONSUMER_KEY;
+const CONSUMER_SECRET = process.env.WC_CONSUMER_SECRET;
+
+if (!CONSUMER_KEY || !CONSUMER_SECRET) {
+  throw new Error('WC_CONSUMER_KEY and WC_CONSUMER_SECRET are required.');
+}
+const requestOptions = {
+  headers: {
+    Authorization: `Basic ${Buffer.from(`${CONSUMER_KEY}:${CONSUMER_SECRET}`).toString('base64')}`,
+  },
+};
 
 // Test 1: Vérifier la connexion à l'API
 console.log('🧪 Test de connexion à WooCommerce...\n');
 
-const apiUrl = `${WORDPRESS_URL}/wp-json/wc/v3/products?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&per_page=5`;
+const apiUrl = `${WORDPRESS_URL}/wp-json/wc/v3/products?per_page=5`;
 
-https.get(apiUrl, (res) => {
+https.get(apiUrl, requestOptions, (res) => {
   let data = '';
 
   res.on('data', (chunk) => {
@@ -49,9 +58,9 @@ https.get(apiUrl, (res) => {
 // Test 2: Vérifier les catégories
 console.log('\n🏷️  Test des catégories...\n');
 
-const catUrl = `${WORDPRESS_URL}/wp-json/wc/v3/products/categories?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}`;
+const catUrl = `${WORDPRESS_URL}/wp-json/wc/v3/products/categories`;
 
-https.get(catUrl, (res) => {
+https.get(catUrl, requestOptions, (res) => {
   let data = '';
 
   res.on('data', (chunk) => {
