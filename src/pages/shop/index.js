@@ -17,8 +17,6 @@ const SORT_PRESETS = {
   popular: { orderby: 'popularity', order: 'desc' },
 };
 
-const PRODUCTS_PER_PAGE = 24;
-
 const ShopPage = () => {
   const router = useRouter();
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
@@ -27,8 +25,6 @@ const ShopPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
-  const [page, setPage] = useState(1);
-  const [loadedProducts, setLoadedProducts] = useState([]);
   const [hiddenImageProductIds, setHiddenImageProductIds] = useState([]);
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
   const localeSegment = router.asPath.split('?')[0].split('/')[1];
@@ -76,8 +72,6 @@ const ShopPage = () => {
 
   const selectCategory = (categoryId = '') => {
     setSelectedCategory(String(categoryId));
-    setLoadedProducts([]);
-    setPage(1);
     setIsOpenSidebar(false);
   };
 
@@ -103,8 +97,6 @@ const ShopPage = () => {
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
       setDebouncedSearchQuery(searchQuery.trim());
-      setPage(1);
-      setLoadedProducts([]);
     }, 300);
 
     return () => window.clearTimeout(timeoutId);
@@ -112,8 +104,7 @@ const ShopPage = () => {
 
   const productParams = useMemo(() => {
     const params = {
-      page,
-      per_page: PRODUCTS_PER_PAGE,
+      all: true,
       orderby: sortPreset.orderby,
       order: sortPreset.order,
       lang: currentLang,
@@ -128,32 +119,14 @@ const ShopPage = () => {
     }
 
     return params;
-  }, [currentLang, debouncedSearchQuery, page, selectedCategory, sortPreset.order, sortPreset.orderby]);
+  }, [currentLang, debouncedSearchQuery, selectedCategory, sortPreset.order, sortPreset.orderby]);
 
   const { products, loading, error } = useProducts(productParams);
   const { categories } = useCategories({ per_page: 100, hide_empty: true, lang: currentLang });
 
   useEffect(() => {
-    setLoadedProducts((currentProducts) => {
-      if (page === 1) {
-        return products;
-      }
-
-      const existingIds = new Set(currentProducts.map((product) => product.id));
-      return [
-        ...currentProducts,
-        ...products.filter((product) => !existingIds.has(product.id)),
-      ];
-    });
-  }, [page, products]);
-
-  useEffect(() => {
     setHiddenImageProductIds([]);
   }, [productParams]);
-
-  useEffect(() => {
-    setPage(1);
-  }, [currentLang, selectedCategory, sortKey]);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -165,9 +138,8 @@ const ShopPage = () => {
 
   const visibleProducts = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
-    const source = loadedProducts.filter((product) => (
+    const source = products.filter((product) => (
       getPrimaryProductImageSrc(product)
-      && product.stock_status !== 'outofstock'
       && !hiddenImageProductIds.includes(product.id)
     ));
 
@@ -190,21 +162,17 @@ const ShopPage = () => {
 
       return haystack.includes(query);
     });
-  }, [hiddenImageProductIds, loadedProducts, searchQuery]);
+  }, [hiddenImageProductIds, products, searchQuery]);
 
   const visibleCategories = useMemo(() => {
     return categories.filter((category) => Number(category.count || 0) > 0).slice(0, 8);
   }, [categories]);
 
-  const totalCategoryCount = useMemo(() => {
-    return visibleCategories.reduce((total, category) => total + Number(category.count || 0), 0);
-  }, [visibleCategories]);
-
   const topProducts = useMemo(() => (
-    loadedProducts
+    products
       .filter((product) => getPrimaryProductImageSrc(product))
       .slice(0, 3)
-  ), [loadedProducts]);
+  ), [products]);
 
   const hideProductWithInvalidImage = (productId) => {
     setHiddenImageProductIds((currentIds) => (
@@ -340,7 +308,7 @@ const ShopPage = () => {
               className={`dosalga-chip ${selectedCategory ? '' : 'is-active'}`}
               onClick={() => selectCategory('')}
             >
-              {isSpanish ? 'Todos' : 'All'} ({totalCategoryCount || products.length})
+              {isSpanish ? 'Todos' : 'All'}{!selectedCategory && !loading ? ` (${visibleProducts.length})` : ''}
             </button>
 
             {visibleCategories.map((category) => (
@@ -395,17 +363,7 @@ const ShopPage = () => {
               ))}
             </div>
 
-            {!loading && !error && products.length >= PRODUCTS_PER_PAGE && (
-              <div className="text-center">
-                <button
-                  type="button"
-                  className="primary-btn1 hover-btn3"
-                  onClick={() => setPage((currentPage) => currentPage + 1)}
-                >
-                  {isSpanish ? 'Ver mas productos' : 'Load more products'}
-                </button>
-              </div>
-            )}
+
           </div>
         </div>
       </div>

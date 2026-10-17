@@ -1,7 +1,7 @@
 /**
  * Hook personnalisé pour gérer les produits WooCommerce via les routes API
  */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { getWooCommerceRefreshIntervalMs } from '@/src/lib/liveRefresh';
 
 const buildQueryString = (params = {}) => {
@@ -23,6 +23,7 @@ const buildQueryString = (params = {}) => {
  * @param {Object} initialParams - Paramètres initiaux (page, per_page, category, etc.)
  */
 export const useProducts = (initialParams = {}, options = {}) => {
+  const requestVersion = useRef(0);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,6 +31,7 @@ export const useProducts = (initialParams = {}, options = {}) => {
   const refreshIntervalMs = options.refreshIntervalMs ?? getWooCommerceRefreshIntervalMs();
 
   const fetchProducts = async (params = {}, fetchOptions = {}) => {
+    const version = ++requestVersion.current;
     const { silent = false } = fetchOptions;
 
     try {
@@ -49,13 +51,14 @@ export const useProducts = (initialParams = {}, options = {}) => {
         throw new Error(result.message || 'Erreur lors de la récupération des produits');
       }
       
-      setProducts(result.data || []);
+      if (version === requestVersion.current) setProducts(result.data || []);
     } catch (err) {
+      if (version !== requestVersion.current) return;
       console.error('Error fetching products:', err);
       setError(err.message);
       setProducts([]);
     } finally {
-      if (!silent) {
+      if (version === requestVersion.current) {
         setLoading(false);
       }
     }
@@ -65,14 +68,14 @@ export const useProducts = (initialParams = {}, options = {}) => {
     fetchProducts(initialParams);
 
     if (!refreshIntervalMs) {
-      return undefined;
+      return () => { requestVersion.current++; };
     }
 
     const intervalId = window.setInterval(() => {
       fetchProducts(initialParams, { silent: true });
     }, refreshIntervalMs);
 
-    return () => window.clearInterval(intervalId);
+    return () => { requestVersion.current++; window.clearInterval(intervalId); };
   }, [paramsKey, refreshIntervalMs]);
 
   const refetch = (params = {}) => {
