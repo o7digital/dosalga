@@ -25,7 +25,6 @@ const ShopPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
-  const [hiddenImageProductIds, setHiddenImageProductIds] = useState([]);
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
   const localeSegment = router.asPath.split('?')[0].split('/')[1];
   const currentLang = localeSegment === 'en'
@@ -105,6 +104,7 @@ const ShopPage = () => {
   const productParams = useMemo(() => {
     const params = {
       all: true,
+      view: 'cards',
       orderby: sortPreset.orderby,
       order: sortPreset.order,
       lang: currentLang,
@@ -124,9 +124,7 @@ const ShopPage = () => {
   const { products, loading, error } = useProducts(productParams);
   const { categories } = useCategories({ per_page: 100, hide_empty: true, lang: currentLang });
 
-  useEffect(() => {
-    setHiddenImageProductIds([]);
-  }, [productParams]);
+
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -140,7 +138,6 @@ const ShopPage = () => {
     const query = searchQuery.trim().toLowerCase();
     const source = products.filter((product) => (
       getPrimaryProductImageSrc(product)
-      && !hiddenImageProductIds.includes(product.id)
     ));
 
     if (!query) {
@@ -162,7 +159,7 @@ const ShopPage = () => {
 
       return haystack.includes(query);
     });
-  }, [hiddenImageProductIds, products, searchQuery]);
+  }, [products, searchQuery]);
 
   const visibleCategories = useMemo(() => {
     return categories.filter((category) => Number(category.count || 0) > 0).slice(0, 8);
@@ -174,11 +171,7 @@ const ShopPage = () => {
       .slice(0, 3)
   ), [products]);
 
-  const hideProductWithInvalidImage = (productId) => {
-    setHiddenImageProductIds((currentIds) => (
-      currentIds.includes(productId) ? currentIds : [...currentIds, productId]
-    ));
-  };
+
 
   const gridColumnClass =
     activeColumn === 'column-2'
@@ -357,7 +350,6 @@ const ShopPage = () => {
                   <ProductCard
                     product={product}
                     showCountdown={index === 0}
-                    onImageInvalid={hideProductWithInvalidImage}
                   />
                 </div>
               ))}

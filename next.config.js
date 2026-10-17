@@ -1,3 +1,4 @@
+const { PRODUCT_IMAGE_HOSTS } = require('./src/lib/productImages.cjs');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -5,11 +6,11 @@ const nextConfig = {
   
   // Image Optimization
   images: {
-    domains: ['dosalga.online', 'www.dosalga.online', 'dosalga.com', 'beautico-nextjs.vercel.app'],
-    formats: ['image/avif', 'image/webp'],
+    remotePatterns: PRODUCT_IMAGE_HOSTS.map(hostname => ({ protocol: 'https', hostname })),
+    formats: ['image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60,
+    minimumCacheTTL: 86400,
   },
   
   // Compression

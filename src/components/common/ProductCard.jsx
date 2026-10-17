@@ -1,22 +1,27 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
+import { canOptimizeProductImage } from '@/src/lib/productImages.cjs';
 import { useRouter } from 'next/router';
 import { useCountdownTimer } from '@/src/hooks/useCountdownTimer';
 import { useWishlist } from '@/src/contexts/WishlistContext';
 import { useCart } from '@/src/contexts/CartContext';
 import { formatLocalizedPrice } from '@/src/lib/pricing';
-import { getPrimaryProductImageSrc, getVisibleProductImages } from '@/src/lib/productVisibility';
+import { getVisibleProductImages } from '@/src/lib/productVisibility';
 import { toast } from 'react-toastify';
 
 /**
  * Composant carte produit pour afficher un produit WooCommerce
  */
-const ProductCard = ({ product, showCountdown = false, detailHref = null, onImageInvalid = null }) => {
+const ProductCard = ({ product, showCountdown = false, detailHref = null }) => {
   const { toggle, isInWishlist } = useWishlist();
   const { addToCart } = useCart();
   const router = useRouter();
   const [rating, setRating] = useState(0);
   const [imageFailed, setImageFailed] = useState(false);
+  const [imageIndex, setImageIndex] = useState(0);
+  const [showAlternate, setShowAlternate] = useState(false);
+  const [alternateReady, setAlternateReady] = useState(false);
   const supportedLocales = ['es', 'de', 'fr', 'it', 'pt'];
   const localeSegment = router.asPath.split('?')[0].split('/')[1];
   const currentLang = localeSegment === 'en'
@@ -45,10 +50,10 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null, onImag
   } = product;
   const productLink = detailHref || `${localePrefix}/shop/product/${id}`;
 
-  const visibleImages = getVisibleProductImages(product);
-  const mainImage = getPrimaryProductImageSrc(product);
-  const hoverCandidate = visibleImages[visibleImages.length - 2];
-  const hoverImage = hoverCandidate?.src || hoverCandidate || mainImage;
+  const imageCandidates = [...new Set(getVisibleProductImages(product).map(image => typeof image === 'string' ? image : image.src))].slice(0, 4);
+  const imageKey = imageCandidates.join('|');
+  const mainImage = imageFailed ? '/assets/img/product-photo-unavailable.svg' : imageCandidates[imageIndex] || '/assets/img/product-photo-unavailable.svg';
+  const hoverImage = imageCandidates[imageIndex + 1];
 
   // Extraire le nom de la première catégorie
   const categoryName = categories[0]?.name || 'Produit';
@@ -75,8 +80,8 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null, onImag
   }, [id]);
 
   useEffect(() => {
-    setImageFailed(false);
-  }, [mainImage]);
+    setImageIndex(0); setImageFailed(false); setShowAlternate(false); setAlternateReady(false);
+  }, [imageKey]);
 
   const handleRate = (value) => {
     setRating(value);
@@ -137,37 +142,37 @@ const ProductCard = ({ product, showCountdown = false, detailHref = null, onImag
   };
 
   const handleMainImageError = () => {
-    setImageFailed(true);
-    if (typeof onImageInvalid === 'function') {
-      onImageInvalid(id);
-    }
+    setAlternateReady(false);
+    setShowAlternate(false);
+    if (imageIndex + 1 < imageCandidates.length) setImageIndex(index => index + 1);
+    else setImageFailed(true);
   };
-
-  if (!mainImage || imageFailed) {
-    return null;
-  }
 
   return (
     <>
-    <div className="product-card hover-btn">
-      <div className="product-card-img double-img">
+    <div className="product-card hover-btn" onMouseEnter={() => setShowAlternate(true)}>
+      <div className={`product-card-img${alternateReady && !imageFailed ? ' double-img' : ''}`} style={{ aspectRatio: '4 / 5' }}>
         <Link legacyBehavior href={productLink}>
           <a>
-            <img
-              src={mainImage}
-              alt={name}
-              className="img1"
-              loading={showCountdown ? 'eager' : 'lazy'}
-              decoding="async"
+            <Image
+              src={mainImage} alt={name} className="img1"
+              width={480} height={600} quality={70}
+              sizes="(max-width: 575px) 100vw, (max-width: 991px) 50vw, (max-width: 1399px) 33vw, 25vw"
+              style={{ width: '100%', height: 'auto', aspectRatio: '4 / 5', objectFit: 'contain' }}
+              unoptimized={!canOptimizeProductImage(mainImage)}
+              loading={showCountdown ? 'eager' : 'lazy'} decoding="async"
               onError={handleMainImageError}
             />
-            {visibleImages.length > 1 && hoverImage && (
-              <img
-                src={hoverImage}
-                alt={name}
-                className="img2"
-                loading="lazy"
-                decoding="async"
+            {imageFailed && <span style={{ position: 'absolute', bottom: 8, left: 0, right: 0, textAlign: 'center', fontSize: 12 }}>{isSpanish ? 'Foto no disponible' : 'Photo unavailable'}</span>}
+            {showAlternate && !imageFailed && hoverImage && (
+              <Image
+                src={hoverImage} alt={name} className="img2"
+                width={480} height={600} quality={70}
+                sizes="(max-width: 575px) 100vw, (max-width: 991px) 50vw, (max-width: 1399px) 33vw, 25vw"
+                style={{ width: '100%', height: '100%', objectFit: 'contain', position: 'absolute', top: 0, left: 0, visibility: alternateReady ? 'visible' : 'hidden' }}
+                unoptimized={!canOptimizeProductImage(hoverImage)}
+                onLoadingComplete={image => setAlternateReady(image.naturalWidth > 0)}
+                onError={() => setAlternateReady(false)}
               />
             )}
             

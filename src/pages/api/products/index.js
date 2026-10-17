@@ -1,3 +1,4 @@
+import { toCatalogueCard } from '@/src/lib/catalogueCard.mjs';
 import {
   findCatalogCategory,
   getCatalogProducts,
@@ -41,6 +42,7 @@ export default async function handler(req, res) {
       featured,
       all = false,
       lang = 'es',
+      view,
     } = req.query;
     const fetchAllProducts = isTrue(all);
     const perPage = Math.min(parsePositiveInteger(limit ?? per_page, 10), 100);
@@ -76,9 +78,10 @@ export default async function handler(req, res) {
     const visibleProducts = products
       .map(preferDescriptionProductImages)
       .filter(isProductVisible);
+    const responseProducts = view === 'cards' ? visibleProducts.map(toCatalogueCard) : visibleProducts;
     const localizedProducts = String(lang).toLowerCase() === 'en'
-      ? normalizeWooProductsTextToEnglish(visibleProducts)
-      : translateWooProductsDescriptionsToSpanish(visibleProducts);
+      ? normalizeWooProductsTextToEnglish(responseProducts)
+      : translateWooProductsDescriptionsToSpanish(responseProducts);
 
     return res.status(200).json({
       success: true,
