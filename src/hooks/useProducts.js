@@ -97,11 +97,15 @@ export const useProduct = (productId, options = {}) => {
   const lang = options.lang;
 
   useEffect(() => {
-    if (!productId) {
+    if (!/^[1-9]\d*$/.test(String(productId ?? ''))) {
+      setProduct(null);
+      setError(null);
       setLoading(false);
       return;
     }
 
+    let cancelled = false;
+    const controller = new AbortController();
     const fetchProduct = async (fetchOptions = {}) => {
       const { silent = false } = fetchOptions;
 
@@ -112,7 +116,9 @@ export const useProduct = (productId, options = {}) => {
         setError(null);
         
         const queryParams = buildQueryString({ lang });
-        const response = await fetch(`/api/products/${productId}${queryParams ? `?${queryParams}` : ''}`);
+        const response = await fetch(`/api/products/${productId}${queryParams ? `?${queryParams}` : ''}`, {
+          signal: controller.signal,
+        });
         let result;
         try {
           result = await response.json();
@@ -124,13 +130,14 @@ export const useProduct = (productId, options = {}) => {
           throw new Error(result?.message || 'Erreur lors de la récupération du produit');
         }
         
-        setProduct(result.data);
+        if (!cancelled) setProduct(result.data);
       } catch (err) {
+        if (cancelled) return;
         console.error(`Error fetching product ${productId}:`, err);
         setError(err.message);
         setProduct(null);
       } finally {
-        if (!silent) {
+        if (!cancelled && !silent) {
           setLoading(false);
         }
       }
@@ -138,15 +145,15 @@ export const useProduct = (productId, options = {}) => {
 
     fetchProduct();
 
-    if (!refreshIntervalMs) {
-      return undefined;
-    }
-
-    const intervalId = window.setInterval(() => {
+    const intervalId = refreshIntervalMs ? window.setInterval(() => {
       fetchProduct({ silent: true });
-    }, refreshIntervalMs);
+    }, refreshIntervalMs) : null;
 
-    return () => window.clearInterval(intervalId);
+    return () => {
+      cancelled = true;
+      controller.abort();
+      if (intervalId !== null) window.clearInterval(intervalId);
+    };
   }, [productId, refreshIntervalMs, lang]);
 
   return { product, loading, error };
