@@ -1,6 +1,7 @@
 import { query, withTransaction } from '@/src/lib/database';
 import { applyRailwayPriceRegistry } from '@/src/lib/pricing';
 import { getAdminRailwayPriceRegistry } from '@/src/lib/railwayPriceRegistry';
+import { applyCatalogPublication } from '@/src/lib/catalogPublication.mjs';
 
 const STORE_ID = 'MX';
 
@@ -258,6 +259,12 @@ export const getCatalogProducts = async (options = {}) => {
 
   const result = await query(`
     SELECT storefront_catalog_products.payload,
+           admin_listing.active AS admin_active,
+           jsonb_build_object(
+             'wooFrozen', admin_listing.metadata->'wooFrozen',
+             'wooPricePublication', admin_listing.metadata->'wooPricePublication',
+             'cjPriceProposal', admin_listing.metadata->'cjPriceProposal'
+           ) AS admin_metadata,
            product_price_registry.raw_price,
            product_price_registry.raw_currency,
            product_price_registry.exchange_rate,
@@ -267,6 +274,8 @@ export const getCatalogProducts = async (options = {}) => {
            product_price_registry.verified,
            product_price_registry.updated_at
     FROM storefront_catalog_products
+    LEFT JOIN store_listings admin_listing
+      ON admin_listing.external_id = 'wp-dosalga-mexico-' || storefront_catalog_products.woo_id::text
     LEFT JOIN product_price_registry
       ON product_price_registry.store_code = storefront_catalog_products.store_id
      AND product_price_registry.woo_product_id = storefront_catalog_products.woo_id
@@ -274,16 +283,22 @@ export const getCatalogProducts = async (options = {}) => {
     ORDER BY ${orderColumn} ${orderDirection} NULLS LAST, storefront_catalog_products.woo_id DESC${pagination}
   `, values);
   const adminRegistry = await getAdminRailwayPriceRegistry();
-  return result.rows.map((row) => applyRailwayPriceRegistry(
+  return result.rows.map((row) => applyCatalogPublication(applyRailwayPriceRegistry(
     row.payload,
     adminRegistry.get(String(row.payload?.id)) || (row.raw_currency ? row : null),
-  ));
+  ), { active: row.admin_active, metadata: row.admin_metadata }));
 };
 
 export const getCatalogProduct = async (id) => {
   await ensureCatalogSchema();
   const result = await query(`
     SELECT storefront_catalog_products.payload,
+           admin_listing.active AS admin_active,
+           jsonb_build_object(
+             'wooFrozen', admin_listing.metadata->'wooFrozen',
+             'wooPricePublication', admin_listing.metadata->'wooPricePublication',
+             'cjPriceProposal', admin_listing.metadata->'cjPriceProposal'
+           ) AS admin_metadata,
            product_price_registry.raw_price,
            product_price_registry.raw_currency,
            product_price_registry.exchange_rate,
@@ -293,6 +308,8 @@ export const getCatalogProduct = async (id) => {
            product_price_registry.verified,
            product_price_registry.updated_at
     FROM storefront_catalog_products
+    LEFT JOIN store_listings admin_listing
+      ON admin_listing.external_id = 'wp-dosalga-mexico-' || storefront_catalog_products.woo_id::text
     LEFT JOIN product_price_registry
       ON product_price_registry.store_code = storefront_catalog_products.store_id
      AND product_price_registry.woo_product_id = storefront_catalog_products.woo_id
@@ -304,10 +321,10 @@ export const getCatalogProduct = async (id) => {
   const row = result.rows[0];
   if (!row) return null;
   const adminRegistry = await getAdminRailwayPriceRegistry();
-  return applyRailwayPriceRegistry(
+  return applyCatalogPublication(applyRailwayPriceRegistry(
     row.payload,
     adminRegistry.get(String(row.payload?.id)) || (row.raw_currency ? row : null),
-  );
+  ), { active: row.admin_active, metadata: row.admin_metadata });
 };
 
 export const getCatalogCategories = async ({ hideEmpty = false } = {}) => {

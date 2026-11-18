@@ -125,6 +125,7 @@ export const isHiddenCreamCategory = (category) => {
 };
 
 export const isProductVisible = (product) => (
-  hasVisibleProductImage(product)
-  && !isBlockedCreamProduct(product)
+  product?.admin_catalog?.blocked !== true
+  && hasVisibleProductImage(product)
+  && (product?.admin_catalog?.approved === true || !isBlockedCreamProduct(product))
 );
