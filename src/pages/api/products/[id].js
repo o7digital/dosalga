@@ -37,8 +37,8 @@ const createCachedVariations = (product) => {
 };
 
 export default async function handler(req, res) {
-  res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=60, stale-while-revalidate=86400');
-  res.setHeader('Vercel-CDN-Cache-Control', 'max-age=60, stale-while-revalidate=86400');
+  res.setHeader('Cache-Control', 'no-store, max-age=0');
+  res.setHeader('Vercel-CDN-Cache-Control', 'no-store');
   res.setHeader('X-Dosalga-Catalog-Source', 'railway');
 
   if (req.method !== 'GET') {

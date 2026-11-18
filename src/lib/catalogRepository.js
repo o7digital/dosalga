@@ -1,7 +1,7 @@
 import { query, withTransaction } from '@/src/lib/database';
 import { applyRailwayPriceRegistry } from '@/src/lib/pricing';
-import { getAdminRailwayPriceRegistry } from '@/src/lib/railwayPriceRegistry';
 import { applyCatalogPublication } from '@/src/lib/catalogPublication.mjs';
+import { approvedListingSql } from '@/src/lib/catalogApproval.mjs';
 
 const STORE_ID = 'MX';
 
@@ -229,6 +229,7 @@ export const getCatalogProducts = async (options = {}) => {
   const conditions = [
     'storefront_catalog_products.store_id = $1',
     "storefront_catalog_products.status = 'publish'",
+    approvedListingSql,
   ];
   const addValue = (value) => {
     values.push(value);
@@ -240,6 +241,7 @@ export const getCatalogProducts = async (options = {}) => {
     if (Number.isFinite(categoryId)) conditions.push(`storefront_catalog_products.category_ids @> ARRAY[${addValue(categoryId)}]::bigint[]`);
   }
   if (options.sku) conditions.push(`LOWER(storefront_catalog_products.sku) = LOWER(${addValue(String(options.sku).trim())})`);
+  if (options.ids) conditions.push(`storefront_catalog_products.woo_id = ANY(${addValue(options.ids)}::bigint[])`);
   if (options.search) conditions.push(`storefront_catalog_products.search_text ILIKE ${addValue(`%${String(options.search).trim()}%`)}`);
   if (options.onSale !== undefined) conditions.push(`storefront_catalog_products.on_sale = ${addValue(Boolean(options.onSale))}`);
   if (options.featured !== undefined) conditions.push(`storefront_catalog_products.featured = ${addValue(Boolean(options.featured))}`);
@@ -276,20 +278,21 @@ export const getCatalogProducts = async (options = {}) => {
     FROM storefront_catalog_products
     LEFT JOIN store_listings admin_listing
       ON admin_listing.external_id = 'wp-dosalga-mexico-' || storefront_catalog_products.woo_id::text
+    LEFT JOIN products admin_product ON admin_product.id = admin_listing.product_id
     LEFT JOIN product_price_registry
       ON product_price_registry.store_code = storefront_catalog_products.store_id
      AND product_price_registry.woo_product_id = storefront_catalog_products.woo_id
     WHERE ${conditions.join(' AND ')}
     ORDER BY ${orderColumn} ${orderDirection} NULLS LAST, storefront_catalog_products.woo_id DESC${pagination}
   `, values);
-  const adminRegistry = await getAdminRailwayPriceRegistry();
   return result.rows.map((row) => applyCatalogPublication(applyRailwayPriceRegistry(
     row.payload,
-    adminRegistry.get(String(row.payload?.id)) || (row.raw_currency ? row : null),
+    row.raw_currency ? row : null,
   ), { active: row.admin_active, metadata: row.admin_metadata }));
 };
 
 export const getCatalogProduct = async (id) => {
+  if (!/^[1-9]\d*$/.test(String(id))) return null;
   await ensureCatalogSchema();
   const result = await query(`
     SELECT storefront_catalog_products.payload,
@@ -310,31 +313,42 @@ export const getCatalogProduct = async (id) => {
     FROM storefront_catalog_products
     LEFT JOIN store_listings admin_listing
       ON admin_listing.external_id = 'wp-dosalga-mexico-' || storefront_catalog_products.woo_id::text
+    LEFT JOIN products admin_product ON admin_product.id = admin_listing.product_id
     LEFT JOIN product_price_registry
       ON product_price_registry.store_code = storefront_catalog_products.store_id
      AND product_price_registry.woo_product_id = storefront_catalog_products.woo_id
     WHERE storefront_catalog_products.store_id = $1
       AND storefront_catalog_products.woo_id = $2
       AND storefront_catalog_products.status = 'publish'
+      AND ${approvedListingSql}
     LIMIT 1
   `, [STORE_ID, id]);
   const row = result.rows[0];
   if (!row) return null;
-  const adminRegistry = await getAdminRailwayPriceRegistry();
   return applyCatalogPublication(applyRailwayPriceRegistry(
     row.payload,
-    adminRegistry.get(String(row.payload?.id)) || (row.raw_currency ? row : null),
+    row.raw_currency ? row : null,
   ), { active: row.admin_active, metadata: row.admin_metadata });
 };
 
 export const getCatalogCategories = async ({ hideEmpty = false } = {}) => {
   await ensureCatalogSchema();
   const result = await query(`
-    SELECT payload FROM storefront_catalog_categories
-    WHERE store_id = $1 ${hideEmpty ? 'AND product_count > 0' : ''}
-    ORDER BY name ASC
+    SELECT category.payload, COUNT(DISTINCT storefront_catalog_products.woo_id)::integer AS approved_count
+    FROM storefront_catalog_categories category
+    LEFT JOIN storefront_catalog_products
+      ON storefront_catalog_products.store_id = category.store_id
+     AND storefront_catalog_products.category_ids @> ARRAY[category.woo_id]::bigint[]
+     AND storefront_catalog_products.status = 'publish'
+    LEFT JOIN store_listings admin_listing
+      ON admin_listing.external_id = 'wp-dosalga-mexico-' || storefront_catalog_products.woo_id::text
+    LEFT JOIN products admin_product ON admin_product.id = admin_listing.product_id
+    WHERE category.store_id = $1 AND ${approvedListingSql}
+    GROUP BY category.woo_id, category.name, category.payload
+    ${hideEmpty ? 'HAVING COUNT(DISTINCT storefront_catalog_products.woo_id) > 0' : ''}
+    ORDER BY category.name ASC
   `, [STORE_ID]);
-  return result.rows.map((row) => row.payload);
+  return result.rows.map((row) => ({ ...row.payload, count: row.approved_count }));
 };
 
 export const findCatalogCategory = async (term) => {

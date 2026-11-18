@@ -38,3 +38,12 @@ test('frozen or archived products stay hidden even with a green price', () => {
 test('approval still requires a usable product image', () => {
   assert.equal(isProductVisible(applyCatalogPublication({ ...product, images: [] }, listing)), false);
 });
+
+test('ordinary white rows, failed red publications and missing listings stay hidden', () => {
+  const ordinary = { ...product, name: 'Travel Bag' };
+  assert.equal(isProductVisible(ordinary), false);
+  assert.equal(isProductVisible(applyCatalogPublication(ordinary, { active: true, metadata: {} })), false);
+  assert.equal(isProductVisible(applyCatalogPublication(ordinary, {
+    ...listing, metadata: { ...listing.metadata, wooPricePublication: { state: 'failed' } },
+  })), false);
+});

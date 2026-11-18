@@ -2,10 +2,21 @@
  * Context pour gérer le panier d'achats
  */
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 const CartContext = createContext();
 const DEFAULT_COUPON_LABEL = 'Remise socios';
 const CART_STORAGE_KEY = 'dosalga_cart_mxn_v2';
+
+const validateCart = async (cart) => {
+  const response = await fetch('/api/cart/validate', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ cart }),
+  });
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.message || 'No se pudo actualizar el carrito.');
+  return result;
+};
 
 export const useCart = () => {
   const context = useContext(CartContext);
@@ -19,17 +30,30 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [cartRestored, setCartRestored] = useState(false);
 
   // Charger le panier depuis localStorage au démarrage
   useEffect(() => {
+    let active = true;
     const savedCart = localStorage.getItem(CART_STORAGE_KEY);
     if (savedCart) {
       try {
-        setCart(JSON.parse(savedCart));
+        const stored = JSON.parse(savedCart);
+        validateCart(stored).then(result => {
+          if (!active) return;
+          setCart(result.cart);
+          setCartRestored(true);
+          if (result.removed.length) toast.info('Se retiraron del carrito los productos que ya no están disponibles.');
+        }).catch(error => {
+          if (active) toast.error(error.message);
+        });
       } catch (error) {
         console.error('Error loading cart:', error);
         localStorage.removeItem(CART_STORAGE_KEY);
+        setCartRestored(true);
       }
+    } else {
+      setCartRestored(true);
     }
     localStorage.removeItem('dosalga_cart');
 
@@ -47,16 +71,18 @@ export const CartProvider = ({ children }) => {
         localStorage.removeItem('dosalga_coupon');
       }
     }
+    return () => { active = false; };
   }, []);
 
   // Sauvegarder le panier dans localStorage à chaque modification
   useEffect(() => {
+    if (!cartRestored) return;
     if (cart.length > 0) {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
     } else {
       localStorage.removeItem(CART_STORAGE_KEY);
     }
-  }, [cart]);
+  }, [cart, cartRestored]);
 
   useEffect(() => {
     if (appliedCoupon) {
@@ -73,6 +99,7 @@ export const CartProvider = ({ children }) => {
 
   // Ajouter un produit au panier
   const addToCart = (product, quantity = 1, variation = null) => {
+    setCartRestored(true);
     setCart((prevCart) => {
       const existingItemIndex = prevCart.findIndex(
         (item) => 
@@ -212,6 +239,12 @@ export const CartProvider = ({ children }) => {
     try {
       if (cart.length === 0 || getCartTotalAfterDiscount() <= 0) {
         throw new Error('Le panier est vide. Ajoute un produit avant de passer commande.');
+      }
+
+      const checked = await validateCart(cart);
+      if (checked.removed.length || checked.pricesChanged) {
+        setCart(checked.cart);
+        throw new Error('Tu carrito se actualizó. Revisa los productos y el total antes de continuar.');
       }
 
       const invalidVariableItem = cart.find((item) => {

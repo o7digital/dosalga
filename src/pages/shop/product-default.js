@@ -271,7 +271,7 @@ const ProductDefaultPage = () => {
   const handleAddToCart = () => {
     if (!product) return false;
 
-    if (!product.purchasable || !product.price) {
+    if (!product.purchasable || !product.price || product.stock_status === 'outofstock') {
       toast.warn(isSpanish ? 'Este producto aun no esta disponible para compra.' : 'This product is not available for purchase yet.');
       return false;
     }
@@ -443,9 +443,10 @@ const ProductDefaultPage = () => {
                   })}
                 </div>
 
+                {product.stock_status === 'outofstock' && <p role="status">{isSpanish ? 'Agotado por el momento.' : 'Currently out of stock.'}</p>}
                 <div className="shop-details-btn">
-                  <button type="button" onClick={handleAddToCart} className="primary-btn1 hover-btn3">{isSpanish ? 'Agregar al carrito' : 'Add to Cart'}</button>
-                  <button type="button" onClick={handleBuyNow} className="primary-btn1 style-3 hover-btn4">{isSpanish ? 'Comprar ahora' : 'Buy Now'}</button>
+                  <button type="button" onClick={handleAddToCart} disabled={product.stock_status === 'outofstock' || !product.purchasable} className="primary-btn1 hover-btn3">{isSpanish ? 'Agregar al carrito' : 'Add to Cart'}</button>
+                  <button type="button" onClick={handleBuyNow} disabled={product.stock_status === 'outofstock' || !product.purchasable} className="primary-btn1 style-3 hover-btn4">{isSpanish ? 'Comprar ahora' : 'Buy Now'}</button>
                 </div>
 
                 <div className="product-info">

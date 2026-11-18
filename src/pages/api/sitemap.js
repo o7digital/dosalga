@@ -77,7 +77,6 @@ export default async function handler(req, res) {
     categories.forEach(category => {
       if (category.count > 0) {
         xml += `
-  <!-- Category: ${category.name} -->
   <url>
     <loc>${siteUrl}/category/${category.slug}</loc>
     <lastmod>${currentDate}</lastmod>
@@ -92,7 +91,6 @@ export default async function handler(req, res) {
     products.forEach(product => {
       const productDate = product.date_modified || product.date_created || currentDate;
       xml += `
-  <!-- Product: ${product.name} -->
   <url>
     <loc>${siteUrl}/shop/product/${product.id}</loc>
     <lastmod>${productDate.split('T')[0]}</lastmod>
@@ -107,7 +105,8 @@ export default async function handler(req, res) {
 
     // Définir les headers
     res.setHeader('Content-Type', 'text/xml');
-    res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
+    res.setHeader('Cache-Control', 'no-store, max-age=0');
+    res.setHeader('Vercel-CDN-Cache-Control', 'no-store');
     
     res.status(200).send(xml);
   } catch (error) {

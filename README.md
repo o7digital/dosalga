@@ -36,3 +36,16 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+### Catalogue MX et achats
+
+Le catalogue public, les recherches, les catégories et le sitemap ne contiennent
+que les lignes actives dont la dernière proposition est verte dans l'admin
+(`woo_verified` avec la même date de proposition). Les fiches non validées,
+archivées ou bloquées ne sont pas accessibles directement.
+
+Les achats s'activent avec `NEXT_PUBLIC_COMMERCE_ENABLED=true` au moment du build.
+Le panier est actualisé à sa restauration et avant le paiement ; le serveur
+vérifie à nouveau l'approbation, le stock et les variantes avant toute création
+de commande. Le prix MXN vient de Railway. Un ancien panier ne permet pas de
+commander un produit retiré de la sélection.

@@ -1,6 +1,7 @@
-import { getWooProductMXNPrice } from '@/src/lib/pricing';
 import { getWooCommerceErrorDetails } from '@/src/lib/woocommerce';
 import { COMMERCE_ENABLED } from '@/src/config/commerce';
+import { getCatalogProducts } from '@/src/lib/catalogRepository';
+import { catalogIds, validateCheckoutItems, CheckoutCatalogError } from '@/src/lib/checkoutCatalog.mjs';
 
 const FALLBACK_WORDPRESS_URL = 'https://oliviers44.sg-host.com';
 
@@ -544,17 +545,14 @@ const resolveLineItemsWithWooMXNPrices = async ({ wcApi, lineItems = [], debugId
         ? `products/${productId}/variations/${variationId}`
         : `products/${productId}`;
       const { data: wooProduct } = await wcApi.get(endpoint);
-      const reviewProductId = Number(wooProduct?.parent_id || productId);
-      const { data: reviews } = await wcApi.get('products/reviews', {
-        product: reviewProductId,
-        per_page: 100,
-      });
-      const wooProductWithReviews = {
-        ...wooProduct,
-        reviews: Array.isArray(reviews) ? reviews : [],
-      };
+      if (wooProduct?.status !== 'publish' || wooProduct?.stock_status === 'outofstock'
+          || (variationId > 0 && Number(wooProduct?.parent_id) !== productId)) {
+        throw new CheckoutCatalogError('Este producto ya no está disponible para comprar.');
+      }
       const wooPrice = parseAmount(wooProduct?.price || wooProduct?.regular_price || wooProduct?.sale_price, NaN);
-      const mxnPrice = getWooProductMXNPrice(wooProductWithReviews, wooPrice);
+      // unit_price was resolved from the current approved Railway catalogue,
+      // before any WooCommerce order/customer/cart mutation.
+      const mxnPrice = Number(item.unit_price);
 
       console.info(`[checkout:${debugId}] product_resolved`, {
         requestedProductId: productId,
@@ -575,6 +573,7 @@ const resolveLineItemsWithWooMXNPrices = async ({ wcApi, lineItems = [], debugId
         unit_price: mxnPrice.toFixed(2),
       };
     } catch (error) {
+      if (error instanceof CheckoutCatalogError) throw error;
       console.error(`[checkout:${debugId}] product_resolve_error`, {
         productId,
         variationId: Number.isFinite(variationId) ? variationId : null,
@@ -747,7 +746,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const orderData = req.body;
+    const orderData = req.body || {};
     const debugContext = getCheckoutDebugContext(req, orderData);
     if (CHECKOUT_DEBUG) {
       console.info(`[checkout:${debugId}] request_received`, debugContext);
@@ -768,6 +767,18 @@ export default async function handler(req, res) {
         message: 'Les informations de facturation sont requises',
         debug_id: debugId,
       });
+    }
+
+    if (orderData.currency && orderData.currency !== STORE_CURRENCY) {
+      return res.status(400).json({ success: false, message: 'La moneda de esta tienda es MXN.', debug_id: debugId });
+    }
+    try {
+      const ids = catalogIds(orderData.line_items);
+      const approvedProducts = await getCatalogProducts({ all: true, ids });
+      orderData.line_items = validateCheckoutItems(orderData.line_items, approvedProducts);
+    } catch (error) {
+      if (!(error instanceof CheckoutCatalogError)) throw error;
+      return res.status(error.status).json({ success: false, message: error.message, debug_id: debugId });
     }
 
     const {
@@ -1159,6 +1170,9 @@ export default async function handler(req, res) {
     });
   } catch (error) {
     console.error(`[checkout:${debugId}] error`, getWooCommerceErrorDetails(error));
+    if (error instanceof CheckoutCatalogError) {
+      return res.status(error.status).json({ success: false, message: error.message, debug_id: debugId });
+    }
     const isAccountError =
       /account|registration|email/i.test(String(error?.message || '')) ||
       /woocommerce_rest_checkout_invalid_customer/i.test(String(error?.code || '')) ||
